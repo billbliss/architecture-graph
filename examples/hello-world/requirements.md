@@ -1,13 +1,17 @@
-# Greeting requirements
+# A greeting that can change without duplicated rules
 
-Initial release: a command-line interface accepts a name and prints `Hello, NAME!`.
-An absent or whitespace-only name becomes `world`. Trim surrounding whitespace.
-Keep the interface, greeting capability, and formatting responsibility separate.
-The formatter owns greeting text; the interface must not independently reconstruct it.
-No network, persistence, or localization in the initial release.
+This tiny application helps illustrate one useful design decision: greeting text should be decided in one place, so a wording change does not require several parts of the application to agree independently.
 
-Open design question: should greetings eventually support multiple tones?
+## Start with a friendly greeting
 
-Subsequent change: add an explicit `formal` tone producing `Good day, NAME.`;
-keep `friendly` as the default. Reject unsupported tones. The formatter remains
-the sole declared text authority. Localization remains unresolved and out of scope.
+A person enters a name at the command line and receives `Hello, NAME!`. Remove surrounding whitespace from the name. If no name is supplied, or it contains only whitespace, use `world`.
+
+For the purposes of this example, keep accepting input, providing the greeting, and formatting its text separate. The formatter decides the words; the interface prints the result without rebuilding it. The extra structure makes the AG relationships easy to see—it is not necessary for a real Hello World.
+
+The initial version needs no network, saved data, or translation. Leave this question open: should someone be able to choose a different greeting tone?
+
+## Then add a formal tone
+
+Support an explicit `formal` tone that returns `Good day, NAME.`. Keep `friendly` as the default, and reject unsupported tones rather than silently choosing one.
+
+The formatter should still decide the text. Whether to support other languages remains an open question and is outside this implementation.

@@ -26,10 +26,11 @@ try {
   const consumer=join(temporary,'isolated project');mkdirSync(consumer);
   writeFileSync(join(consumer,'package.json'),'{"name":"isolated-ag-consumer","private":true,"type":"module"}');
   run(consumer,'npm',['install','--save-dev','--ignore-scripts','--offline','--no-audit','--no-fund',tarball]);
-  for (const path of ['LICENSE','bin/ag.js','src/index.js','schema/graph.schema.json','skills/architecture-graph/SKILL.md','skills/architecture-graph/references/modeling.md']) {
+  for (const path of ['LICENSE','bin/ag.js','src/index.js','schema/graph.schema.json','docs/getting-started.md','examples/hello-world/README.md','skills/architecture-graph/SKILL.md','skills/architecture-graph/references/modeling.md']) {
     assert(existsSync(join(consumer,'node_modules/@architecture-graph/toolkit',path)), `Missing packaged file: ${path}`);
   }
   assert(!existsSync(join(consumer,'node_modules/@architecture-graph/toolkit/.git')));
+  assert(!existsSync(join(consumer,'node_modules/@architecture-graph/toolkit/examples/hello-world/node_modules')), 'The packaged example must not include installed dependencies');
   ag(consumer,'init','--id','graph:hello-world','--title','Hello-world architecture');
   cpSync(join(example,'requirements.md'),join(consumer,'requirements.md'));
   const proposed=JSON.parse(readFileSync(join(example,'stages/proposed.json')));
@@ -74,5 +75,10 @@ try {
   run(example,'npm',['install','--no-save','--package-lock=false','--ignore-scripts','--offline','--no-audit','--no-fund',tarball]);
   run(example,'npm',['test']);ag(example,'validate');ag(example,'generate');ag(example,'check');
   log('PASS: checked-in hello-world uses installed public CLI and passes application tests.');
-  if(process.argv.includes('--record'))writeFileSync(join(repo,'docs/validation-results.md'),'# Validation results\n\nExecuted 2026-09-09 with Node '+process.version+'. Run `npm run verify` to reproduce.\n\n'+report.map(s=>'- '+s).join('\n')+'\n\nThese are functional checks of the toolkit and example, not AAG evidence or general architectural conformance.\n');
+  if (process.argv.includes('--record')) {
+    const date = new Date().toISOString().slice(0, 10);
+    writeFileSync(join(repo, 'docs/history/latest-consumer-run.md'),
+      `# Package and example check — ${date}\n\nThis run checked whether a separate project could install the package and use AG while a design evolved into working code. Run \`npm run verify\` for a fresh check; this is a saved record, not a live status page.\n\nRuntime: Node ${process.version}.\n\n${report.map(s => '- ' + s).join('\n')}\n\nThe intentionally broken formatter shows the limit: consistent design records do not establish correct application behavior. These checks are not AAG evidence.\n`);
+  }
+
 } finally {rmSync(temporary,{recursive:true,force:true});}

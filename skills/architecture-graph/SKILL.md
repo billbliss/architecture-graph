@@ -1,30 +1,32 @@
 ---
 name: architecture-graph
-description: Bootstrap architectural declarations from requirements and design documents, or maintain an existing Architecture Graph during changes to responsibilities, ownership, authorities, contracts, and boundaries.
+description: Create a useful architecture graph from requirements and design documents, or keep an existing graph current as responsibilities, ownership, shared rules, and boundaries change.
 metadata:
   version: "0.1.0"
 ---
 
-# Architecture Graph
+# Help a project remember its design
 
-Use the consuming repository's installed `@architecture-graph/toolkit` 0.1.0 (graph/config schema `1`). Run `./node_modules/.bin/ag --version` from the consumer root. If missing, follow the project's installation instructions; do not silently fetch an unrelated registry package. In the steps below, `ag` means `./node_modules/.bin/ag` unless the project provides an equivalent npm script. No Visual Studio dependency.
+Use AG to make important design decisions easier to find before a change. The result should help someone understand what a part of the system is responsible for, which rules it must preserve, and what is still undecided. A graph that merely passes validation is not enough.
 
-Read project instructions and `ag.config.json`. Paths resolve from the config directory; use `--config` explicitly from other directories. Canonical declarations are project-owned. Generated guidance is a projection, never a source of truth.
+Use the project's installed `@architecture-graph/toolkit` **0.1.0**, with graph/config format **1**. Check `./node_modules/.bin/ag --version` from the project root. If it is missing, follow the project's installation instructions; do not fetch an unrelated registry package. Below, `ag` means that local executable or the project's equivalent npm script. Visual Studio is not required.
 
-## Bootstrap
+Read project instructions and `ag.config.json`. Paths are relative to the configuration directory; use `--config` when working elsewhere. The project owns its graph. Generated guidance is a view of that graph, not a place to make design changes.
 
-Read the actual requirements and design documents before declaring architecture. Extract durable responsibilities, structural elements, owners, semantic authorities, contracts, and boundaries. Use [the modeling reference](references/modeling.md) for schema and relation choices. Start proportionately; a document or source file does not automatically deserve a node.
+## Bootstrap: build the first useful record
 
-Identify contradictions and open questions. Record disputed alternatives as unresolved nodes/relationships with descriptions and real document references. Distinguish explicit design statements from inferred proposals. Do not resolve product decisions just to get a valid graph. Ask only about decisions that block the user's requested work; preserve other uncertainty in the graph.
+Read the actual requirements and design documents. Identify the responsibilities, owners, sources of shared meaning, rules, and boundaries worth remembering. Start small; not every document or file needs its own graph entry. Consult [the modeling guide](references/modeling.md) for how to express these ideas.
 
-Run `ag init --id graph:<project> --title "<project> architecture"` if no graph exists, then author its scope and declarations. Proposed nodes need no source code; reference existing design documents. Never create fictitious files or evidence. Add a short instruction to the project's existing AGENTS.md explaining when to retrieve and maintain AG; preserve unrelated instructions.
+Distinguish agreed requirements from inferred proposals. Record contradictions, unchosen alternatives, and unanswered questions as unresolved, citing real documents where available. Do not make a product decision just to satisfy validation. Ask about decisions that block the requested work; preserve the other questions in the graph.
 
-Run `ag validate`, `ag generate`, and `ag check`. Review whether the graph reflects the documents and whether unresolved choices remain visible. An empty or structurally valid graph is not proof of adequate modeling.
+If no graph exists, run `ag init --id graph:<project> --title "<project> architecture"`. This creates empty files, not an inferred design. Fill in the scope and initial records from what you read. Planned work does not need invented implementation files or evidence.
 
-## Maintain
+Add a short reminder to the project's AGENTS.md to consult AG before design changes and maintain it alongside the code. Preserve other project instructions. Run `ag validate`, `ag generate`, and `ag check`, then review whether the result explains the design and keeps uncertainty visible.
 
-Before changing architecture, run `ag context --file <repo-relative-path>` or `ag context --id <node-id>`. Use `--query <text>` for discovery and `--depth 2` for wider context when needed. A missing match is a coverage gap to investigate. Read the retrieved declarations and referenced files, including incoming ownership, authority, contracts, and decisions.
+## Maintain: start a change with the design in view
 
-Update declarations alongside the implementation. Preserve identities through renames and moves. Mark elements implemented only after real implementation exists; supply implementation references for implemented nodes and relationships. Keep design references. Revise affected contracts and unresolved decisions honestly.
+Use `ag context --file <project-relative-path>` or `ag context --id <id>` before changing architecture. Use `--query <text>` to find a topic and `--depth 2` for wider context. If nothing matches, investigate whether the graph is missing useful coverage.
 
-Run application checks appropriate to the change, then `ag validate`, `ag generate`, and `ag check`. Review both declaration and guidance diffs. Fix drift at the canonical source and regenerate. Report structural results separately from behavioral results: AG neither executes AAG proofs nor establishes implementation conformance.
+Read the returned records and referenced files, including owners, authorities, rules, and open decisions. Update the graph when the design changes. Keep IDs stable through file moves. Mark records implemented only when real implementation exists, adding implementation references to implemented ideas and relationships while retaining design references.
+
+Run appropriate application tests, then `ag validate`, `ag generate`, and `ag check`. Review the graph and generated briefing together. Fix stale guidance by updating the graph and regenerating. Report checks of the records separately from tests of behavior: AG does not run AAG proofs or establish that code follows the design.

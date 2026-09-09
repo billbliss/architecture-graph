@@ -1,24 +1,38 @@
-# Companion Codex skill
+# Use AG with Codex
 
-The npm tarball bundles `skills/architecture-graph` alongside the matching toolkit. After installing the package in a consumer, copy the skill into that repository's Codex discovery directory:
+A graph is useful only if someone keeps it meaningful. The companion skill gives Codex a repeatable way to read your design, preserve open questions, and update the graph as the software changes. It helps a future coding session start with the decisions you have already made.
+
+The skill is a folder of instructions, included in the toolkit package. It is not a separate executable, hosted service, or Visual Studio extension. The toolkit does the mechanical checks; Codex does the reading and modeling with your review.
+
+## Install once per project
+
+First [install the toolkit](getting-started.md). Then, from that project's root:
 
 ```sh
 mkdir -p .agents/skills
 cp -R node_modules/@architecture-graph/toolkit/skills/architecture-graph .agents/skills/
 ```
 
-If a skill already exists there, review its version and any local changes before replacing it. This copies the whole folder, including its modeling reference. Keep tooling and skill versions aligned when upgrading. A project can commit the copied skill for its developers.
+Copy the whole folder so the modeling reference comes with it. If you already have a copy, review any local changes before replacing it. Keep its version aligned with the installed toolkit.
 
-Codex discovers repository skills under `.agents/skills`; the skill entry point is `SKILL.md` with name and description metadata. See [OpenAI's skill documentation](https://learn.chatgpt.com/docs/build-skills). This workflow works with Codex independently of Visual Studio. Discovery and behavioral testing in a fresh Codex session remain a manual adoption check; package tests verify the distributed files and command interfaces.
+Codex reads project skills from `.agents/skills`. If it does not show up after copying, restart Codex. See [OpenAI's skill documentation](https://learn.chatgpt.com/docs/build-skills). Installing the folder makes the skill available; it does not run it.
 
-Suggested prompts:
+## Create the first graph
 
-> Use $architecture-graph to read our requirements and design documents and bootstrap a proportionate graph. Preserve contradictions and open decisions; there is no implementation yet.
+Open the project in Codex and name the documents it should read:
 
-> Use $architecture-graph to retrieve context for the formatting change, maintain declarations alongside code, and validate the resulting graph and generated guidance.
+> Use $architecture-graph to read our requirements and design documents and create an initial graph. Focus on the responsibilities, owners, and boundaries that will matter as we build. Show me where the documents disagree or leave a decision open. We do not have application code yet.
 
-Add a small project-specific instruction to the consuming project's AGENTS.md, preserving its existing content:
+This is the bootstrap step. Codex reads your material, creates the graph if needed, and checks it. Review the proposed design before relying on it. An empty starter graph, or one that merely passes validation, is not a useful substitute for that review.
 
-> Before changing responsibilities, ownership, authorities, contracts or boundaries, retrieve context using `./node_modules/.bin/ag context`. Maintain the configured graph alongside implementation. Run relevant application checks, `ag validate`, `ag generate`, and `ag check`. Canonical declarations belong to this project; generated guidance is derived. Structural validation does not establish implementation conformance.
+## Keep it useful during changes
 
-Replace bare `ag` in project instructions with your npm script or installed executable path if it is not on PATH. `init` intentionally does not change AGENTS.md or install a skill automatically.
+For an existing project:
+
+> Use $architecture-graph to find the design context for this change. Explain which responsibilities or rules it affects, then maintain the graph alongside the implementation.
+
+Give future sessions a short reminder in the project's `AGENTS.md`, preserving its other instructions:
+
+> Before changing responsibilities, ownership, shared rules, or boundaries, use `./node_modules/.bin/ag context` to read the relevant design. Update the graph when the design changes. Run application tests, then the AG `validate`, `generate`, and `check` commands. The graph records our intent; passing AG checks does not prove the code follows it.
+
+The skill supplies the reusable method. The project owns its decisions, graph, and this short reminder. You do not need to copy this toolkit's own history or its hello-world graph into your application.

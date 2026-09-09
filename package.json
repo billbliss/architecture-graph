@@ -20,7 +20,14 @@
     "schema",
     "skills",
     "docs",
-    "README.md"
+    "README.md",
+    "examples/hello-world/*.md",
+    "examples/hello-world/package.json",
+    "examples/hello-world/ag.config.json",
+    "examples/hello-world/app.test.js",
+    "examples/hello-world/src",
+    "examples/hello-world/architecture",
+    "examples/hello-world/stages"
   ],
   "scripts": {
     "test": "node --test test/*.test.js",
