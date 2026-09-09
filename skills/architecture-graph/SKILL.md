@@ -2,16 +2,16 @@
 name: architecture-graph
 description: Create a useful architecture graph from requirements and design documents, or keep an existing graph current as responsibilities, ownership, shared rules, and boundaries change.
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # Help a project remember its design
 
 Use AG to make important design decisions easier to find before a change. The result should help someone understand what a part of the system is responsible for, which rules it must preserve, and what is still undecided. A graph that merely passes validation is not enough.
 
-Use the project's installed `@architecture-graph/toolkit` **0.1.0**, with graph/config format **1**. Check `./node_modules/.bin/ag --version` from the project root. If it is missing, follow the project's installation instructions; do not fetch an unrelated registry package. Below, `ag` means that local executable or the project's equivalent npm script. Visual Studio is not required.
+Use the project's installed `@architecture-graph/toolkit` **0.2.0**, with graph/config format **1**. Check `./node_modules/.bin/ag --version` from the project root. If it is missing, follow the project's installation instructions; do not fetch an unrelated registry package. Below, `ag` means that local executable or the project's equivalent npm script. Visual Studio is not required.
 
-Read project instructions and `ag.config.json`. Paths are relative to the configuration directory; use `--config` when working elsewhere. The project owns its graph. Generated guidance is a view of that graph, not a place to make design changes.
+Read project instructions and `ag.config.json`. Paths are relative to the configuration directory; use `--config` when working elsewhere. The project owns one canonical graph file; new projects use YAML, and existing JSON remains supported. Generated guidance is a view of that graph, not a place to make design changes.
 
 ## Bootstrap: build the first useful record
 
@@ -27,6 +27,8 @@ Add a short reminder to the project's AGENTS.md to consult AG before design chan
 
 Use `ag context --file <project-relative-path>` or `ag context --id <id>` before changing architecture. Use `--query <text>` to find a topic and `--depth 2` for wider context. If nothing matches, investigate whether the graph is missing useful coverage.
 
+Use `--module <id>` or `--guardrail <id>` for a known boundary or rule. Inspect `truncated` and warnings: a bounded result may omit relevant records. Narrow the query or deliberately adjust its limits before assuming the context is complete. Generated indexes are disposable; missing or stale indexes fall back to the canonical file.
+
 Read the returned records and referenced files, including owners, authorities, rules, and open decisions. Update the graph when the design changes. Keep IDs stable through file moves. Mark records implemented only when real implementation exists, adding implementation references to implemented ideas and relationships while retaining design references.
 
-Run appropriate application tests, then `ag validate`, `ag generate`, and `ag check`. Review the graph and generated briefing together. Fix stale guidance by updating the graph and regenerating. Report checks of the records separately from tests of behavior: AG does not run AAG proofs or establish that code follows the design.
+Run appropriate application tests, then `ag validate`, `ag generate`, and `ag check`. Review the graph and generated briefing together. Fix stale guidance by updating the graph and regenerating. Report checks of the records separately from tests of behavior: AG does not establish that code follows the design.

@@ -1,0 +1,15 @@
+{
+  "artifactVersion": "2",
+  "toolVersion": "0.2.0",
+  "graphId": "graph:hello-world",
+  "declarationDigest": "3659a88ede4e3fa2ab16e5ddf6034ca1b44de922df3ff4a87acc38475d2f8994",
+  "checksums": {
+    "graph-index.json": "91286697b1ca12754d3cd55a0779a70bf74dfb24c8b4804995ec761706448d2c",
+    "source-context-index.json": "9ac4fb56c552febe8c3935d54e3ccd65ccfd4df520af928394a5601ef21cc3af",
+    "neighborhood-index.json": "a4bd5497c6d6b353ff6fa5d16fd2da8e551bb93abb33a2add67379f2a90439e9",
+    "module-ownership-map.json": "d72b849eb77b173dbc64057d0b75a38155bb2bb8cd9f64fd3c8d2ccbe3581d9c",
+    "cross-module-dependency-index.json": "0915314bead712f4f4682b6408bd69cccb8ce857d85ba473b5264d01c79820c2",
+    "guardrail-index.json": "8d9809aca3112e51de2b373c4c6406b5e2222472e4c17e0e2a8660fce8c405e0",
+    "graph-source-map.json": "9ef5972cb0d46c9f5fa564278efc105c0dff69e11bb3c80964d7c426ffe6021a"
+  }
+}

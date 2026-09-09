@@ -1,0 +1,304 @@
+{
+  "nodes": {
+    "boundary:presentation": {
+      "description": "The CLI must consume greeting text without independently reconstructing it.",
+      "id": "boundary:presentation",
+      "kind": "boundary",
+      "module": "module:interface",
+      "name": "Presentation boundary",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/cli.js"
+        }
+      ],
+      "status": "implemented"
+    },
+    "capability:greet": {
+      "description": "Return a greeting for a supplied name.",
+      "id": "capability:greet",
+      "kind": "capability",
+      "module": "module:greetings",
+      "name": "Greet a person",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/greeter.js"
+        }
+      ],
+      "status": "implemented"
+    },
+    "component:formatter": {
+      "description": "Determine greeting text and normalize blank names to world.",
+      "id": "component:formatter",
+      "kind": "component",
+      "module": "module:greetings",
+      "name": "Formatter",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/formatter.js"
+        }
+      ],
+      "status": "implemented"
+    },
+    "component:greeter": {
+      "description": "Provide the greeting capability by calling the formatter.",
+      "id": "component:greeter",
+      "kind": "component",
+      "module": "module:greetings",
+      "name": "Greeting service",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/greeter.js"
+        }
+      ],
+      "status": "implemented"
+    },
+    "contract:greeting": {
+      "description": "Trim names; empty names become world. Friendly returns Hello, NAME!; formal returns Good day, NAME. Reject unsupported tones.",
+      "id": "contract:greeting",
+      "kind": "contract",
+      "module": "module:greetings",
+      "name": "Greeting format",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/formatter.js"
+        }
+      ],
+      "status": "implemented"
+    },
+    "decision:localization": {
+      "description": "Whether to localize greetings is unresolved; localization is excluded from this implementation.",
+      "id": "decision:localization",
+      "kind": "decision",
+      "module": "module:greetings",
+      "name": "Localization",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "unresolved"
+    },
+    "decision:tone": {
+      "description": "Resolved: friendly remains the default; explicit formal tone is supported and unsupported tones are rejected.",
+      "id": "decision:tone",
+      "kind": "decision",
+      "module": "module:greetings",
+      "name": "Greeting tone",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/formatter.js"
+        }
+      ],
+      "status": "implemented"
+    },
+    "surface:cli": {
+      "description": "Accept a name and print the greeting without rebuilding its text.",
+      "id": "surface:cli",
+      "kind": "surface",
+      "module": "module:interface",
+      "name": "Greeting interface",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/cli.js"
+        }
+      ],
+      "status": "implemented"
+    }
+  },
+  "relationships": {
+    "relationship:authority": {
+      "description": "The formatter determines greeting text semantics.",
+      "from": "component:formatter",
+      "id": "relationship:authority",
+      "kind": "authority_for",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/formatter.js"
+        }
+      ],
+      "status": "implemented",
+      "to": "contract:greeting"
+    },
+    "relationship:boundary": {
+      "description": "Do not reconstruct text in the CLI.",
+      "from": "surface:cli",
+      "id": "relationship:boundary",
+      "kind": "constrained_by",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/cli.js"
+        }
+      ],
+      "status": "implemented",
+      "to": "boundary:presentation"
+    },
+    "relationship:cli-calls": {
+      "description": "The interface delegates greeting creation.",
+      "from": "surface:cli",
+      "id": "relationship:cli-calls",
+      "kind": "depends_on",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/cli.js"
+        }
+      ],
+      "status": "implemented",
+      "to": "component:greeter"
+    },
+    "relationship:formats": {
+      "description": "The service delegates text semantics to the formatter.",
+      "from": "component:greeter",
+      "id": "relationship:formats",
+      "kind": "depends_on",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/greeter.js"
+        }
+      ],
+      "status": "implemented",
+      "to": "component:formatter"
+    },
+    "relationship:localization": {
+      "description": "Localization would require a separate contract decision.",
+      "from": "decision:localization",
+      "id": "relationship:localization",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "unresolved",
+      "to": "contract:greeting"
+    },
+    "relationship:owns-greeting": {
+      "description": "The greeting service owns delivery of the greeting capability.",
+      "from": "component:greeter",
+      "id": "relationship:owns-greeting",
+      "kind": "owns",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/greeter.js"
+        }
+      ],
+      "status": "implemented",
+      "to": "capability:greet"
+    },
+    "relationship:preserves": {
+      "description": "Preserve the formatting result.",
+      "from": "component:greeter",
+      "id": "relationship:preserves",
+      "kind": "preserves",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/greeter.js"
+        }
+      ],
+      "status": "implemented",
+      "to": "contract:greeting"
+    },
+    "relationship:provides": {
+      "description": "The service provides greeting behavior.",
+      "from": "component:greeter",
+      "id": "relationship:provides",
+      "kind": "provides",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/greeter.js"
+        }
+      ],
+      "status": "implemented",
+      "to": "capability:greet"
+    },
+    "relationship:tone": {
+      "description": "The accepted tone choice extends the format contract with an explicit formal variant.",
+      "from": "decision:tone",
+      "id": "relationship:tone",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/formatter.js"
+        }
+      ],
+      "status": "implemented",
+      "to": "contract:greeting"
+    }
+  }
+}

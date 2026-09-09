@@ -1,24 +1,26 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Architecture Graph config v1",
   "type": "object",
-  "additionalProperties": false,
+  "properties": {
+    "configVersion": {
+      "type": "string",
+      "const": "1"
+    },
+    "graph": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "generated": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    }
+  },
   "required": [
     "configVersion",
     "graph",
     "generated"
   ],
-  "properties": {
-    "configVersion": {
-      "const": "1"
-    },
-    "graph": {
-      "type": "string",
-      "minLength": 1
-    },
-    "generated": {
-      "type": "string",
-      "minLength": 1
-    }
-  }
+  "additionalProperties": false
 }

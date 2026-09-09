@@ -1,0 +1,30 @@
+{
+  "revision": "7fcbe6b64ec6cd5bd436107a15d29818949ed4d6",
+  "files": [
+    {
+      "path": "src/architecture/architecture-graph-schema.ts",
+      "sha256": "03fc2f9203ac2a9ffb9a0c504cd67557567b4948eb870ecabc3157eafd27a4b6",
+      "status": ""
+    },
+    {
+      "path": "src/architecture/architecture-graph-compiled-artifacts.ts",
+      "sha256": "a528295c8f44112afc11d68ed88b640efe943c21aa11df3494dffb615d06cdc2",
+      "status": ""
+    },
+    {
+      "path": "src/architecture/architecture-graph-context-neighborhood-loader.ts",
+      "sha256": "c8f0668b58bda6ed7e608141875bdda75eaedbdfe4d178b628ad32089f327232",
+      "status": ""
+    },
+    {
+      "path": "src/architecture/architecture-graph-module-manifest-contract.ts",
+      "sha256": "913147e5f146c8a5be0b5f74e285660d45e72388c9a5dbe0312341e7545c0aa8",
+      "status": ""
+    },
+    {
+      "path": "src/architecture/architecture-graph-index-and-modularization-readiness.ts",
+      "sha256": "9a32bf93d877221a3a68240e7c477660f24b0d11b80ef1e377db5fab19667c59",
+      "status": ""
+    }
+  ]
+}

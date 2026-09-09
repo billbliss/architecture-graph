@@ -1,0 +1,64 @@
+{
+  "neighborhoods": {
+    "boundary:presentation": {
+      "inbound": [
+        "relationship:boundary"
+      ],
+      "outbound": []
+    },
+    "capability:greet": {
+      "inbound": [
+        "relationship:owns-greeting",
+        "relationship:provides"
+      ],
+      "outbound": []
+    },
+    "component:formatter": {
+      "inbound": [
+        "relationship:formats"
+      ],
+      "outbound": [
+        "relationship:authority"
+      ]
+    },
+    "component:greeter": {
+      "inbound": [
+        "relationship:cli-calls"
+      ],
+      "outbound": [
+        "relationship:formats",
+        "relationship:owns-greeting",
+        "relationship:preserves",
+        "relationship:provides"
+      ]
+    },
+    "contract:greeting": {
+      "inbound": [
+        "relationship:authority",
+        "relationship:localization",
+        "relationship:preserves",
+        "relationship:tone"
+      ],
+      "outbound": []
+    },
+    "decision:localization": {
+      "inbound": [],
+      "outbound": [
+        "relationship:localization"
+      ]
+    },
+    "decision:tone": {
+      "inbound": [],
+      "outbound": [
+        "relationship:tone"
+      ]
+    },
+    "surface:cli": {
+      "inbound": [],
+      "outbound": [
+        "relationship:boundary",
+        "relationship:cli-calls"
+      ]
+    }
+  }
+}

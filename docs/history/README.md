@@ -8,4 +8,4 @@ For current instructions, start with [getting started](../getting-started.md) or
 - [Early validation record](validation-results.md): checks performed during initial development, not the status of the latest build.
 - [Original Filmcraft adoption plan](filmcraft-adoption.md): an early intended use, not a prerequisite for other projects.
 
-The JSON files record source revisions and file fingerprints. `source-roadmap.patch` preserves the exact uncommitted roadmap change inspected during extraction. They are provenance records, not setup files.
+The JSON files record source revisions and file fingerprints. Private project names and local root paths in these records are redacted; revision IDs and recorded hashes are unchanged. They are provenance records, not setup files.

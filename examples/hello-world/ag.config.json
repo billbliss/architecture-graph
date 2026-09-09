@@ -1,5 +1,5 @@
 {
   "configVersion": "1",
-  "graph": "architecture/graph.json",
+  "graph": "architecture/graph.yaml",
   "generated": "architecture/generated"
 }

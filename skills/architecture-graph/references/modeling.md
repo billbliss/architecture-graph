@@ -6,7 +6,7 @@ A useful graph helps answer questions that are otherwise easy to lose: who owns 
 
 A **component** is where behavior lives; a **capability** is the responsibility it provides. A **contract** describes an obligation, such as a greeting format or an API response rule. An **authority** relationship records which part decides the meaning others should preserve.
 
-Other supported kinds are `actor`, `artifact`, `transform`, `surface`, `policy`, `boundary`, and `decision`. Use a decision to keep a question, its alternatives, and eventual resolution visible. Prefer a clear description to adding more entries just because the vocabulary allows them.
+Original AG vocabulary also includes `data_object`, `evidence_surface`, `adapter`, `workflow`, and `constraint`. An evidence surface records a design concept; it does not execute or certify evidence. Other supported kinds are `actor`, `artifact`, `transform`, `surface`, `policy`, `boundary`, and `decision`. Use a decision to keep a question, its alternatives, and eventual resolution visible. Prefer a clear description to adding more entries just because the vocabulary allows them.
 
 ## Say what is known
 
@@ -26,7 +26,7 @@ Every relationship needs a description explaining why the connection matters.
 
 | Relationship | Meaning and supported direction |
 | --- | --- |
-| `owns` | An actor or component owns an idea; declared ownership has one owner and no cycles |
+| `owns` | An actor, component, or capability owns an idea; declared ownership has one owner and no cycles |
 | `provides` | A component, surface, or transform supplies a capability |
 | `authority_for` | An actor, component, or contract decides the meaning of a capability, contract, or artifact |
 | `governed_by` | An idea follows a policy |
@@ -46,3 +46,7 @@ Each node has `id`, `kind`, `name`, `description`, `status`, and `references`. I
 References must use local paths within the project, without symlinks, parent traversal, URLs, or wildcards. See `schema/graph.schema.json` in the installed toolkit for the full accepted shape. Unknown fields are errors.
 
 These rules catch broken records. They cannot establish whether the graph covers everything important, whether all design statements agree in meaning, or whether the program respects its boundaries.
+
+## Make shared boundaries visible
+
+Optional `modules` group related responsibilities inside the same canonical graph. Each module has an ID, name, description, and lists of imported and exported node IDs. A node can name its `module`. A relationship crossing modules requires the source module to import its target and the target module to export that node. This makes shared boundaries reviewable. See the [reference](../../../docs/reference.md) for the complete shape and additional relationship kinds.

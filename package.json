@@ -1,6 +1,6 @@
 {
   "name": "@architecture-graph/toolkit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Portable architectural declarations, context, and derived guidance",
   "type": "module",
   "private": true,
@@ -11,7 +11,10 @@
     "ag": "bin/ag.js"
   },
   "exports": {
-    ".": "./src/index.js",
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js"
+    },
     "./schema": "./schema/graph.schema.json"
   },
   "files": [
@@ -27,18 +30,31 @@
     "examples/hello-world/app.test.js",
     "examples/hello-world/src",
     "examples/hello-world/architecture",
-    "examples/hello-world/stages"
+    "examples/hello-world/stages",
+    "lib",
+    "tsconfig.json"
   ],
   "scripts": {
-    "test": "node --test test/*.test.js",
+    "test": "npm run build && node --test test/*.test.js",
     "test:consumer": "node test/consumer.mjs",
     "verify": "npm test && npm run test:consumer",
     "package": "node scripts/package.mjs",
-    "test:package": "node scripts/test-package.mjs"
+    "test:package": "node scripts/test-package.mjs",
+    "build": "tsc -p tsconfig.json && node scripts/schema.mjs",
+    "prepack": "npm run build"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/billbliss/architecture-graph.git"
-  }
+  },
+  "dependencies": {
+    "yaml": "2.9.0",
+    "zod": "4.6.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.2",
+    "typescript": "5.9.3"
+  },
+  "types": "./lib/index.d.ts"
 }

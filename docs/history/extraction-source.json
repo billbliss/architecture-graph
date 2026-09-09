@@ -1,5 +1,5 @@
 {
-  "sourceRoot": "/Users/billbliss/dev/alpha-engine",
+  "sourceRoot": "<private-source-root>",
   "revision": "7fcbe6b64ec6cd5bd436107a15d29818949ed4d6",
   "inspectionDate": "2026-09-09",
   "files": [
@@ -39,7 +39,7 @@
       "status": ""
     },
     {
-      "path": "architecture/graph/alpha-engine-architecture.yaml",
+      "path": "architecture/graph/<private-project>-architecture.yaml",
       "sha256": "b123a5374faadc5046d963927a8ab451fb6694dfbf968afa3b7d94e3a6a52796",
       "status": ""
     }

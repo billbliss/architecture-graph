@@ -40,8 +40,17 @@ jobs:
           package-manager-cache: false
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - run: npm run verify
-      - name: Check committed example guidance
-        run: git diff --exit-code -- examples/hello-world/architecture/generated
+      - name: Check committed schemas and example artifacts
+        run: git diff --exit-code -- schema examples/hello-world/architecture/generated
+
+      - name: Upload example architecture context
+        if: matrix.os == 'ubuntu-latest' && matrix.node == '22'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: hello-world-architecture-context-${{ github.sha }}
+          path: examples/hello-world/architecture/generated/
+          if-no-files-found: error
+          retention-days: 30
 
   package:
     name: Package verified tarball

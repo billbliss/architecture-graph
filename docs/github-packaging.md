@@ -4,6 +4,10 @@ A downloadable package lets a project use AG without depending on the toolkit's 
 
 If you just want to adopt AG, download a package and follow [getting started](getting-started.md). The build instructions below are for people maintaining the toolkit or trying local changes.
 
+This page covers building the **toolkit package**. To generate **your project’s graph indexes** on a shared runner, see [indexes and generation in CI](indexing-and-ci.md).
+
+The package can model projects in any language, but installing and running it requires Node/npm. A tarball is an npm package, not a standalone executable; see [toolchain impact](languages-and-toolchain.md).
+
 ## Download from GitHub Actions
 
 Open this repository's **Actions → Validate and package**, choose a successful run, and download `architecture-graph-<commit SHA>` from **Artifacts**. Extract the ZIP. It contains:
@@ -30,7 +34,7 @@ Choose the command for your system. Then copy the `.tgz` into your project's `ve
 
 The **Validate and package** workflow runs for pushes to `main`, pull requests targeting `main`, tags beginning with `v`, and manual requests from the Actions page. It tests on Linux with Node 22 and 24 and on macOS with Node 22. Packaging waits for those checks to pass.
 
-Each download remains available for 30 days. For a lasting release, attach the tested tarball and checksum to a GitHub Release. A version tag must match the package version—for example, `v0.1.0`. The workflow does not create a release or publish to npm for you.
+Each download remains available for 30 days. For a lasting release, attach the tested tarball and checksum to a GitHub Release. A version tag must match the package version—for example, `v0.2.0`. The workflow does not create a release or publish to npm for you.
 
 ## Build and try a local package
 

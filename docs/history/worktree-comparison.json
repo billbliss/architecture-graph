@@ -1,6 +1,6 @@
 [
   {
-    "worktree": "/Users/billbliss/dev/alpha-engine",
+    "worktree": "<private-source-root>",
     "branch": "ag-y-canonical-graph-semantic-proof-authority",
     "revision": "7fcbe6b64ec6cd5bd436107a15d29818949ed4d6",
     "files": [
@@ -37,7 +37,7 @@
     ]
   },
   {
-    "worktree": "/Users/billbliss/dev/alpha-engine-ag-v",
+    "worktree": "<private-source-root>-ag-v",
     "branch": "ag-v-entry-closure-import-reachability",
     "revision": "899f40bac8cd4e8be2d0bb2be74a1e5b15b59a16",
     "files": [
@@ -74,7 +74,7 @@
     ]
   },
   {
-    "worktree": "/Users/billbliss/dev/alpha-engine-ag-z",
+    "worktree": "<private-source-root>-ag-z",
     "branch": "ag-aa-finite-callable-binding-authority",
     "revision": "1a17900bdfec82f4d54b3ed4fb360a8ec9ed3146",
     "files": [
@@ -111,7 +111,7 @@
     ]
   },
   {
-    "worktree": "/Users/billbliss/dev/alpha-engine-ag-ab",
+    "worktree": "<private-source-root>-ag-ab",
     "branch": "ag-ab-source-bound-finite-process-authority",
     "revision": "5a968c87f78c2cf80dbf13a696e19ad5f85f0183",
     "files": [

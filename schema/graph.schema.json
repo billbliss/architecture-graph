@@ -1,18 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Architecture Graph graph v1",
   "type": "object",
-  "additionalProperties": false,
-  "required": [
-    "schemaVersion",
-    "id",
-    "title",
-    "description",
-    "nodes",
-    "relationships"
-  ],
   "properties": {
     "schemaVersion": {
+      "type": "string",
       "const": "1"
     },
     "id": {
@@ -33,21 +24,13 @@
       "type": "array",
       "items": {
         "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "id",
-          "kind",
-          "name",
-          "description",
-          "status",
-          "references"
-        ],
         "properties": {
           "id": {
             "type": "string",
             "pattern": "^[a-z][a-z0-9_-]*:[a-z0-9][a-z0-9._-]*$"
           },
           "kind": {
+            "type": "string",
             "enum": [
               "actor",
               "component",
@@ -58,7 +41,12 @@
               "surface",
               "policy",
               "boundary",
-              "decision"
+              "decision",
+              "data_object",
+              "evidence_surface",
+              "adapter",
+              "workflow",
+              "constraint"
             ]
           },
           "name": {
@@ -72,6 +60,7 @@
             "pattern": "\\S"
           },
           "status": {
+            "type": "string",
             "enum": [
               "proposed",
               "implemented",
@@ -82,13 +71,9 @@
             "type": "array",
             "items": {
               "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "kind",
-                "path"
-              ],
               "properties": {
                 "kind": {
+                  "type": "string",
                   "enum": [
                     "design",
                     "implementation"
@@ -96,39 +81,60 @@
                 },
                 "path": {
                   "type": "string",
-                  "minLength": 1
+                  "minLength": 1,
+                  "pattern": "\\S"
                 },
                 "description": {
                   "type": "string",
                   "minLength": 1,
                   "pattern": "\\S"
                 }
-              }
+              },
+              "required": [
+                "kind",
+                "path"
+              ],
+              "additionalProperties": false
             }
+          },
+          "module": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]*:[a-z0-9][a-z0-9._-]*$"
+          },
+          "classification": {
+            "type": "string",
+            "enum": [
+              "canonical",
+              "retained_oracle",
+              "compatibility_boundary",
+              "future_candidate",
+              "guardrail",
+              "graph_coverage_gap"
+            ]
           }
-        }
+        },
+        "required": [
+          "id",
+          "kind",
+          "name",
+          "description",
+          "status",
+          "references"
+        ],
+        "additionalProperties": false
       }
     },
     "relationships": {
       "type": "array",
       "items": {
         "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "id",
-          "kind",
-          "from",
-          "to",
-          "description",
-          "status",
-          "references"
-        ],
         "properties": {
           "id": {
             "type": "string",
             "pattern": "^[a-z][a-z0-9_-]*:[a-z0-9][a-z0-9._-]*$"
           },
           "kind": {
+            "type": "string",
             "enum": [
               "owns",
               "provides",
@@ -139,7 +145,12 @@
               "governed_by",
               "authority_for",
               "constrained_by",
-              "affects"
+              "affects",
+              "adapts",
+              "validates",
+              "supersedes",
+              "emits_evidence",
+              "guarded_by"
             ]
           },
           "from": {
@@ -156,6 +167,7 @@
             "pattern": "\\S"
           },
           "status": {
+            "type": "string",
             "enum": [
               "proposed",
               "implemented",
@@ -166,13 +178,9 @@
             "type": "array",
             "items": {
               "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "kind",
-                "path"
-              ],
               "properties": {
                 "kind": {
+                  "type": "string",
                   "enum": [
                     "design",
                     "implementation"
@@ -180,18 +188,87 @@
                 },
                 "path": {
                   "type": "string",
-                  "minLength": 1
+                  "minLength": 1,
+                  "pattern": "\\S"
                 },
                 "description": {
                   "type": "string",
                   "minLength": 1,
                   "pattern": "\\S"
                 }
-              }
+              },
+              "required": [
+                "kind",
+                "path"
+              ],
+              "additionalProperties": false
             }
           }
-        }
+        },
+        "required": [
+          "id",
+          "kind",
+          "from",
+          "to",
+          "description",
+          "status",
+          "references"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]*:[a-z0-9][a-z0-9._-]*$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "exports": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_-]*:[a-z0-9][a-z0-9._-]*$"
+            }
+          },
+          "imports": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_-]*:[a-z0-9][a-z0-9._-]*$"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "exports",
+          "imports"
+        ],
+        "additionalProperties": false
       }
     }
-  }
+  },
+  "required": [
+    "schemaVersion",
+    "id",
+    "title",
+    "description",
+    "nodes",
+    "relationships"
+  ],
+  "additionalProperties": false
 }

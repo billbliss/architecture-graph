@@ -1,0 +1,60 @@
+{
+  "sources": {
+    "requirements.md": {
+      "nodeIds": [
+        "boundary:presentation",
+        "capability:greet",
+        "component:formatter",
+        "component:greeter",
+        "contract:greeting",
+        "decision:localization",
+        "decision:tone",
+        "surface:cli"
+      ],
+      "relationshipIds": [
+        "relationship:authority",
+        "relationship:boundary",
+        "relationship:cli-calls",
+        "relationship:formats",
+        "relationship:localization",
+        "relationship:owns-greeting",
+        "relationship:preserves",
+        "relationship:provides",
+        "relationship:tone"
+      ]
+    },
+    "src/cli.js": {
+      "nodeIds": [
+        "boundary:presentation",
+        "surface:cli"
+      ],
+      "relationshipIds": [
+        "relationship:boundary",
+        "relationship:cli-calls"
+      ]
+    },
+    "src/formatter.js": {
+      "nodeIds": [
+        "component:formatter",
+        "contract:greeting",
+        "decision:tone"
+      ],
+      "relationshipIds": [
+        "relationship:authority",
+        "relationship:tone"
+      ]
+    },
+    "src/greeter.js": {
+      "nodeIds": [
+        "capability:greet",
+        "component:greeter"
+      ],
+      "relationshipIds": [
+        "relationship:formats",
+        "relationship:owns-greeting",
+        "relationship:preserves",
+        "relationship:provides"
+      ]
+    }
+  }
+}

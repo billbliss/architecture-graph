@@ -1,103 +1,33 @@
 # Hello-world architecture
 
-This briefing brings the recorded design together so you can understand the responsibilities and rules before making a change. It is generated from `architecture/graph.json`; update that file to change the design.
+This briefing helps you find the recorded design before making a change. The complete authored graph is `architecture/graph.yaml`.
 
-AG checks these records and their file references. It does not prove that the code follows the design.
+Structural validation only; declarations and file existence do not prove implementation conformance.
 
-## Before a change
-
-Use the project's installed `ag context --id <id>` or `ag context --file <path>` command to find the relevant design. Read the connected responsibilities, rules, and open questions. Proposed work is a plan; unresolved work still needs a decision.
-
-When the design changes, update the graph alongside the code. Run application tests, then `ag validate`, `ag generate`, and `ag check`. Regenerate this briefing instead of editing it directly.
-
-## What this graph covers
+## Scope
 
 Greeting CLI, service, and formatting semantics; excludes persistence and network. Localization is not yet decided.
 
-## Responsibilities and decisions
+The graph records 8 ideas, 9 relationships, and 2 logical modules in one file.
 
-### Presentation boundary
+## Find the relevant design
 
-The CLI must consume greeting text without independently reconstructing it.
+Use the project's installed `ag context --id <id>` or `ag context --file <path>`. You can also use `--module <id>`, `--guardrail <id>`, or `--query <text>`. Results include incoming and outgoing relationships. Read the referenced files and keep open questions visible.
 
-Status: **implemented** · ID: `boundary:presentation`
+Context is limited to 60 nodes and 120 examined relationships by default. A shortened result explicitly says it is incomplete. Narrow the lookup or raise `--max-nodes` and `--max-relationships` when needed. This briefing is an overview, not the full architecture.
 
-- Design document: `requirements.md`
-- Implementation file: `src/cli.js`
+## Logical modules
 
-### Greet a person
+- **Greeting interface** (`module:interface`): Accept input and display the returned greeting.
+- **Greeting behavior** (`module:greetings`): Own greeting delivery and the single formatting authority.
 
-Return a greeting for a supplied name.
+## Open questions
 
-Status: **implemented** · ID: `capability:greet`
+- `decision:localization`: Whether to localize greetings is unresolved; localization is excluded from this implementation.
+- `relationship:localization`: Localization would require a separate contract decision.
 
-- Design document: `requirements.md`
-- Implementation file: `src/greeter.js`
+## Keep the record useful
 
-### Formatter
+When the design changes, update the single graph alongside the code. Proposed work is a plan; unresolved work still needs a decision. Run application tests, then `ag validate`, `ag generate`, and `ag check`. Regenerate this briefing instead of editing it directly.
 
-Determine greeting text and normalize blank names to world.
-
-Status: **implemented** · ID: `component:formatter`
-
-- Design document: `requirements.md`
-- Implementation file: `src/formatter.js`
-
-### Greeting service
-
-Provide the greeting capability by calling the formatter.
-
-Status: **implemented** · ID: `component:greeter`
-
-- Design document: `requirements.md`
-- Implementation file: `src/greeter.js`
-
-### Greeting format
-
-Trim names; empty names become world. Friendly returns Hello, NAME!; formal returns Good day, NAME. Reject unsupported tones.
-
-Status: **implemented** · ID: `contract:greeting`
-
-- Design document: `requirements.md`
-- Implementation file: `src/formatter.js`
-
-### Localization
-
-Whether to localize greetings is unresolved; localization is excluded from this implementation.
-
-Status: **unresolved** · ID: `decision:localization`
-
-- Design document: `requirements.md`
-
-### Greeting tone
-
-Resolved: friendly remains the default; explicit formal tone is supported and unsupported tones are rejected.
-
-Status: **implemented** · ID: `decision:tone`
-
-- Design document: `requirements.md`
-- Implementation file: `src/formatter.js`
-
-### Greeting interface
-
-Accept a name and print the greeting without rebuilding its text.
-
-Status: **implemented** · ID: `surface:cli`
-
-- Design document: `requirements.md`
-- Implementation file: `src/cli.js`
-
-## How they connect
-
-- **Formatter → Greeting format** (implemented): The formatter determines greeting text semantics. [`authority_for`, `relationship:authority`]
-- **Greeting interface → Presentation boundary** (implemented): Do not reconstruct text in the CLI. [`constrained_by`, `relationship:boundary`]
-- **Greeting interface → Greeting service** (implemented): The interface delegates greeting creation. [`depends_on`, `relationship:cli-calls`]
-- **Greeting service → Formatter** (implemented): The service delegates text semantics to the formatter. [`depends_on`, `relationship:formats`]
-- **Localization → Greeting format** (unresolved): Localization would require a separate contract decision. [`affects`, `relationship:localization`]
-- **Greeting service → Greet a person** (implemented): The greeting service owns delivery of the greeting capability. [`owns`, `relationship:owns-greeting`]
-- **Greeting service → Greeting format** (implemented): Preserve the formatting result. [`preserves`, `relationship:preserves`]
-- **Greeting service → Greet a person** (implemented): The service provides greeting behavior. [`provides`, `relationship:provides`]
-- **Greeting tone → Greeting format** (implemented): The accepted tone choice extends the format contract with an explicit formal variant. [`affects`, `relationship:tone`]
-
----
-Generated by AG 0.1.0. Input fingerprint: `d03ba7bed2152a3cfd11d544f5fb0fa7ff6ac34557f60840f6427863af4ac4db`. This identifies the records used for this briefing, not evidence of correct behavior.
+Generated by AG 0.2.0. Declaration fingerprint: `3659a88ede4e3fa2ab16e5ddf6034ca1b44de922df3ff4a87acc38475d2f8994`. This identifies the records, not evidence of correct behavior.

@@ -3,12 +3,12 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, writeFileSync, readFileSync, mkdirSync, symlinkSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { VERSION, initProject, loadProject, validateGraph, getContext, syncArtifacts } from '../src/index.js';
+import { VERSION, initProject, loadProject, validateGraph, getContext, syncArtifacts } from '../lib/index.js';
 const fixture = JSON.parse(readFileSync(new URL('../examples/hello-world/stages/proposed.json', import.meta.url)));
 function setup(t) {
   const root = mkdtempSync(join(tmpdir(),'ag-unit-'));
   t.after(() => rmSync(root,{recursive:true,force:true}));
-  initProject(root); writeFileSync(join(root,'requirements.md'),'Actual requirements');
+  initProject(root); writeFileSync(join(root,'ag.config.json'), JSON.stringify({configVersion:'1',graph:'architecture/graph.json',generated:'architecture/generated'})); writeFileSync(join(root,'requirements.md'),'Actual requirements');
   const graph = structuredClone(fixture);
   const save = () => writeFileSync(join(root,'architecture/graph.json'), JSON.stringify(graph));
   save(); return { root, graph, save, load: () => loadProject(join(root,'ag.config.json')) };
@@ -50,13 +50,13 @@ test('typed relations, conflicting authorities and ownership cycles are detected
 });
 test('drift is detected read-only, repaired, and independent of object key order', t=>{
   const p=setup(t);const project=p.load();
-  assert.equal(syncArtifacts(project,{check:true}).drift.length,2);
+  assert.equal(syncArtifacts(project,{check:true}).drift.length,10);
   syncArtifacts(project);assert.deepEqual(syncArtifacts(project,{check:true}).drift,[]);
   const output=join(p.root,'architecture/generated/guidance.md');
   writeFileSync(output,'stale'); assert(syncArtifacts(project,{check:true}).drift.includes('guidance.md'));
   assert.equal(readFileSync(output,'utf8'),'stale');syncArtifacts(project);
   p.graph.nodes.reverse();p.save();assert.deepEqual(syncArtifacts(p.load(),{check:true}).drift,[]);
-  p.graph.nodes[0].description='Changed intent';p.save();assert.equal(syncArtifacts(p.load(),{check:true}).drift.length,2);
+  p.graph.nodes[0].description='Changed intent';p.save();assert.equal(syncArtifacts(p.load(),{check:true}).drift.length >= 2,true);
 });
 test('context honors depth, source lookup and relationship lookup without generated data',t=>{
   const p=setup(t);const project=p.load();

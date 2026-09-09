@@ -1,0 +1,13 @@
+{
+  "guardrails": {
+    "boundary:presentation": {
+      "guardedNodeIds": [
+        "surface:cli"
+      ],
+      "nodeId": "boundary:presentation",
+      "relationshipIds": [
+        "relationship:boundary"
+      ]
+    }
+  }
+}

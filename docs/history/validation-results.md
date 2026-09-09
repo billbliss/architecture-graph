@@ -10,13 +10,13 @@ A freshly packaged toolkit was installed in a separate temporary project. That p
 
 The example then added formal greetings, updated its graph, detected stale guidance, and regenerated it. Deliberate mistakes were caught: a relationship pointing to a missing idea, a duplicate ID, an implemented record without an implementation reference, and a nonexistent source file. The public JavaScript import and the checked-in example also worked with the installed package.
 
-The 12 focused tests passed, covering record validation, file boundaries, ownership conflicts, context retrieval, generated output, custom paths, safe initialization, and toolkit/skill version alignment. The skill passed its frontmatter validator using a temporary PyYAML 6.0.3 installation; that Python dependency is not needed by users of AG. The inspected Alpha Engine source files remained unchanged.
+The 12 focused tests passed, covering record validation, file boundaries, ownership conflicts, context retrieval, generated output, custom paths, safe initialization, and toolkit/skill version alignment. The skill passed its frontmatter validator using a temporary PyYAML 6.0.3 installation; that Python dependency is not needed by users of AG. The inspected private application’s source files remained unchanged.
 
 ## A limitation demonstrated on purpose
 
 The test replaced the formatter with code that returned the wrong greeting. AG still passed: the design records were well-formed and their files existed. The application's tests failed. This showed why a passing AG check cannot establish correct behavior or architectural conformance.
 
-No independent Codex-session trial, Filmcraft document modeling, Windows run, or AAG assessment was performed in this initial record.
+No independent Codex-session trial, Filmcraft document modeling, or Windows run was performed in this initial record.
 
 ## Packaging checks added afterward
 

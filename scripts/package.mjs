@@ -10,6 +10,7 @@ const manifest = JSON.parse(readFileSync(resolve(root, 'package.json')));
 if (process.env.GITHUB_REF_TYPE === 'tag' && process.env.GITHUB_REF_NAME !== `v${manifest.version}`) {
   throw new Error(`Tag must match package version: v${manifest.version}`);
 }
+execFileSync('npm', ['run', 'build'], { cwd: root, stdio: 'inherit' });
 mkdirSync(output, { recursive: true });
 const [packed] = JSON.parse(execFileSync('npm', ['pack', '--json', '--ignore-scripts', '--pack-destination', output], {
   cwd: root, encoding: 'utf8',

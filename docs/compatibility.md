@@ -1,41 +1,42 @@
 # What AG can tell you—and how to upgrade
 
-AG helps you keep a design record understandable and internally consistent. Knowing the limits of that record is part of using it well.
+AG helps you keep a design record understandable and internally consistent. It can show the rules connected to a part of your software and catch broken references. It does not establish that the program follows those rules.
 
-## A useful check, not a guarantee about the code
+For example, a formatter can be recorded as the authority for greeting text while another component secretly builds its own greeting. AG checks the declaration, not the runtime behavior. Application tests and review still matter. The hello-world tests deliberately demonstrate that difference.
 
-Suppose the graph says a formatter owns the wording of a greeting. AG can check that the formatter is recorded, the relationship is valid, and the referenced file exists. It cannot tell whether another part of the application secretly builds its own greeting.
+## The 0.2.0 foundation
 
-That distinction matters: a well-formed design record can still describe software inaccurately. Marking something `implemented` is a statement by the author, backed by a file reference—not a conclusion reached by AG. A document mislabeled as implementation will not be recognized as such by the toolkit.
+The toolkit and skill are **0.2.0**. Graph and configuration format **1** remain readable; generated artifacts use format **2**. New projects start with one YAML file. The toolkit also reads existing standalone JSON graphs, so changing formats is optional. Older toolkit versions may reject the added fields and vocabulary; compatibility is from 0.1 data to the 0.2 reader.
 
-Use application tests and review to check behavior. The [hello-world example](../examples/hello-world/README.md) deliberately includes a test in which broken code passes AG checks and fails the application tests.
+TypeScript is now the editable implementation source. npm consumers run the compiled JavaScript without installing a compiler. The package includes declarations and source maps, so developers can navigate back to the source and use the library with type checking. See [developing the toolkit](development.md).
 
-## Keep the model small enough to be useful
+There is one authored graph per configuration. Logical modules, when useful, are groups inside that file. The graph can grow while node, relationship, file, guardrail and module indexes provide focused access. Context output has explicit limits and reports truncation. Loading still parses and validates the entire authored file; free-text queries scan records. These are local file tools, not an incremental graph database.
 
-This release reads one JSON graph per configuration. It finds related ideas through their connections and simple text matching. It does not scan source code or automatically extract a design from documents; Codex can help with that through the skill.
+## Upgrade an existing standalone project
 
-The generated briefing includes the whole graph. Model the decisions people need to preserve, rather than cataloging every file. AG cannot discover missing coverage, resolve every contradiction, check source symbols or line numbers, or enforce a runtime boundary.
+1. Install the 0.2.0 package and refresh the copied skill after reviewing local changes.
+2. Keep the existing JSON graph and configuration if desired; they remain supported. `ag init` is for new projects and will not overwrite your files.
+3. Run `ag validate`, then `ag generate` to rebuild the new indexes and briefing. Review the changes and run `ag check`.
+4. If you prefer YAML, convert the same graph data to one `.yaml` file and update `config.graph`. Compare the loaded data before removing the JSON file. Do not maintain two independent authored copies.
 
-`ag check` compares the two generated files with the current graph and configuration. It does not check whether source contents changed. Other files in the generated directory are left alone.
+The public library adds typed project/index data and bounded context options. Context now reports cache origin, truncation and traversal statistics. Queries that formerly returned the whole matching graph may return a bounded result; callers must inspect `truncated`. The generated briefing is an overview rather than a full graph dump.
 
-## Keep the toolkit and skill together
+Zod supplies runtime validation and TypeScript types from the same schemas. Exported JSON schemas are generated from those definitions. Unknown fields and versions are rejected. Duplicate mapping keys are rejected in both YAML and JSON. YAML input must be one document without aliases or custom tags; comments remain untouched because normal maintenance only reads the authored file.
 
-The toolkit and bundled skill are **0.1.0**. The graph, configuration, and generated-file formats each use version **1**. These format numbers describe how records are stored; they are separate from the toolkit release number.
+## Compatibility with the original AG
 
-When upgrading, keep the new package archive and lockfile with your project, replace the copied skill after reviewing local changes, and read the release notes. Run `ag --version` to check the installed toolkit. Then validate the graph and review regenerated guidance.
+The original AG kinds (`workflow`, `adapter`, `data_object`, `constraint`, `evidence_surface`) and relationships (`adapts`, `validates`, `supersedes`, `emits_evidence`, `guarded_by`) are accepted alongside the standalone vocabulary. The original classification labels can be recorded, but do not certify behavior. Both underscore and hyphen ID prefixes for original underscore kinds are accepted without renaming IDs.
 
-Unknown graph/configuration versions and unknown fields are rejected so an unsupported change cannot silently disappear. An incompatible format change will need a new format version and a documented migration. During the 0.x series, incompatible command or library changes require a minor release; compatible fixes use a patch release.
+This is vocabulary continuity, not a promise to load the predecessor application’s YAML unchanged. The standalone graph still uses its own lifecycle, reference and top-level fields. There is no automatic migration from that private application. The exact preservation/exclusion decisions are in [the foundation inventory](foundation.md).
 
-This standalone format does not promise compatibility with Alpha Engine's historical YAML or assurance records. Early local verification used Node 22.17.0 on macOS. The repository's Actions workflow is configured for Node 22/24 on Linux and Node 22 on macOS; consult its run results for the build you use. Windows has not been tested.
+## What the checks do not establish
 
-## Details for integrations
+An `implemented` status is a claim by its author, with a reference to a real file. AG cannot recognize a document falsely labeled as implementation, discover every missing architectural concept, or prove a runtime boundary.
 
-The included JSON schemas describe the supported files. The toolkit's schema checker implements the rules those schemas use; it is not a general-purpose JSON Schema engine. JSON follows Node's parsing behavior: repeated object keys keep the last value, while duplicate graph IDs are checked separately. Use editor checks and review to catch authoring mistakes as well.
+Compiled indexes are disposable. Their metadata checks graph identity, declaration fingerprint, toolkit version, and file checksums. Missing, stale or damaged indexes cause a canonical fallback. Checksums detect stale or damaged files; they are not signed assurance evidence or protection against a deliberately forged cache and metadata. `generate` always rebuilds from authored declarations.
 
-The [reference](reference.md) explains the difference between loading a project and validating a graph object directly.
+`check` covers the ten owned generated files. It does not fingerprint implementation contents or remove unrelated files. A code-only behavioral change can leave graph checks green. Stable locators identify a graph record by file, section and ID, not by source-code symbol or line number.
 
-## Where assurance could fit later
+## Future versions
 
-Architecture Assurance Graph (AAG) addresses a different question: what evidence shows that an implementation follows the declared design? It is outside this toolkit's current scope.
-
-Stable graph IDs would let a future assurance system attach evidence to a specific design idea even after its source file moves. That system would also need to identify the design version and implementation revision, and decide when evidence has become outdated. The fingerprints in today's generated files identify their inputs; they are not proof of correct behavior. No proof runner or evidence integration is implemented here.
+Incompatible authored formats require a new format version and migration instructions. During 0.x, incompatible CLI/library changes require a minor release; compatible fixes use a patch release. Keep the toolkit, copied skill and project lockfile aligned. The Actions matrix covers Linux Node 22/24 and macOS Node 22; consult actual run results. Windows has not been tested.

@@ -1,0 +1,40 @@
+# Copy to .github/workflows/generate-architecture.yml in a consuming project.
+# Commit ag.config.json, the graph, referenced files, package.json and lockfile.
+# For tarball installation, also commit the archive referenced by the lockfile.
+name: Generate architecture context
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ag-context-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      # generate loads and validates the graph before writing its derived files.
+      - run: ./node_modules/.bin/ag generate
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: architecture-context-${{ github.sha }}
+          # Match ag.config.json's generated directory if you customize it.
+          path: architecture/generated/
+          if-no-files-found: error
+          retention-days: 30

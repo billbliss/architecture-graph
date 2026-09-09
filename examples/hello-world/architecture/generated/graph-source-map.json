@@ -1,0 +1,99 @@
+{
+  "locators": {
+    "boundary:presentation": {
+      "objectId": "boundary:presentation",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "capability:greet": {
+      "objectId": "capability:greet",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "component:formatter": {
+      "objectId": "component:formatter",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "component:greeter": {
+      "objectId": "component:greeter",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "contract:greeting": {
+      "objectId": "contract:greeting",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "decision:localization": {
+      "objectId": "decision:localization",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "decision:tone": {
+      "objectId": "decision:tone",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "module:greetings": {
+      "objectId": "module:greetings",
+      "path": "architecture/graph.yaml",
+      "section": "modules"
+    },
+    "module:interface": {
+      "objectId": "module:interface",
+      "path": "architecture/graph.yaml",
+      "section": "modules"
+    },
+    "relationship:authority": {
+      "objectId": "relationship:authority",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:boundary": {
+      "objectId": "relationship:boundary",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:cli-calls": {
+      "objectId": "relationship:cli-calls",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:formats": {
+      "objectId": "relationship:formats",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:localization": {
+      "objectId": "relationship:localization",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:owns-greeting": {
+      "objectId": "relationship:owns-greeting",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:preserves": {
+      "objectId": "relationship:preserves",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:provides": {
+      "objectId": "relationship:provides",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:tone": {
+      "objectId": "relationship:tone",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "surface:cli": {
+      "objectId": "surface:cli",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "crossModule": {
+    "relationship:cli-calls": {
+      "edgeId": "relationship:cli-calls",
+      "fromModule": "module:interface",
+      "targetId": "component:greeter",
+      "toModule": "module:greetings"
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "modules": {
+    "module:greetings": {
+      "description": "Own greeting delivery and the single formatting authority.",
+      "exports": [
+        "component:greeter"
+      ],
+      "id": "module:greetings",
+      "imports": [],
+      "name": "Greeting behavior",
+      "nodeIds": [
+        "capability:greet",
+        "component:formatter",
+        "component:greeter",
+        "contract:greeting",
+        "decision:localization",
+        "decision:tone"
+      ],
+      "relationshipIds": [
+        "relationship:authority",
+        "relationship:formats",
+        "relationship:localization",
+        "relationship:owns-greeting",
+        "relationship:preserves",
+        "relationship:provides",
+        "relationship:tone"
+      ]
+    },
+    "module:interface": {
+      "description": "Accept input and display the returned greeting.",
+      "exports": [],
+      "id": "module:interface",
+      "imports": [
+        "component:greeter"
+      ],
+      "name": "Greeting interface",
+      "nodeIds": [
+        "boundary:presentation",
+        "surface:cli"
+      ],
+      "relationshipIds": [
+        "relationship:boundary",
+        "relationship:cli-calls"
+      ]
+    }
+  }
+}

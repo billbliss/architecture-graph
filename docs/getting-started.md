@@ -2,25 +2,28 @@
 
 The goal is to give your project a shared record of its important design decisions. Installing a tool is only the first part. The useful result is a small graph that you and your coding agent can consult before making changes.
 
+AG works with any programming language. Running its commands requires Node.js 22 or later and npm, even when your application uses another language. For a project without Node tooling, this adds a development toolchain and npm dependency files; it does not change the application’s runtime. Read [language support and toolchain impact](languages-and-toolchain.md) before deciding whether that overhead fits your project.
+
 AG has three pieces:
 
 | Piece | What it does | Where it lives |
 | --- | --- | --- |
 | Toolkit | Provides commands to read the graph, check it, and generate guidance | Installed in your project's `node_modules` |
 | Codex skill (optional) | Gives Codex a method for creating and maintaining the graph | Copied into your project's `.agents/skills` |
-| Your graph | Records your project's responsibilities, rules, relationships, and open decisions | Usually `architecture/graph.json` in your repository |
+| Your graph | Records your project's responsibilities, rules, relationships, and open decisions | Usually `architecture/graph.yaml` in your repository |
 
 You can use AG without Codex by editing the graph yourself. Adding the skill does not automatically create a graph or change your application.
 
 ## 1. Get the package
 
-You need Node.js 22 or later and npm. The current package is `architecture-graph-toolkit-0.1.0.tgz`, an archive npm can install. It is not yet available by package name from the npm registry.
+You need Node.js 22 or later and npm. The current package is `architecture-graph-toolkit-0.2.0.tgz`, an archive npm can install. It is not yet available by package name from the npm registry.
 
 Download a successful build from the repository's **Actions → Validate and package → Artifacts**, and extract the ZIP. See [package downloads](github-packaging.md) for details and checksum instructions.
 
 If you already have a clone of this toolkit repository, you can create the same kind of package there:
 
 ```sh
+npm ci
 npm run package
 ```
 
@@ -33,11 +36,11 @@ Go to **your project's root directory**. Put a copy of the downloaded or built `
 If your project does not have a `package.json`, run `npm init -y` first. This is just a way to install the AG tooling; your application does not have to use JavaScript.
 
 ```sh
-npm install --save-dev ./vendor/architecture-graph-toolkit-0.1.0.tgz
+npm install --save-dev ./vendor/architecture-graph-toolkit-0.2.0.tgz
 ./node_modules/.bin/ag --version
 ```
 
-The second command should print `0.1.0`. The toolkit is now installed, but it has not read your documents or created a design.
+npm installs the YAML and schema libraries along with the toolkit; an initial install needs registry access unless those dependencies are cached. The second command should print `0.2.0`. The toolkit is now installed, but it has not read your documents or created a design.
 
 ## 3. Let Codex help, or create the graph yourself
 
@@ -66,22 +69,20 @@ Create the starter files:
 ./node_modules/.bin/ag init --id graph:my-project --title "My project architecture"
 ```
 
-This creates `ag.config.json` and an **empty** `architecture/graph.json`. It does not scan code or decide what your architecture should be. If these files already exist, it refuses to replace them.
+This creates `ag.config.json` and an **empty** `architecture/graph.yaml`. It does not scan code or decide what your architecture should be. If these files already exist, it refuses to replace them.
 
 Read your requirements, then edit the graph's description to explain its scope. Add a few important ideas to the `nodes` array. For example:
 
-```json
-{
-  "id": "capability:welcome",
-  "kind": "capability",
-  "name": "Welcome a person",
-  "description": "Proposed responsibility: welcome a person by name. The wording is still undecided.",
-  "status": "proposed",
-  "references": []
-}
+```yaml
+- id: capability:welcome
+  kind: capability
+  name: Welcome a person
+  description: "Proposed responsibility: welcome a person by name. The wording is still undecided."
+  status: proposed
+  references: []
 ```
 
-This is a single entry to add to `nodes`, not a replacement for the whole graph file. The [modeling guide](../skills/architecture-graph/references/modeling.md) explains how to connect ideas and cite existing documents. A project with no code can have a useful graph: leave planned work proposed and unanswered choices unresolved.
+Replace the starter’s `nodes: []` with `nodes:` followed by this list entry, indented two spaces. Keep the other top-level fields. This adds one idea; it does not replace the whole graph. The [modeling guide](../skills/architecture-graph/references/modeling.md) explains how to connect ideas and cite existing documents. A project with no code can have a useful graph: leave planned work proposed and unanswered choices unresolved.
 
 ## 4. Check and use the graph
 
