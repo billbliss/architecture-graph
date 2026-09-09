@@ -1,0 +1,150 @@
+[
+  {
+    "worktree": "/Users/billbliss/dev/alpha-engine",
+    "branch": "ag-y-canonical-graph-semantic-proof-authority",
+    "revision": "7fcbe6b64ec6cd5bd436107a15d29818949ed4d6",
+    "files": [
+      {
+        "path": "docs/architecture-graph/architecture-graph.md",
+        "sha256": "5ccd547baed8794bd29fcc0f8fbab5c3b34111f50dbb1385741fbaaa3ddc9d79",
+        "status": ""
+      },
+      {
+        "path": "docs/architecture-graph/architecture-graph-roadmap.md",
+        "sha256": "4ed2016071581486182650d641a2f04420433cba36d507b6507a63f95566c215",
+        "status": "M docs/architecture-graph/architecture-graph-roadmap.md"
+      },
+      {
+        "path": "src/architecture/architecture-graph-schema.ts",
+        "sha256": "03fc2f9203ac2a9ffb9a0c504cd67557567b4948eb870ecabc3157eafd27a4b6",
+        "status": ""
+      },
+      {
+        "path": "src/architecture/architecture-graph-loader.ts",
+        "sha256": "74a5b6b0db848d42d751895268773160af060e307f86cdcf3f29c8e64db1df50",
+        "status": ""
+      },
+      {
+        "path": "src/architecture/architecture-graph-context-neighborhood-loader.ts",
+        "sha256": "c8f0668b58bda6ed7e608141875bdda75eaedbdfe4d178b628ad32089f327232",
+        "status": ""
+      },
+      {
+        "path": "src/architecture/architecture-graph-compiled-artifacts.ts",
+        "sha256": "a528295c8f44112afc11d68ed88b640efe943c21aa11df3494dffb615d06cdc2",
+        "status": ""
+      }
+    ]
+  },
+  {
+    "worktree": "/Users/billbliss/dev/alpha-engine-ag-v",
+    "branch": "ag-v-entry-closure-import-reachability",
+    "revision": "899f40bac8cd4e8be2d0bb2be74a1e5b15b59a16",
+    "files": [
+      {
+        "path": "docs/architecture-graph/architecture-graph.md",
+        "sha256": "5a04d5c0bb2ba52b161e2bc5c2d70262bbede535afdd09cbc8012a872889ff90",
+        "status": ""
+      },
+      {
+        "path": "docs/architecture-graph/architecture-graph-roadmap.md",
+        "sha256": "323c7e0df391e3db93bd92b812439cb042763f4e4bc67cfac7ae309fd675169a",
+        "status": ""
+      },
+      {
+        "path": "src/architecture/architecture-graph-schema.ts",
+        "sha256": "03fc2f9203ac2a9ffb9a0c504cd67557567b4948eb870ecabc3157eafd27a4b6",
+        "status": ""
+      },
+      {
+        "path": "src/architecture/architecture-graph-loader.ts",
+        "sha256": "97e496867ccd1fab3d09d9fd0849e077ae45b4521434095f06ad3031f06b0b66",
+        "status": ""
+      },
+      {
+        "path": "src/architecture/architecture-graph-context-neighborhood-loader.ts",
+        "sha256": "c8f0668b58bda6ed7e608141875bdda75eaedbdfe4d178b628ad32089f327232",
+        "status": ""
+      },
+      {
+        "path": "src/architecture/architecture-graph-compiled-artifacts.ts",
+        "sha256": "a528295c8f44112afc11d68ed88b640efe943c21aa11df3494dffb615d06cdc2",
+        "status": ""
+      }
+    ]
+  },
+  {
+    "worktree": "/Users/billbliss/dev/alpha-engine-ag-z",
+    "branch": "ag-aa-finite-callable-binding-authority",
+    "revision": "1a17900bdfec82f4d54b3ed4fb360a8ec9ed3146",
+    "files": [
+      {
+        "path": "docs/architecture-graph/architecture-graph.md",
+        "sha256": "5ccd547baed8794bd29fcc0f8fbab5c3b34111f50dbb1385741fbaaa3ddc9d79",
+        "status": ""
+      },
+      {
+        "path": "docs/architecture-graph/architecture-graph-roadmap.md",
+        "sha256": "7bf6b6f4b3ecd2e8f4795edd532812538c231c25bdf984534b69f92650416abf",
+        "status": ""
+      },
+      {
+        "path": "src/architecture/architecture-graph-schema.ts",
+        "sha256": "03fc2f9203ac2a9ffb9a0c504cd67557567b4948eb870ecabc3157eafd27a4b6",
+        "status": ""
+      },
+      {
+        "path": "src/architecture/architecture-graph-loader.ts",
+        "sha256": "74a5b6b0db848d42d751895268773160af060e307f86cdcf3f29c8e64db1df50",
+        "status": ""
+      },
+      {
+        "path": "src/architecture/architecture-graph-context-neighborhood-loader.ts",
+        "sha256": "c8f0668b58bda6ed7e608141875bdda75eaedbdfe4d178b628ad32089f327232",
+        "status": ""
+      },
+      {
+        "path": "src/architecture/architecture-graph-compiled-artifacts.ts",
+        "sha256": "a528295c8f44112afc11d68ed88b640efe943c21aa11df3494dffb615d06cdc2",
+        "status": ""
+      }
+    ]
+  },
+  {
+    "worktree": "/Users/billbliss/dev/alpha-engine-ag-ab",
+    "branch": "ag-ab-source-bound-finite-process-authority",
+    "revision": "5a968c87f78c2cf80dbf13a696e19ad5f85f0183",
+    "files": [
+      {
+        "path": "docs/architecture-graph/architecture-graph.md",
+        "sha256": "5ccd547baed8794bd29fcc0f8fbab5c3b34111f50dbb1385741fbaaa3ddc9d79",
+        "status": ""
+      },
+      {
+        "path": "docs/architecture-graph/architecture-graph-roadmap.md",
+        "sha256": "4989e2531d39081dee5a1877c4310bcab1133155b81fca1808e03605a0034c2c",
+        "status": ""
+      },
+      {
+        "path": "src/architecture/architecture-graph-schema.ts",
+        "sha256": "03fc2f9203ac2a9ffb9a0c504cd67557567b4948eb870ecabc3157eafd27a4b6",
+        "status": ""
+      },
+      {
+        "path": "src/architecture/architecture-graph-loader.ts",
+        "sha256": "74a5b6b0db848d42d751895268773160af060e307f86cdcf3f29c8e64db1df50",
+        "status": ""
+      },
+      {
+        "path": "src/architecture/architecture-graph-context-neighborhood-loader.ts",
+        "sha256": "c8f0668b58bda6ed7e608141875bdda75eaedbdfe4d178b628ad32089f327232",
+        "status": ""
+      },
+      {
+        "path": "src/architecture/architecture-graph-compiled-artifacts.ts",
+        "sha256": "a528295c8f44112afc11d68ed88b640efe943c21aa11df3494dffb615d06cdc2",
+        "status": ""
+      }
+    ]
+  }
+]

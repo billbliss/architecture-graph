@@ -1,0 +1,37 @@
+{
+  "name": "@architecture-graph/toolkit",
+  "version": "0.1.0",
+  "description": "Portable architectural declarations, context, and derived guidance",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "ag": "bin/ag.js"
+  },
+  "exports": {
+    ".": "./src/index.js",
+    "./schema": "./schema/graph.schema.json"
+  },
+  "files": [
+    "bin",
+    "src",
+    "schema",
+    "skills",
+    "docs",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "test:consumer": "node test/consumer.mjs",
+    "verify": "npm test && npm run test:consumer",
+    "package": "node scripts/package.mjs",
+    "test:package": "node scripts/test-package.mjs"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/billbliss/architecture-graph.git"
+  }
+}

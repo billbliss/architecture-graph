@@ -1,0 +1,47 @@
+{
+  "sourceRoot": "/Users/billbliss/dev/alpha-engine",
+  "revision": "7fcbe6b64ec6cd5bd436107a15d29818949ed4d6",
+  "inspectionDate": "2026-09-09",
+  "files": [
+    {
+      "path": "docs/architecture-graph/architecture-graph.md",
+      "sha256": "5ccd547baed8794bd29fcc0f8fbab5c3b34111f50dbb1385741fbaaa3ddc9d79",
+      "status": ""
+    },
+    {
+      "path": "docs/architecture-graph/architecture-graph-roadmap.md",
+      "sha256": "4ed2016071581486182650d641a2f04420433cba36d507b6507a63f95566c215",
+      "status": "M docs/architecture-graph/architecture-graph-roadmap.md"
+    },
+    {
+      "path": "src/architecture/architecture-graph-schema.ts",
+      "sha256": "03fc2f9203ac2a9ffb9a0c504cd67557567b4948eb870ecabc3157eafd27a4b6",
+      "status": ""
+    },
+    {
+      "path": "src/architecture/architecture-graph-loader.ts",
+      "sha256": "74a5b6b0db848d42d751895268773160af060e307f86cdcf3f29c8e64db1df50",
+      "status": ""
+    },
+    {
+      "path": "src/architecture/architecture-graph-context-neighborhood-loader.ts",
+      "sha256": "c8f0668b58bda6ed7e608141875bdda75eaedbdfe4d178b628ad32089f327232",
+      "status": ""
+    },
+    {
+      "path": "src/architecture/architecture-graph-compiled-artifacts.ts",
+      "sha256": "a528295c8f44112afc11d68ed88b640efe943c21aa11df3494dffb615d06cdc2",
+      "status": ""
+    },
+    {
+      "path": "scripts/architecture/load-architecture-graph-context.ts",
+      "sha256": "606495380ae60fed41dae6182adf768098c4125dcf7d8ab83dc88a8dce4c9d9d",
+      "status": ""
+    },
+    {
+      "path": "architecture/graph/alpha-engine-architecture.yaml",
+      "sha256": "b123a5374faadc5046d963927a8ab451fb6694dfbf968afa3b7d94e3a6a52796",
+      "status": ""
+    }
+  ]
+}

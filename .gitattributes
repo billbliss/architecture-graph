@@ -1,0 +1,2 @@
+# Preserve the exact inspected source diff, including its blank context lines.
+docs/source-roadmap.patch -whitespace

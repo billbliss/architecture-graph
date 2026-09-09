@@ -1,0 +1,7 @@
+{
+  "name": "ag-hello-world",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": { "start": "node src/cli.js", "test": "node --test app.test.js", "ag": "ag" }
+}

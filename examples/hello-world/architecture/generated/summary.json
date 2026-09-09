@@ -1,0 +1,26 @@
+{
+  "artifactVersion": "1",
+  "toolVersion": "0.1.0",
+  "declarationDigest": "d03ba7bed2152a3cfd11d544f5fb0fa7ff6ac34557f60840f6427863af4ac4db",
+  "graphId": "graph:hello-world",
+  "title": "Hello-world architecture",
+  "scope": "Greeting CLI, service, and formatting semantics; excludes persistence and network. Localization is not yet decided.",
+  "limitation": "Structural validation only; declarations and file existence do not prove implementation conformance.",
+  "nodes": 8,
+  "relationships": 9,
+  "statuses": {
+    "proposed": 0,
+    "implemented": 7,
+    "unresolved": 1
+  },
+  "unresolved": [
+    {
+      "id": "decision:localization",
+      "description": "Whether to localize greetings is unresolved; localization is excluded from this implementation."
+    },
+    {
+      "id": "relationship:localization",
+      "description": "Localization would require a separate contract decision."
+    }
+  ]
+}
