@@ -1,7 +1,7 @@
 schemaVersion: "1"
 id: graph:architecture-graph
 title: Architecture Graph architecture
-description: "AG 0.3.0: declarations, context, interfaces and delivery. Software ownership is
+description: "AG 0.3.1: declarations, context, interfaces and delivery. Software ownership is
   modeled; human assignments remain open. Excludes predecessor internals, explorer UI and
   implementation assurance."
 nodes:

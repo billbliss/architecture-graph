@@ -30,7 +30,7 @@ AG records what the software is intended to do. It does not prove that the code 
 You need a coding agent (Claude Code or Codex), Node.js 22 or later, and npm. The npm installation command for this release is:
 
 ```sh
-npm install --save-dev @billbliss/architecture-graph@0.3.0
+npm install --save-dev @billbliss/architecture-graph@0.3.1
 ```
 
 You can also [install from a tarball](docs/github-packaging.md) when testing a local build.
@@ -51,4 +51,4 @@ The [project history](docs/history/README.md) records how AG was created. It is 
 
 The toolkit is developed in TypeScript and ships JavaScript ready to run, with types and source maps for developers. Your project owns one YAML graph.
 
-Version **0.3.0** · [MIT licensed](LICENSE)
+Version **0.3.1** · [MIT licensed](LICENSE)

@@ -1,6 +1,6 @@
 {
   "name": "@billbliss/architecture-graph",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Portable architectural declarations, context, and derived guidance",
   "type": "module",
   "engines": {

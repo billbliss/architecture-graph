@@ -21,7 +21,7 @@ From the root of a clone of the Architecture Graph repository:
 ```sh
 npm run package
 cd examples/hello-world
-npm install --no-save --package-lock=false ../../dist/billbliss-architecture-graph-0.3.0.tgz
+npm install --no-save --package-lock=false ../../dist/billbliss-architecture-graph-0.3.1.tgz
 npm start -- Ada formal
 npm test
 npm run ag -- context --file src/formatter.js

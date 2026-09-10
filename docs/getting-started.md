@@ -23,11 +23,11 @@ Use Claude Code or Codex, Node.js 22 or later, and npm. Your application can use
 The npm installation command for this release is:
 
 ```sh
-npm install --save-dev @billbliss/architecture-graph@0.3.0
+npm install --save-dev @billbliss/architecture-graph@0.3.1
 ./node_modules/.bin/ag --version
 ```
 
-For a local build, use [tarball installation](github-packaging.md). npm installs the toolkit's dependencies as well. Initial installation requires registry access unless the packages are cached. The version command should print `0.3.0`; installation does not infer your design.
+For a local build, use [tarball installation](github-packaging.md). npm installs the toolkit's dependencies as well. Initial installation requires registry access unless the packages are cached. The version command should print `0.3.1`; installation does not infer your design.
 
 ## 3. Bootstrap the graph with your coding agent
 

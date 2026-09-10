@@ -28,13 +28,13 @@ shasum -a 256 -c SHA256SUMS
 sha256sum -c SHA256SUMS
 ```
 
-Choose the command for your system. Then copy the `.tgz` into your project's `vendor/` folder and run `npm install --save-dev ./vendor/billbliss-architecture-graph-0.3.0.tgz` from that project’s root (run `npm init -y` first if it has no manifest). Continue with [agent setup](getting-started.md#3-bootstrap-the-graph-with-your-coding-agent). The metadata identifies a build; it is not evidence that your application's architecture is correct.
+Choose the command for your system. Then copy the `.tgz` into your project's `vendor/` folder and run `npm install --save-dev ./vendor/billbliss-architecture-graph-0.3.1.tgz` from that project’s root (run `npm init -y` first if it has no manifest). Continue with [agent setup](getting-started.md#3-bootstrap-the-graph-with-your-coding-agent). The metadata identifies a build; it is not evidence that your application's architecture is correct.
 
 ## What runs automatically?
 
 The **Validate and package** workflow runs for pushes to `main`, pull requests targeting `main`, tags beginning with `v`, and manual requests from the Actions page. It tests on Linux with Node 22 and 24 and on macOS with Node 22. Packaging waits for those checks to pass.
 
-Each download remains available for 30 days. For a lasting release, attach the tested tarball and checksum to a GitHub Release. A version tag must match the package version—for example, `v0.3.0`. A version-tag push can publish the tested archive to npm after the release configuration check and environment approval; see [release setup](publishing.md). Branch pushes, pull requests and manual runs do not publish. The workflow does not create a GitHub Release.
+Each download remains available for 30 days. For a lasting release, attach the tested tarball and checksum to a GitHub Release. A version tag must match the package version—for example, `v0.3.1`. A version-tag push can publish the tested archive to npm after the release configuration check and environment approval; see [release setup](publishing.md). Branch pushes, pull requests and manual runs do not publish. The workflow does not create a GitHub Release.
 
 ## Build and try a local package
 
