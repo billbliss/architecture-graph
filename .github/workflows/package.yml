@@ -40,6 +40,10 @@ jobs:
           package-manager-cache: false
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - run: npm run verify
+      - name: Validate AG self-model and check committed guidance
+        run: |
+          node bin/ag.js validate
+          node bin/ag.js check
       - name: Check committed schemas and example artifacts
         run: git diff --exit-code -- schema examples/hello-world/architecture/generated
 

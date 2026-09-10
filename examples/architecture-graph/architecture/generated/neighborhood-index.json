@@ -1,0 +1,285 @@
+{
+  "neighborhoods": {
+    "artifact:bundled-skill": {
+      "inbound": [
+        "relationship:agent-workflow",
+        "relationship:build-skill",
+        "relationship:installer-source"
+      ],
+      "outbound": [
+        "relationship:skill-context",
+        "relationship:skill-maintenance",
+        "relationship:skill-proof"
+      ]
+    },
+    "artifact:derived-indexes": {
+      "inbound": [
+        "relationship:indexes-produce"
+      ],
+      "outbound": []
+    },
+    "artifact:guidance-summary": {
+      "inbound": [
+        "relationship:generator-output",
+        "relationship:guidance-authority"
+      ],
+      "outbound": []
+    },
+    "boundary:declarations-not-proof": {
+      "inbound": [
+        "relationship:generator-proof",
+        "relationship:skill-proof",
+        "relationship:validator-proof"
+      ],
+      "outbound": []
+    },
+    "boundary:project-local-files": {
+      "inbound": [
+        "relationship:generator-files",
+        "relationship:installer-files",
+        "relationship:loader-files"
+      ],
+      "outbound": []
+    },
+    "capability:install-agent-skill": {
+      "inbound": [
+        "relationship:entrypoints-install",
+        "relationship:installer-owns",
+        "relationship:installer-provides",
+        "relationship:marketplace-installer"
+      ],
+      "outbound": []
+    },
+    "capability:load-project": {
+      "inbound": [
+        "relationship:context-project",
+        "relationship:entrypoints-project",
+        "relationship:generator-project",
+        "relationship:loader-owns",
+        "relationship:loader-provides"
+      ],
+      "outbound": []
+    },
+    "capability:maintain-guidance": {
+      "inbound": [
+        "relationship:entrypoints-guidance",
+        "relationship:guidance-owns",
+        "relationship:guidance-provides",
+        "relationship:skill-maintenance"
+      ],
+      "outbound": []
+    },
+    "capability:retrieve-context": {
+      "inbound": [
+        "relationship:context-owns",
+        "relationship:context-provides",
+        "relationship:entrypoints-context",
+        "relationship:skill-context"
+      ],
+      "outbound": []
+    },
+    "capability:ship-toolkit": {
+      "inbound": [
+        "relationship:delivery-owns",
+        "relationship:delivery-provides",
+        "relationship:windows-delivery"
+      ],
+      "outbound": []
+    },
+    "capability:validate-declarations": {
+      "inbound": [
+        "relationship:loader-validates",
+        "relationship:validator-owns",
+        "relationship:validator-provides"
+      ],
+      "outbound": []
+    },
+    "component:artifact-generator": {
+      "inbound": [
+        "relationship:fallback-generator"
+      ],
+      "outbound": [
+        "relationship:generator-files",
+        "relationship:generator-indexes",
+        "relationship:generator-output",
+        "relationship:generator-project",
+        "relationship:generator-proof",
+        "relationship:guidance-authority",
+        "relationship:guidance-owns",
+        "relationship:guidance-provides"
+      ]
+    },
+    "component:build-release": {
+      "inbound": [
+        "relationship:typescript-build"
+      ],
+      "outbound": [
+        "relationship:build-api",
+        "relationship:build-model",
+        "relationship:build-skill",
+        "relationship:delivery-owns",
+        "relationship:delivery-provides"
+      ]
+    },
+    "component:context-engine": {
+      "inbound": [],
+      "outbound": [
+        "relationship:context-authority",
+        "relationship:context-indexes",
+        "relationship:context-limits",
+        "relationship:context-owns",
+        "relationship:context-project",
+        "relationship:context-provides"
+      ]
+    },
+    "component:declaration-model": {
+      "inbound": [
+        "relationship:build-model",
+        "relationship:typescript-model"
+      ],
+      "outbound": [
+        "relationship:schema-authority"
+      ]
+    },
+    "component:lookup-indexes": {
+      "inbound": [
+        "relationship:context-indexes",
+        "relationship:generator-indexes",
+        "relationship:loader-indexes"
+      ],
+      "outbound": [
+        "relationship:indexes-locators",
+        "relationship:indexes-produce",
+        "relationship:locator-authority"
+      ]
+    },
+    "component:project-loader": {
+      "inbound": [
+        "relationship:fallback-loader",
+        "relationship:single-file-loader"
+      ],
+      "outbound": [
+        "relationship:loader-files",
+        "relationship:loader-indexes",
+        "relationship:loader-owns",
+        "relationship:loader-provides",
+        "relationship:loader-validates"
+      ]
+    },
+    "component:public-entrypoints": {
+      "inbound": [
+        "relationship:build-api"
+      ],
+      "outbound": [
+        "relationship:api-authority",
+        "relationship:entrypoints-context",
+        "relationship:entrypoints-guidance",
+        "relationship:entrypoints-install",
+        "relationship:entrypoints-project"
+      ]
+    },
+    "component:skill-installer": {
+      "inbound": [],
+      "outbound": [
+        "relationship:installer-files",
+        "relationship:installer-owns",
+        "relationship:installer-provides",
+        "relationship:installer-source"
+      ]
+    },
+    "component:structural-validator": {
+      "inbound": [],
+      "outbound": [
+        "relationship:module-authority",
+        "relationship:validator-format",
+        "relationship:validator-modules",
+        "relationship:validator-owns",
+        "relationship:validator-proof",
+        "relationship:validator-provides"
+      ]
+    },
+    "contract:authored-format": {
+      "inbound": [
+        "relationship:human-model",
+        "relationship:schema-authority",
+        "relationship:validator-format"
+      ],
+      "outbound": []
+    },
+    "contract:bounded-context": {
+      "inbound": [
+        "relationship:context-authority",
+        "relationship:context-limits"
+      ],
+      "outbound": []
+    },
+    "contract:logical-modules": {
+      "inbound": [
+        "relationship:module-authority",
+        "relationship:single-file-modules",
+        "relationship:validator-modules"
+      ],
+      "outbound": []
+    },
+    "contract:public-operations": {
+      "inbound": [
+        "relationship:api-authority",
+        "relationship:human-api"
+      ],
+      "outbound": []
+    },
+    "contract:stable-locators": {
+      "inbound": [
+        "relationship:indexes-locators",
+        "relationship:locator-authority"
+      ],
+      "outbound": []
+    },
+    "decision:agent-maintained-design": {
+      "inbound": [],
+      "outbound": [
+        "relationship:agent-workflow"
+      ]
+    },
+    "decision:canonical-fallback": {
+      "inbound": [],
+      "outbound": [
+        "relationship:fallback-generator",
+        "relationship:fallback-loader"
+      ]
+    },
+    "decision:human-ownership": {
+      "inbound": [],
+      "outbound": [
+        "relationship:human-api",
+        "relationship:human-model"
+      ]
+    },
+    "decision:marketplace-readiness": {
+      "inbound": [],
+      "outbound": [
+        "relationship:marketplace-installer"
+      ]
+    },
+    "decision:single-canonical-file": {
+      "inbound": [],
+      "outbound": [
+        "relationship:single-file-loader",
+        "relationship:single-file-modules"
+      ]
+    },
+    "decision:typescript-source": {
+      "inbound": [],
+      "outbound": [
+        "relationship:typescript-build",
+        "relationship:typescript-model"
+      ]
+    },
+    "decision:windows-support": {
+      "inbound": [],
+      "outbound": [
+        "relationship:windows-delivery"
+      ]
+    }
+  }
+}

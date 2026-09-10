@@ -1,0 +1,47 @@
+{
+  "artifactVersion": "2",
+  "toolVersion": "0.3.0",
+  "declarationDigest": "50360c87dd68185ccab71f22967f03ac1402687f8c48e260643ae594f854ef89",
+  "graphId": "graph:architecture-graph",
+  "title": "Architecture Graph architecture",
+  "scope": "AG 0.3.0: declarations, context, interfaces and delivery. Software ownership is modeled; human assignments remain open. Excludes predecessor internals, explorer UI and implementation assurance.",
+  "limitation": "Structural validation only; declarations and file existence do not prove implementation conformance.",
+  "nodes": 32,
+  "relationships": 57,
+  "modules": 4,
+  "statuses": {
+    "proposed": 0,
+    "implemented": 29,
+    "unresolved": 3
+  },
+  "unresolved": [
+    {
+      "id": "decision:human-ownership",
+      "description": "Modeling question: docs identify source responsibilities but do not assign human reviewers for schemas, public API and releases. Keep software ownership here; decide whether named maintainer/team ownership belongs in this graph or separate repository governance."
+    },
+    {
+      "id": "decision:marketplace-readiness",
+      "description": "Open: docs record no successful live marketplace test. Choose routes after testing agent installation, discovery, updates/removal and coexistence with project copies. Claude manifests do not establish Codex compatibility."
+    },
+    {
+      "id": "decision:windows-support",
+      "description": "Open: compatibility docs explicitly say Windows is untested and CI has no Windows job. Decide whether to add a supported Windows test target or continue documenting the gap; Node portability alone does not resolve it."
+    },
+    {
+      "id": "relationship:human-api",
+      "description": "Public interface review responsibility is not assigned to a named person in this model."
+    },
+    {
+      "id": "relationship:human-model",
+      "description": "Schema compatibility changes need a review owner if human governance is added to this record."
+    },
+    {
+      "id": "relationship:marketplace-installer",
+      "description": "Project-copy installation is implemented; additional marketplace routes need live verification before readiness claims."
+    },
+    {
+      "id": "relationship:windows-delivery",
+      "description": "Adding a supported platform would require CI and packaged consumer evidence; current matrix leaves Windows untested."
+    }
+  ]
+}

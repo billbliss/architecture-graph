@@ -38,7 +38,7 @@ The runner needs Node/npm even for a Python, Rust or other non-JavaScript applic
 
 Before enabling it:
 
-1. Commit the project's graph, `ag.config.json`, referenced files, `package.json` and lockfile. With the current tarball installation, also commit the archive referenced by the lockfile so `npm ci` can install it.
+1. Commit the project's graph, `ag.config.json`, referenced files, `package.json` and lockfile. If you install from a tarball, also commit the archive referenced by the lockfile so `npm ci` can install it.
 2. Adjust the default branch and generated-directory path in the workflow if your project uses different ones. The example expects the configuration at the repository root.
 3. If referenced files are produced by a build, add the necessary build step before generation. The template skips dependency lifecycle scripts; adapt that installation step if your project requires them.
 
@@ -55,3 +55,7 @@ AG checks the declaration fingerprint and toolkit version when loading. If your 
 For a follow-on job in the same workflow, GitHub's `download-artifact` action can restore the named artifact to the generated directory before invoking AG. See [GitHub's artifact guide](https://docs.github.com/en/actions/tutorials/store-and-share-data) for transfer and download instructions. The template retains downloads for 30 days; regenerate when an artifact is no longer available.
 
 You can instead commit generated output when reviewing those changes is valuable. In that model, run `ag check` **before** regeneration in CI so stale output fails the check. Choose that review policy knowingly: it still performs the generation work. With CI-produced downloads, developers can leave derived files untracked and use CI output for unchanged revisions, generating locally when they need fresh output before CI finishes.
+
+## See the pattern in AG itself
+
+The [self-model](https://github.com/billbliss/architecture-graph/tree/main/examples/architecture-graph) keeps its canonical YAML and ten generated views under `examples/architecture-graph/`. A root configuration lets it reference the actual toolkit source, tests and CI files. It demonstrates file, contract, module and guardrail lookups across a real design. Use a full checkout; this development model is not shipped as a runnable npm example. The repository workflow validates it and checks committed output before any regeneration.

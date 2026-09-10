@@ -1,0 +1,1105 @@
+schemaVersion: "1"
+id: graph:architecture-graph
+title: Architecture Graph architecture
+description: "AG 0.3.0: declarations, context, interfaces and delivery. Software ownership is
+  modeled; human assignments remain open. Excludes predecessor internals, explorer UI and
+  implementation assurance."
+nodes:
+  - id: component:declaration-model
+    kind: component
+    name: Declaration model
+    description: Defines strict runtime schemas and inferred TypeScript types. The build derives JSON
+      schemas from these definitions; exported schemas are not independently authored.
+    status: implemented
+    module: module:declarations
+    references:
+      - kind: implementation
+        path: src/schema.ts
+      - kind: implementation
+        path: scripts/schema.mjs
+      - kind: design
+        path: docs/development.md
+  - id: contract:authored-format
+    kind: contract
+    name: Authored format 1
+    description: One configured graph has stable IDs, typed nodes and relationships, lifecycle statuses
+      and local references. Unknown fields/versions and duplicate keys are rejected. YAML is the
+      default; legacy standalone JSON remains readable.
+    status: implemented
+    module: module:declarations
+    references:
+      - kind: implementation
+        path: src/schema.ts
+      - kind: implementation
+        path: src/serialization.ts
+      - kind: design
+        path: docs/compatibility.md
+  - id: component:project-loader
+    kind: component
+    name: Project loader
+    description: Loads explicit configuration, parses and validates the complete canonical graph and
+      references, then selects compiled or rebuilt indexes. The configuration directory is the
+      project root; no parent search. Loaded projects are snapshots to reload after edits.
+    status: implemented
+    module: module:declarations
+    references:
+      - kind: implementation
+        path: src/project.ts
+      - kind: design
+        path: docs/reference.md
+  - id: capability:load-project
+    kind: capability
+    name: Load a valid project snapshot
+    description: Combines configuration, canonical declarations, fingerprint and lookup index into a
+      Project shared by context and generation. Loading still reads and validates the whole graph
+      even when compiled indexes are current.
+    status: implemented
+    module: module:declarations
+    references:
+      - kind: implementation
+        path: src/project.ts
+      - kind: implementation
+        path: src/model.ts
+      - kind: design
+        path: docs/indexing-and-ci.md
+  - id: component:structural-validator
+    kind: component
+    name: Structural validator
+    description: Checks shape, globally unique identities, endpoint kinds, references, ownership cycles,
+      single owner/authority and module imports/exports. Unresolved owner/authority alternatives are
+      excluded from conflict checks; unassigned nodes are permitted.
+    status: implemented
+    module: module:declarations
+    references:
+      - kind: implementation
+        path: src/validation.ts
+      - kind: design
+        path: docs/reference.md
+  - id: capability:validate-declarations
+    kind: capability
+    name: Validate architectural records
+    description: Returns structural diagnostics for declarations and real reference files. Implemented
+      nodes and relationships require an implementation reference; AG cannot recognize a file
+      falsely labeled implementation.
+    status: implemented
+    module: module:declarations
+    references:
+      - kind: implementation
+        path: src/validation.ts
+      - kind: design
+        path: docs/compatibility.md
+  - id: boundary:project-local-files
+    kind: boundary
+    name: Project-local file boundary
+    description: Paths must be normalized, local to the configuration root, and free of parent
+      traversal, absolute paths, URLs, wildcards and symlink traversal. Generated output must not
+      contain configuration, canonical graph, or referenced inputs.
+    status: implemented
+    module: module:declarations
+    references:
+      - kind: implementation
+        path: src/paths.ts
+      - kind: implementation
+        path: src/project.ts
+      - kind: implementation
+        path: src/validation.ts
+      - kind: design
+        path: docs/reference.md
+  - id: boundary:declarations-not-proof
+    kind: boundary
+    name: Declarations are not implementation proof
+    description: AG checks records and file existence, not runtime behavior, architecture coverage,
+      source symbols or truth of implementation claims. Tests and review remain separate; checksums
+      and build metadata are not assurance evidence.
+    status: implemented
+    module: module:declarations
+    references:
+      - kind: implementation
+        path: src/model.ts
+      - kind: implementation
+        path: src/validation.ts
+      - kind: implementation
+        path: test/consumer.mjs
+      - kind: design
+        path: docs/compatibility.md
+  - id: contract:logical-modules
+    kind: contract
+    name: Logical module boundary contract
+    description: A node may belong to one declared module. Each cross-module relationship requires its
+      source module to import the target node and its target module to export it. These declarations
+      do not enforce source-code dependency boundaries.
+    status: implemented
+    module: module:declarations
+    references:
+      - kind: implementation
+        path: src/schema.ts
+      - kind: implementation
+        path: src/validation.ts
+      - kind: design
+        path: docs/reference.md
+  - id: decision:single-canonical-file
+    kind: decision
+    name: Keep one canonical graph
+    description: "Chosen and implemented: logical modules remain within one authored YAML/JSON file.
+      Generated indexes support focused retrieval while configuration selects the authoritative file."
+    status: implemented
+    module: module:declarations
+    references:
+      - kind: implementation
+        path: src/project.ts
+      - kind: implementation
+        path: src/serialization.ts
+      - kind: design
+        path: docs/foundation.md
+  - id: component:lookup-indexes
+    kind: component
+    name: Lookup indexes and cache
+    description: Builds node, relationship, neighborhood, source, module, cross-module, guardrail and
+      stable locator tables. Cache reads verify metadata and checksums and fall back on missing,
+      stale or damaged files.
+    status: implemented
+    module: module:context
+    references:
+      - kind: implementation
+        path: src/indexes.ts
+      - kind: implementation
+        path: src/compiled.ts
+      - kind: design
+        path: docs/indexing-and-ci.md
+  - id: artifact:derived-indexes
+    kind: artifact
+    name: Disposable compiled indexes
+    description: Seven index files plus compilation metadata use artifact format 2. Metadata binds graph
+      ID, declarations/configuration fingerprint, toolkit version and file checksums; it is not a
+      signature or implementation-content fingerprint.
+    status: implemented
+    module: module:context
+    references:
+      - kind: implementation
+        path: src/compiled.ts
+      - kind: implementation
+        path: src/serialization.ts
+      - kind: design
+        path: docs/compatibility.md
+  - id: contract:stable-locators
+    kind: contract
+    name: Stable declaration locators
+    description: A locator identifies the configured graph file, section and stable object ID. Insertion
+      and reorder do not change record identity; locators do not identify implementation symbols or
+      line numbers.
+    status: implemented
+    module: module:context
+    references:
+      - kind: implementation
+        path: src/indexes.ts
+      - kind: implementation
+        path: src/model.ts
+      - kind: implementation
+        path: test/foundation.test.js
+      - kind: design
+        path: docs/foundation.md
+  - id: component:context-engine
+    kind: component
+    name: Context retrieval
+    description: Retrieves incoming and outgoing neighborhoods by exactly one node/relationship ID,
+      declared source file, module, guardrail or case-insensitive text query. File lookup uses
+      declared references; text lookup scans records.
+    status: implemented
+    module: module:context
+    references:
+      - kind: implementation
+        path: src/context.ts
+      - kind: design
+        path: docs/reference.md
+  - id: capability:retrieve-context
+    kind: capability
+    name: Retrieve design before a change
+    description: Returns selected declarations, relationships, modules, cross-module dependencies and
+      locators, with cache origin, fallback reason, traversal stats and explicit incompleteness
+      warnings.
+    status: implemented
+    module: module:context
+    references:
+      - kind: implementation
+        path: src/context.ts
+      - kind: implementation
+        path: src/model.ts
+      - kind: design
+        path: docs/indexing-and-ci.md
+  - id: contract:bounded-context
+    kind: contract
+    name: Bounded context with visible omissions
+    description: "Defaults: depth 1, 60 nodes, 120 examined relationships. Depth is 0–3; node limits
+      2–1000; relationship limits 1–4000. Output/traversal are bounded, not full-graph loading or
+      text scanning. Callers must inspect truncated and warnings."
+    status: implemented
+    module: module:context
+    references:
+      - kind: implementation
+        path: src/context.ts
+      - kind: implementation
+        path: src/model.ts
+      - kind: design
+        path: docs/reference.md
+  - id: decision:canonical-fallback
+    kind: decision
+    name: Canonical declarations outrank cache
+    description: "Chosen and implemented: absent, stale or corrupt indexes cause canonical fallback.
+      Generation rebuilds from declarations even when a loaded cache exists. A maliciously forged
+      cache and metadata are outside the integrity guarantee."
+    status: implemented
+    module: module:context
+    references:
+      - kind: implementation
+        path: src/project.ts
+      - kind: implementation
+        path: src/compiled.ts
+      - kind: implementation
+        path: src/artifacts.ts
+      - kind: design
+        path: docs/compatibility.md
+  - id: component:artifact-generator
+    kind: component
+    name: Guidance and drift generation
+    description: Builds a bounded briefing, complete summary and compiled indexes from canonical
+      declarations. Check compares all ten owned files read-only; generate writes them after path
+      preflight and leaves unrelated output files alone.
+    status: implemented
+    module: module:interfaces
+    references:
+      - kind: implementation
+        path: src/artifacts.ts
+      - kind: design
+        path: docs/reference.md
+  - id: capability:maintain-guidance
+    kind: capability
+    name: Generate and check current guidance
+    description: Makes architecture discoverable and reports missing/stale generated files. A successful
+      check establishes agreement with declarations, not implementation behavior; generation
+      processes the whole graph.
+    status: implemented
+    module: module:interfaces
+    references:
+      - kind: implementation
+        path: src/artifacts.ts
+      - kind: design
+        path: docs/indexing-and-ci.md
+  - id: artifact:guidance-summary
+    kind: artifact
+    name: Generated briefing and summary
+    description: guidance.md is a bounded overview with retrieval and maintenance instructions, up to 12
+      modules and 10 open questions. summary.json preserves counts and all unresolved
+      nodes/relationships. Both are derived and never design authority.
+    status: implemented
+    module: module:interfaces
+    references:
+      - kind: implementation
+        path: src/artifacts.ts
+      - kind: design
+        path: docs/reference.md
+  - id: component:public-entrypoints
+    kind: component
+    name: CLI and typed library
+    description: The small bin launcher runs compiled CLI code; the public ESM library exports the same
+      toolkit operations and types. CLI dispatch owns option validation, JSON/text rendering, and
+      exit codes; it does not contain separate architecture semantics.
+    status: implemented
+    module: module:interfaces
+    references:
+      - kind: implementation
+        path: bin/ag.js
+      - kind: implementation
+        path: src/cli.ts
+      - kind: implementation
+        path: src/index.ts
+      - kind: implementation
+        path: package.json
+      - kind: design
+        path: docs/reference.md
+  - id: contract:public-operations
+    kind: contract
+    name: Public operation contract
+    description: CLI errors exit 1; stale check exits 2; success exits 0. Library loadProject throws on
+      invalid projects; validateGraph returns diagnostics and omits configuration-specific checks.
+      Consumers should load through loadProject before querying and reload after edits.
+    status: implemented
+    module: module:interfaces
+    references:
+      - kind: implementation
+        path: src/cli.ts
+      - kind: implementation
+        path: src/project.ts
+      - kind: implementation
+        path: src/index.ts
+      - kind: design
+        path: docs/reference.md
+  - id: component:skill-installer
+    kind: component
+    name: Project skill installer
+    description: Copies one bundled instruction folder into Claude Code and/or Codex project locations.
+      Preflights all selected destinations, rejects symlink destinations, and refuses replacement
+      unless force is explicit. Installation does not create or update a graph.
+    status: implemented
+    module: module:delivery
+    references:
+      - kind: implementation
+        path: src/skills.ts
+      - kind: implementation
+        path: test/toolkit.test.js
+      - kind: design
+        path: docs/skill-installation.md
+  - id: capability:install-agent-skill
+    kind: capability
+    name: Install shared agent instructions
+    description: Supports claude, codex, or both, with explicit project root and replacement choice.
+      Copied skill instructions are separate from toolkit installation and architecture authoring.
+    status: implemented
+    module: module:delivery
+    references:
+      - kind: implementation
+        path: src/skills.ts
+      - kind: implementation
+        path: src/cli.ts
+      - kind: design
+        path: docs/getting-started.md
+  - id: artifact:bundled-skill
+    kind: artifact
+    name: Shared modeling and maintenance instructions
+    description: One shipped skill teaches agents to read actual requirements, model intent and
+      uncertainty, retrieve context before changes, maintain implementation references, and
+      validate/generate/check. Project-installed copies can diverge and require deliberate refresh.
+    status: implemented
+    module: module:delivery
+    references:
+      - kind: implementation
+        path: skills/architecture-graph/SKILL.md
+      - kind: implementation
+        path: skills/architecture-graph/references/modeling.md
+      - kind: design
+        path: docs/skill-installation.md
+  - id: component:build-release
+    kind: component
+    name: Build and package pipeline
+    description: Compiles strict TypeScript to runnable JavaScript, declarations and source maps;
+      refreshes schemas; packs a local archive with checksum/build metadata. CI verifies Linux Node
+      22/24 and macOS Node 22, then uploads archives; the workflow does not publish.
+    status: implemented
+    module: module:delivery
+    references:
+      - kind: implementation
+        path: package.json
+      - kind: implementation
+        path: scripts/schema.mjs
+      - kind: implementation
+        path: scripts/package.mjs
+      - kind: implementation
+        path: .github/workflows/package.yml
+      - kind: design
+        path: docs/development.md
+      - kind: design
+        path: docs/publishing.md
+  - id: capability:ship-toolkit
+    kind: capability
+    name: Ship a portable typed toolkit
+    description: Packages CLI, ESM library, editable TypeScript, schemas, docs and skill; npm installs
+      declared runtime dependencies separately. Consumers need Node 22+ but not TypeScript;
+      modeled applications can use any language.
+      Local consumer tests exercise the packed public interfaces.
+    status: implemented
+    module: module:delivery
+    references:
+      - kind: implementation
+        path: package.json
+      - kind: implementation
+        path: test/consumer.mjs
+      - kind: implementation
+        path: scripts/test-package.mjs
+      - kind: design
+        path: docs/languages-and-toolchain.md
+  - id: decision:typescript-source
+    kind: decision
+    name: TypeScript is the editable implementation
+    description: "Chosen and implemented: edit src/, generate lib/ and JSON schemas. Zod unifies runtime
+      validation and inferred types; published JavaScript avoids requiring a compiler in consuming
+      projects."
+    status: implemented
+    module: module:delivery
+    references:
+      - kind: implementation
+        path: package.json
+      - kind: implementation
+        path: tsconfig.json
+      - kind: implementation
+        path: src/schema.ts
+      - kind: implementation
+        path: scripts/schema.mjs
+      - kind: design
+        path: docs/development.md
+  - id: decision:agent-maintained-design
+    kind: decision
+    name: Agent-maintained, human-directed design
+    description: "Chosen workflow: agents retrieve and maintain architecture alongside code; people
+      direct, resolve decisions and review. Commands remain manually usable. Skill installation
+      alone neither infers design nor proves that an agent followed these instructions."
+    status: implemented
+    module: module:delivery
+    references:
+      - kind: implementation
+        path: skills/architecture-graph/SKILL.md
+      - kind: design
+        path: README.md
+      - kind: design
+        path: docs/manual-operation.md
+  - id: decision:marketplace-readiness
+    kind: decision
+    name: Which marketplace routes are verified?
+    description: "Open: docs record no successful live marketplace test. Choose routes after testing
+      agent installation, discovery, updates/removal and coexistence with project copies. Claude
+      manifests do not establish Codex compatibility."
+    status: unresolved
+    module: module:delivery
+    references:
+      - kind: design
+        path: docs/publishing.md
+      - kind: design
+        path: docs/skill-installation.md
+  - id: decision:windows-support
+    kind: decision
+    name: Will Windows become a tested platform?
+    description: "Open: compatibility docs explicitly say Windows is untested and CI has no Windows job.
+      Decide whether to add a supported Windows test target or continue documenting the gap; Node
+      portability alone does not resolve it."
+    status: unresolved
+    module: module:delivery
+    references:
+      - kind: design
+        path: docs/compatibility.md
+      - kind: design
+        path: .github/workflows/package.yml
+  - id: decision:human-ownership
+    kind: decision
+    name: Who reviews cross-cutting contract changes?
+    description: "Modeling question: docs identify source responsibilities but do not assign human
+      reviewers for schemas, public API and releases. Keep software ownership here; decide whether
+      named maintainer/team ownership belongs in this graph or separate repository governance."
+    status: unresolved
+    module: module:delivery
+    references:
+      - kind: design
+        path: docs/development.md
+      - kind: design
+        path: docs/publishing.md
+relationships:
+  - id: relationship:loader-owns
+    kind: owns
+    from: component:project-loader
+    to: capability:load-project
+    description: This component owns the implementation and maintenance of this responsibility.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/project.ts
+  - id: relationship:loader-provides
+    kind: provides
+    from: component:project-loader
+    to: capability:load-project
+    description: Callers obtain this capability through the responsible implementation.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/project.ts
+  - id: relationship:validator-owns
+    kind: owns
+    from: component:structural-validator
+    to: capability:validate-declarations
+    description: This component owns the implementation and maintenance of this responsibility.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/validation.ts
+  - id: relationship:validator-provides
+    kind: provides
+    from: component:structural-validator
+    to: capability:validate-declarations
+    description: Callers obtain this capability through the responsible implementation.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/validation.ts
+  - id: relationship:context-owns
+    kind: owns
+    from: component:context-engine
+    to: capability:retrieve-context
+    description: This component owns the implementation and maintenance of this responsibility.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/context.ts
+  - id: relationship:context-provides
+    kind: provides
+    from: component:context-engine
+    to: capability:retrieve-context
+    description: Callers obtain this capability through the responsible implementation.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/context.ts
+  - id: relationship:guidance-owns
+    kind: owns
+    from: component:artifact-generator
+    to: capability:maintain-guidance
+    description: This component owns the implementation and maintenance of this responsibility.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/artifacts.ts
+  - id: relationship:guidance-provides
+    kind: provides
+    from: component:artifact-generator
+    to: capability:maintain-guidance
+    description: Callers obtain this capability through the responsible implementation.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/artifacts.ts
+  - id: relationship:installer-owns
+    kind: owns
+    from: component:skill-installer
+    to: capability:install-agent-skill
+    description: This component owns the implementation and maintenance of this responsibility.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/skills.ts
+  - id: relationship:installer-provides
+    kind: provides
+    from: component:skill-installer
+    to: capability:install-agent-skill
+    description: Callers obtain this capability through the responsible implementation.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/skills.ts
+  - id: relationship:delivery-owns
+    kind: owns
+    from: component:build-release
+    to: capability:ship-toolkit
+    description: This component owns the implementation and maintenance of this responsibility.
+    status: implemented
+    references:
+      - kind: implementation
+        path: package.json
+  - id: relationship:delivery-provides
+    kind: provides
+    from: component:build-release
+    to: capability:ship-toolkit
+    description: Callers obtain this capability through the responsible implementation.
+    status: implemented
+    references:
+      - kind: implementation
+        path: package.json
+  - id: relationship:schema-authority
+    kind: authority_for
+    from: component:declaration-model
+    to: contract:authored-format
+    description: Zod definitions decide the authored field shapes and runtime types; generated JSON
+      schemas must preserve them.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/schema.ts
+      - kind: implementation
+        path: scripts/schema.mjs
+  - id: relationship:module-authority
+    kind: authority_for
+    from: component:structural-validator
+    to: contract:logical-modules
+    description: Semantic validation decides membership and cross-module import/export obligations.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/validation.ts
+  - id: relationship:context-authority
+    kind: authority_for
+    from: component:context-engine
+    to: contract:bounded-context
+    description: The retrieval implementation defines accepted limits and omission reporting.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/context.ts
+  - id: relationship:locator-authority
+    kind: authority_for
+    from: component:lookup-indexes
+    to: contract:stable-locators
+    description: Index construction defines record identity through graph file, section and object ID.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/indexes.ts
+  - id: relationship:api-authority
+    kind: authority_for
+    from: component:public-entrypoints
+    to: contract:public-operations
+    description: Public exports and CLI dispatch define the supported entrypoints and observable command
+      outcomes.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/index.ts
+      - kind: implementation
+        path: src/cli.ts
+  - id: relationship:guidance-authority
+    kind: authority_for
+    from: component:artifact-generator
+    to: artifact:guidance-summary
+    description: Rendering defines the disposable briefing and summary shapes; their design content
+      comes from declarations.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/artifacts.ts
+  - id: relationship:loader-validates
+    kind: depends_on
+    from: component:project-loader
+    to: capability:validate-declarations
+    description: Every project load validates canonical declarations before considering cache use.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/project.ts
+  - id: relationship:validator-format
+    kind: preserves
+    from: component:structural-validator
+    to: contract:authored-format
+    description: Semantic validation first rejects input outside the strict shared schema.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/validation.ts
+  - id: relationship:validator-modules
+    kind: preserves
+    from: component:structural-validator
+    to: contract:logical-modules
+    description: Checks cross-module links and membership without assuming code boundaries are enforced.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/validation.ts
+  - id: relationship:loader-files
+    kind: constrained_by
+    from: component:project-loader
+    to: boundary:project-local-files
+    description: Configuration, graph and generated paths are checked against the project root, with
+      generated inputs excluded.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/project.ts
+      - kind: implementation
+        path: src/paths.ts
+  - id: relationship:validator-proof
+    kind: constrained_by
+    from: component:structural-validator
+    to: boundary:declarations-not-proof
+    description: Validation checks declarations and reference existence rather than executing or
+      inspecting application behavior.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/validation.ts
+  - id: relationship:single-file-loader
+    kind: affects
+    from: decision:single-canonical-file
+    to: component:project-loader
+    description: Loader parses one configured authored file; logical modules do not add load units.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/project.ts
+  - id: relationship:single-file-modules
+    kind: affects
+    from: decision:single-canonical-file
+    to: contract:logical-modules
+    description: Imports and exports remain declarations inside the single graph.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/schema.ts
+      - kind: design
+        path: docs/foundation.md
+  - id: relationship:loader-indexes
+    kind: depends_on
+    from: component:project-loader
+    to: component:lookup-indexes
+    description: After canonical validation, loader tries the compiled cache and builds indexes on fallback.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/project.ts
+  - id: relationship:indexes-produce
+    kind: produces
+    from: component:lookup-indexes
+    to: artifact:derived-indexes
+    description: Compiled serialization emits lookup tables and checksum metadata from the canonical index.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/compiled.ts
+  - id: relationship:indexes-locators
+    kind: preserves
+    from: component:lookup-indexes
+    to: contract:stable-locators
+    description: Index construction retains IDs through source order changes.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/indexes.ts
+  - id: relationship:context-project
+    kind: consumes
+    from: component:context-engine
+    to: capability:load-project
+    description: Context expects a validated Project snapshot containing the selected lookup tables.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/context.ts
+      - kind: implementation
+        path: src/model.ts
+  - id: relationship:context-indexes
+    kind: depends_on
+    from: component:context-engine
+    to: component:lookup-indexes
+    description: Queries use indexes for seeds and bidirectional traversal; text searches still scan records.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/context.ts
+  - id: relationship:context-limits
+    kind: preserves
+    from: component:context-engine
+    to: contract:bounded-context
+    description: Traversal tracks examined relationships and selected nodes and reports size-limit omissions.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/context.ts
+  - id: relationship:fallback-loader
+    kind: affects
+    from: decision:canonical-fallback
+    to: component:project-loader
+    description: Missing/stale/corrupt caches are optional acceleration, never a reason to lose
+      canonical context.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/project.ts
+      - kind: implementation
+        path: src/compiled.ts
+  - id: relationship:fallback-generator
+    kind: affects
+    from: decision:canonical-fallback
+    to: component:artifact-generator
+    description: Rendering always builds a fresh index from declarations rather than trusting project.index.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/artifacts.ts
+  - id: relationship:generator-project
+    kind: consumes
+    from: component:artifact-generator
+    to: capability:load-project
+    description: Rendering uses the validated graph and configured output location.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/artifacts.ts
+  - id: relationship:generator-indexes
+    kind: depends_on
+    from: component:artifact-generator
+    to: component:lookup-indexes
+    description: All owned index files are rebuilt together with guidance and summary.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/artifacts.ts
+  - id: relationship:generator-output
+    kind: produces
+    from: component:artifact-generator
+    to: artifact:guidance-summary
+    description: Generates a bounded overview while retaining all unresolved records in summary.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/artifacts.ts
+  - id: relationship:generator-files
+    kind: constrained_by
+    from: component:artifact-generator
+    to: boundary:project-local-files
+    description: Preflights all owned output paths before writing, including symlink rejection.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/artifacts.ts
+      - kind: implementation
+        path: test/toolkit.test.js
+  - id: relationship:generator-proof
+    kind: constrained_by
+    from: component:artifact-generator
+    to: boundary:declarations-not-proof
+    description: Drift compares derived records only; code-only behavior changes can leave check green.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/artifacts.ts
+      - kind: implementation
+        path: test/consumer.mjs
+  - id: relationship:entrypoints-project
+    kind: depends_on
+    from: component:public-entrypoints
+    to: capability:load-project
+    description: Graph commands load a project before validation reporting, summary, context or generation.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/cli.ts
+  - id: relationship:entrypoints-context
+    kind: depends_on
+    from: component:public-entrypoints
+    to: capability:retrieve-context
+    description: CLI translates selectors and limits to the shared context API and formats its output.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/cli.ts
+      - kind: implementation
+        path: src/index.ts
+  - id: relationship:entrypoints-guidance
+    kind: depends_on
+    from: component:public-entrypoints
+    to: capability:maintain-guidance
+    description: Generate/check dispatch to syncArtifacts; stale check controls exit code 2.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/cli.ts
+  - id: relationship:entrypoints-install
+    kind: depends_on
+    from: component:public-entrypoints
+    to: capability:install-agent-skill
+    description: Skill installation is available without loading or initializing a graph.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/cli.ts
+      - kind: implementation
+        path: src/index.ts
+  - id: relationship:installer-source
+    kind: consumes
+    from: component:skill-installer
+    to: artifact:bundled-skill
+    description: Uses the skill shipped beside the running toolkit, not a network download or generated design.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/skills.ts
+  - id: relationship:installer-files
+    kind: constrained_by
+    from: component:skill-installer
+    to: boundary:project-local-files
+    description: Installation destinations use localPath and are preflighted before any requested
+      destination is replaced.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/skills.ts
+  - id: relationship:skill-context
+    kind: depends_on
+    from: artifact:bundled-skill
+    to: capability:retrieve-context
+    description: Instructions require context before architecture changes and review of truncation and
+      references.
+    status: implemented
+    references:
+      - kind: implementation
+        path: skills/architecture-graph/SKILL.md
+  - id: relationship:skill-maintenance
+    kind: depends_on
+    from: artifact:bundled-skill
+    to: capability:maintain-guidance
+    description: Instructions finish changes by validating, generating and checking maintained records.
+    status: implemented
+    references:
+      - kind: implementation
+        path: skills/architecture-graph/SKILL.md
+  - id: relationship:skill-proof
+    kind: constrained_by
+    from: artifact:bundled-skill
+    to: boundary:declarations-not-proof
+    description: Instructions separate declaration checks from behavior tests and retain unresolved questions.
+    status: implemented
+    references:
+      - kind: implementation
+        path: skills/architecture-graph/SKILL.md
+  - id: relationship:build-model
+    kind: depends_on
+    from: component:build-release
+    to: component:declaration-model
+    description: Build emits JSON schemas from Zod definitions so packaged machine contracts share one source.
+    status: implemented
+    references:
+      - kind: implementation
+        path: scripts/schema.mjs
+      - kind: implementation
+        path: package.json
+  - id: relationship:build-api
+    kind: depends_on
+    from: component:build-release
+    to: component:public-entrypoints
+    description: Packaged exports and launcher point to compiled entrypoints; isolated consumers
+      exercise the actual archive.
+    status: implemented
+    references:
+      - kind: implementation
+        path: package.json
+      - kind: implementation
+        path: test/consumer.mjs
+  - id: relationship:build-skill
+    kind: consumes
+    from: component:build-release
+    to: artifact:bundled-skill
+    description: Package file list includes the shared skill and modeling reference for offline project
+      installation.
+    status: implemented
+    references:
+      - kind: implementation
+        path: package.json
+  - id: relationship:typescript-build
+    kind: affects
+    from: decision:typescript-source
+    to: component:build-release
+    description: Build compiles editable TypeScript and emits declarations/source maps for Node consumers.
+    status: implemented
+    references:
+      - kind: implementation
+        path: tsconfig.json
+      - kind: implementation
+        path: package.json
+  - id: relationship:typescript-model
+    kind: affects
+    from: decision:typescript-source
+    to: component:declaration-model
+    description: Zod drives runtime shape, inferred TypeScript types and generated JSON schema.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/schema.ts
+      - kind: implementation
+        path: scripts/schema.mjs
+  - id: relationship:agent-workflow
+    kind: affects
+    from: decision:agent-maintained-design
+    to: artifact:bundled-skill
+    description: The shared instructions implement the intended bootstrap and maintenance workflow.
+    status: implemented
+    references:
+      - kind: implementation
+        path: skills/architecture-graph/SKILL.md
+      - kind: design
+        path: README.md
+  - id: relationship:marketplace-installer
+    kind: affects
+    from: decision:marketplace-readiness
+    to: capability:install-agent-skill
+    description: Project-copy installation is implemented; additional marketplace routes need live
+      verification before readiness claims.
+    status: unresolved
+    references:
+      - kind: design
+        path: docs/publishing.md
+  - id: relationship:windows-delivery
+    kind: affects
+    from: decision:windows-support
+    to: capability:ship-toolkit
+    description: Adding a supported platform would require CI and packaged consumer evidence; current
+      matrix leaves Windows untested.
+    status: unresolved
+    references:
+      - kind: design
+        path: docs/compatibility.md
+      - kind: design
+        path: .github/workflows/package.yml
+  - id: relationship:human-model
+    kind: affects
+    from: decision:human-ownership
+    to: contract:authored-format
+    description: Schema compatibility changes need a review owner if human governance is added to this record.
+    status: unresolved
+    references:
+      - kind: design
+        path: docs/development.md
+  - id: relationship:human-api
+    kind: affects
+    from: decision:human-ownership
+    to: contract:public-operations
+    description: Public interface review responsibility is not assigned to a named person in this model.
+    status: unresolved
+    references:
+      - kind: design
+        path: docs/development.md
+modules:
+  - id: module:declarations
+    name: Declarations and validity
+    description: Owns authored meaning, project loading and structural checks. Exposes validated project
+      snapshots, format/module contracts and file/proof boundaries.
+    exports:
+      - boundary:declarations-not-proof
+      - boundary:project-local-files
+      - capability:load-project
+      - component:declaration-model
+      - component:project-loader
+      - contract:authored-format
+    imports:
+      - component:lookup-indexes
+  - id: module:context
+    name: Indexes and focused context
+    description: Owns disposable lookup indexes and bounded retrieval. Imports validated project
+      snapshots; exports context capability and index construction for loading/generation.
+    exports:
+      - capability:retrieve-context
+      - component:lookup-indexes
+    imports:
+      - capability:load-project
+      - component:artifact-generator
+      - component:project-loader
+  - id: module:interfaces
+    name: Public interfaces and guidance
+    description: Owns CLI/library entrypoints and generated guidance/drift. Coordinates declarations,
+      context and installation without redefining their semantics.
+    exports:
+      - capability:maintain-guidance
+      - component:artifact-generator
+      - component:public-entrypoints
+      - contract:public-operations
+    imports:
+      - boundary:declarations-not-proof
+      - boundary:project-local-files
+      - capability:install-agent-skill
+      - capability:load-project
+      - capability:retrieve-context
+      - component:lookup-indexes
+  - id: module:delivery
+    name: Agent adoption and distribution
+    description: Owns shared skill installation, build/package delivery and adoption decisions. Imports
+      public operations, schema authority, maintenance capabilities and project boundaries.
+    exports:
+      - capability:install-agent-skill
+    imports:
+      - boundary:declarations-not-proof
+      - boundary:project-local-files
+      - capability:maintain-guidance
+      - capability:retrieve-context
+      - component:declaration-model
+      - component:public-entrypoints
+      - contract:authored-format
+      - contract:public-operations

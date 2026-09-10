@@ -6,7 +6,7 @@ The goal is to make a future release straightforward while leaving time to valid
 
 The toolkit can be built as an npm tarball and installed in a consuming project. Its command can copy the bundled skill into the Codex or Claude Code project directory. Automated checks exercise those installations, including preserving local edits unless replacement is explicitly requested.
 
-The current GitHub Actions workflow tests and packages the toolkit and uploads build artifacts. It does not publish to npm, submit a plugin to a directory, or change repository visibility. `private: true` in `package.json` continues to block npm registry publication.
+The current GitHub Actions workflow tests and packages the toolkit and uploads build artifacts. It does not publish to npm, submit a plugin to a directory, or change repository visibility. The package is now configured for an authorized public npm release; registry authentication and scope access must be verified before publication.
 
 The Claude manifests describe a repository-hosted marketplace. Codex marketplace support has been researched, but this repository's installation path has not been tested in either agent. Keep the tested project-copy route as the user-facing default.
 
@@ -32,4 +32,4 @@ These are candidate test instructions, not a public installation recommendation.
 
 Making the GitHub repository public, publishing the npm package, and offering a marketplace plugin are separate release decisions. None is required merely to keep the manifests in source control.
 
-When validation is satisfactory, choose which distribution routes to release. For npm, choose the package name and version, remove the publication block deliberately, and publish the tested release. For a marketplace, complete the agent-specific installation test before advertising the route; submission to a public directory is a further distribution choice. Update the installation guide only for the routes that have actually been verified and made available.
+When validation is satisfactory, choose which distribution routes to release. For npm, publish the tested archive with `npm publish ./dist/billbliss-architecture-graph-0.3.0.tgz --access public --registry=https://registry.npmjs.org`, then confirm the registry version and install it in a clean project. For a marketplace, complete the agent-specific installation test before advertising the route; submission to a public directory is a further distribution choice. Update the installation guide only for the routes that have actually been verified and made available.

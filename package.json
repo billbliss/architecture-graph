@@ -1,9 +1,8 @@
 {
-  "name": "@architecture-graph/toolkit",
+  "name": "@billbliss/architecture-graph",
   "version": "0.3.0",
   "description": "Portable architectural declarations, context, and derived guidance",
   "type": "module",
-  "private": true,
   "engines": {
     "node": ">=22"
   },
@@ -53,8 +52,13 @@
     "zod": "4.6.1"
   },
   "devDependencies": {
+    "@billbliss/architecture-graph": "^0.3.0",
     "@types/node": "22.20.2",
     "typescript": "5.9.3"
   },
-  "types": "./lib/index.d.ts"
+  "types": "./lib/index.d.ts",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  }
 }

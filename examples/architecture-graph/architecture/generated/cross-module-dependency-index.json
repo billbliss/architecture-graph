@@ -1,0 +1,124 @@
+{
+  "crossModule": {
+    "relationship:build-api": {
+      "edgeId": "relationship:build-api",
+      "fromModule": "module:delivery",
+      "targetId": "component:public-entrypoints",
+      "toModule": "module:interfaces"
+    },
+    "relationship:build-model": {
+      "edgeId": "relationship:build-model",
+      "fromModule": "module:delivery",
+      "targetId": "component:declaration-model",
+      "toModule": "module:declarations"
+    },
+    "relationship:context-project": {
+      "edgeId": "relationship:context-project",
+      "fromModule": "module:context",
+      "targetId": "capability:load-project",
+      "toModule": "module:declarations"
+    },
+    "relationship:entrypoints-context": {
+      "edgeId": "relationship:entrypoints-context",
+      "fromModule": "module:interfaces",
+      "targetId": "capability:retrieve-context",
+      "toModule": "module:context"
+    },
+    "relationship:entrypoints-install": {
+      "edgeId": "relationship:entrypoints-install",
+      "fromModule": "module:interfaces",
+      "targetId": "capability:install-agent-skill",
+      "toModule": "module:delivery"
+    },
+    "relationship:entrypoints-project": {
+      "edgeId": "relationship:entrypoints-project",
+      "fromModule": "module:interfaces",
+      "targetId": "capability:load-project",
+      "toModule": "module:declarations"
+    },
+    "relationship:fallback-generator": {
+      "edgeId": "relationship:fallback-generator",
+      "fromModule": "module:context",
+      "targetId": "component:artifact-generator",
+      "toModule": "module:interfaces"
+    },
+    "relationship:fallback-loader": {
+      "edgeId": "relationship:fallback-loader",
+      "fromModule": "module:context",
+      "targetId": "component:project-loader",
+      "toModule": "module:declarations"
+    },
+    "relationship:generator-files": {
+      "edgeId": "relationship:generator-files",
+      "fromModule": "module:interfaces",
+      "targetId": "boundary:project-local-files",
+      "toModule": "module:declarations"
+    },
+    "relationship:generator-indexes": {
+      "edgeId": "relationship:generator-indexes",
+      "fromModule": "module:interfaces",
+      "targetId": "component:lookup-indexes",
+      "toModule": "module:context"
+    },
+    "relationship:generator-project": {
+      "edgeId": "relationship:generator-project",
+      "fromModule": "module:interfaces",
+      "targetId": "capability:load-project",
+      "toModule": "module:declarations"
+    },
+    "relationship:generator-proof": {
+      "edgeId": "relationship:generator-proof",
+      "fromModule": "module:interfaces",
+      "targetId": "boundary:declarations-not-proof",
+      "toModule": "module:declarations"
+    },
+    "relationship:human-api": {
+      "edgeId": "relationship:human-api",
+      "fromModule": "module:delivery",
+      "targetId": "contract:public-operations",
+      "toModule": "module:interfaces"
+    },
+    "relationship:human-model": {
+      "edgeId": "relationship:human-model",
+      "fromModule": "module:delivery",
+      "targetId": "contract:authored-format",
+      "toModule": "module:declarations"
+    },
+    "relationship:installer-files": {
+      "edgeId": "relationship:installer-files",
+      "fromModule": "module:delivery",
+      "targetId": "boundary:project-local-files",
+      "toModule": "module:declarations"
+    },
+    "relationship:loader-indexes": {
+      "edgeId": "relationship:loader-indexes",
+      "fromModule": "module:declarations",
+      "targetId": "component:lookup-indexes",
+      "toModule": "module:context"
+    },
+    "relationship:skill-context": {
+      "edgeId": "relationship:skill-context",
+      "fromModule": "module:delivery",
+      "targetId": "capability:retrieve-context",
+      "toModule": "module:context"
+    },
+    "relationship:skill-maintenance": {
+      "edgeId": "relationship:skill-maintenance",
+      "fromModule": "module:delivery",
+      "targetId": "capability:maintain-guidance",
+      "toModule": "module:interfaces"
+    },
+    "relationship:skill-proof": {
+      "edgeId": "relationship:skill-proof",
+      "fromModule": "module:delivery",
+      "targetId": "boundary:declarations-not-proof",
+      "toModule": "module:declarations"
+    },
+    "relationship:typescript-model": {
+      "edgeId": "relationship:typescript-model",
+      "fromModule": "module:delivery",
+      "targetId": "component:declaration-model",
+      "toModule": "module:declarations"
+    }
+  }
+}

@@ -65,7 +65,7 @@ If you choose not to commit generated output, run `ag generate` during the build
 The package ships compiled JavaScript, TypeScript declarations, source maps, and editable TypeScript source. A script can use the same toolkit without invoking its command line:
 
 ```js
-import { loadProject, getContext, validateGraph, summarize, syncArtifacts } from '@architecture-graph/toolkit';
+import { loadProject, getContext, validateGraph, summarize, syncArtifacts } from '@billbliss/architecture-graph';
 
 const project = loadProject('ag.config.json');
 const context = getContext(project, { id: 'capability:welcome', depth: 1 });
@@ -76,7 +76,7 @@ const result = syncArtifacts(project, { check: true });
 
 Start with `loadProject`: it checks the configuration, graph, and file references, and rejects references into generated output. Treat a loaded project as a snapshot and reload after editing declarations. `loadProject(path, { forceCanonical: true })` bypasses the compiled cache. `validateGraph` checks a graph object and returns a list of `{code, at, message}` errors; it does not perform the additional configuration checks. Other operations throw errors for invalid inputs. `syncArtifacts` returns a `drift` list; without `check: true`, it writes the generated files.
 
-The package exports types including `Graph`, `GraphNode`, `Relationship`, `GraphModule`, `Project`, and `ContextBundle`, along with typed Zod schemas. It also exports `serializeGraph` and `parseDeclarations` for working with the authored format, and `initProject`, `installSkill`, `renderArtifacts`, `formatContext`, `VERSION`, `LIMIT`, and `AGError`. Tools that read JSON can access the graph schema through `@architecture-graph/toolkit/schema`.
+The package exports types including `Graph`, `GraphNode`, `Relationship`, `GraphModule`, `Project`, and `ContextBundle`, along with typed Zod schemas. It also exports `serializeGraph` and `parseDeclarations` for working with the authored format, and `initProject`, `installSkill`, `renderArtifacts`, `formatContext`, `VERSION`, `LIMIT`, and `AGError`. Tools that read JSON can access the graph schema through `@billbliss/architecture-graph/schema`.
 
 ## One file, logical modules
 

@@ -1,0 +1,380 @@
+{
+  "sources": {
+    ".github/workflows/package.yml": {
+      "nodeIds": [
+        "component:build-release",
+        "decision:windows-support"
+      ],
+      "relationshipIds": [
+        "relationship:windows-delivery"
+      ]
+    },
+    "README.md": {
+      "nodeIds": [
+        "decision:agent-maintained-design"
+      ],
+      "relationshipIds": [
+        "relationship:agent-workflow"
+      ]
+    },
+    "bin/ag.js": {
+      "nodeIds": [
+        "component:public-entrypoints"
+      ],
+      "relationshipIds": []
+    },
+    "docs/compatibility.md": {
+      "nodeIds": [
+        "artifact:derived-indexes",
+        "boundary:declarations-not-proof",
+        "capability:validate-declarations",
+        "contract:authored-format",
+        "decision:canonical-fallback",
+        "decision:windows-support"
+      ],
+      "relationshipIds": [
+        "relationship:windows-delivery"
+      ]
+    },
+    "docs/development.md": {
+      "nodeIds": [
+        "component:build-release",
+        "component:declaration-model",
+        "decision:human-ownership",
+        "decision:typescript-source"
+      ],
+      "relationshipIds": [
+        "relationship:human-api",
+        "relationship:human-model"
+      ]
+    },
+    "docs/foundation.md": {
+      "nodeIds": [
+        "contract:stable-locators",
+        "decision:single-canonical-file"
+      ],
+      "relationshipIds": [
+        "relationship:single-file-modules"
+      ]
+    },
+    "docs/getting-started.md": {
+      "nodeIds": [
+        "capability:install-agent-skill"
+      ],
+      "relationshipIds": []
+    },
+    "docs/indexing-and-ci.md": {
+      "nodeIds": [
+        "capability:load-project",
+        "capability:maintain-guidance",
+        "capability:retrieve-context",
+        "component:lookup-indexes"
+      ],
+      "relationshipIds": []
+    },
+    "docs/languages-and-toolchain.md": {
+      "nodeIds": [
+        "capability:ship-toolkit"
+      ],
+      "relationshipIds": []
+    },
+    "docs/manual-operation.md": {
+      "nodeIds": [
+        "decision:agent-maintained-design"
+      ],
+      "relationshipIds": []
+    },
+    "docs/publishing.md": {
+      "nodeIds": [
+        "component:build-release",
+        "decision:human-ownership",
+        "decision:marketplace-readiness"
+      ],
+      "relationshipIds": [
+        "relationship:marketplace-installer"
+      ]
+    },
+    "docs/reference.md": {
+      "nodeIds": [
+        "artifact:guidance-summary",
+        "boundary:project-local-files",
+        "component:artifact-generator",
+        "component:context-engine",
+        "component:project-loader",
+        "component:public-entrypoints",
+        "component:structural-validator",
+        "contract:bounded-context",
+        "contract:logical-modules",
+        "contract:public-operations"
+      ],
+      "relationshipIds": []
+    },
+    "docs/skill-installation.md": {
+      "nodeIds": [
+        "artifact:bundled-skill",
+        "component:skill-installer",
+        "decision:marketplace-readiness"
+      ],
+      "relationshipIds": []
+    },
+    "package.json": {
+      "nodeIds": [
+        "capability:ship-toolkit",
+        "component:build-release",
+        "component:public-entrypoints",
+        "decision:typescript-source"
+      ],
+      "relationshipIds": [
+        "relationship:build-api",
+        "relationship:build-model",
+        "relationship:build-skill",
+        "relationship:delivery-owns",
+        "relationship:delivery-provides",
+        "relationship:typescript-build"
+      ]
+    },
+    "scripts/package.mjs": {
+      "nodeIds": [
+        "component:build-release"
+      ],
+      "relationshipIds": []
+    },
+    "scripts/schema.mjs": {
+      "nodeIds": [
+        "component:build-release",
+        "component:declaration-model",
+        "decision:typescript-source"
+      ],
+      "relationshipIds": [
+        "relationship:build-model",
+        "relationship:schema-authority",
+        "relationship:typescript-model"
+      ]
+    },
+    "scripts/test-package.mjs": {
+      "nodeIds": [
+        "capability:ship-toolkit"
+      ],
+      "relationshipIds": []
+    },
+    "skills/architecture-graph/SKILL.md": {
+      "nodeIds": [
+        "artifact:bundled-skill",
+        "decision:agent-maintained-design"
+      ],
+      "relationshipIds": [
+        "relationship:agent-workflow",
+        "relationship:skill-context",
+        "relationship:skill-maintenance",
+        "relationship:skill-proof"
+      ]
+    },
+    "skills/architecture-graph/references/modeling.md": {
+      "nodeIds": [
+        "artifact:bundled-skill"
+      ],
+      "relationshipIds": []
+    },
+    "src/artifacts.ts": {
+      "nodeIds": [
+        "artifact:guidance-summary",
+        "capability:maintain-guidance",
+        "component:artifact-generator",
+        "decision:canonical-fallback"
+      ],
+      "relationshipIds": [
+        "relationship:fallback-generator",
+        "relationship:generator-files",
+        "relationship:generator-indexes",
+        "relationship:generator-output",
+        "relationship:generator-project",
+        "relationship:generator-proof",
+        "relationship:guidance-authority",
+        "relationship:guidance-owns",
+        "relationship:guidance-provides"
+      ]
+    },
+    "src/cli.ts": {
+      "nodeIds": [
+        "capability:install-agent-skill",
+        "component:public-entrypoints",
+        "contract:public-operations"
+      ],
+      "relationshipIds": [
+        "relationship:api-authority",
+        "relationship:entrypoints-context",
+        "relationship:entrypoints-guidance",
+        "relationship:entrypoints-install",
+        "relationship:entrypoints-project"
+      ]
+    },
+    "src/compiled.ts": {
+      "nodeIds": [
+        "artifact:derived-indexes",
+        "component:lookup-indexes",
+        "decision:canonical-fallback"
+      ],
+      "relationshipIds": [
+        "relationship:fallback-loader",
+        "relationship:indexes-produce"
+      ]
+    },
+    "src/context.ts": {
+      "nodeIds": [
+        "capability:retrieve-context",
+        "component:context-engine",
+        "contract:bounded-context"
+      ],
+      "relationshipIds": [
+        "relationship:context-authority",
+        "relationship:context-indexes",
+        "relationship:context-limits",
+        "relationship:context-owns",
+        "relationship:context-project",
+        "relationship:context-provides"
+      ]
+    },
+    "src/index.ts": {
+      "nodeIds": [
+        "component:public-entrypoints",
+        "contract:public-operations"
+      ],
+      "relationshipIds": [
+        "relationship:api-authority",
+        "relationship:entrypoints-context",
+        "relationship:entrypoints-install"
+      ]
+    },
+    "src/indexes.ts": {
+      "nodeIds": [
+        "component:lookup-indexes",
+        "contract:stable-locators"
+      ],
+      "relationshipIds": [
+        "relationship:indexes-locators",
+        "relationship:locator-authority"
+      ]
+    },
+    "src/model.ts": {
+      "nodeIds": [
+        "boundary:declarations-not-proof",
+        "capability:load-project",
+        "capability:retrieve-context",
+        "contract:bounded-context",
+        "contract:stable-locators"
+      ],
+      "relationshipIds": [
+        "relationship:context-project"
+      ]
+    },
+    "src/paths.ts": {
+      "nodeIds": [
+        "boundary:project-local-files"
+      ],
+      "relationshipIds": [
+        "relationship:loader-files"
+      ]
+    },
+    "src/project.ts": {
+      "nodeIds": [
+        "boundary:project-local-files",
+        "capability:load-project",
+        "component:project-loader",
+        "contract:public-operations",
+        "decision:canonical-fallback",
+        "decision:single-canonical-file"
+      ],
+      "relationshipIds": [
+        "relationship:fallback-loader",
+        "relationship:loader-files",
+        "relationship:loader-indexes",
+        "relationship:loader-owns",
+        "relationship:loader-provides",
+        "relationship:loader-validates",
+        "relationship:single-file-loader"
+      ]
+    },
+    "src/schema.ts": {
+      "nodeIds": [
+        "component:declaration-model",
+        "contract:authored-format",
+        "contract:logical-modules",
+        "decision:typescript-source"
+      ],
+      "relationshipIds": [
+        "relationship:schema-authority",
+        "relationship:single-file-modules",
+        "relationship:typescript-model"
+      ]
+    },
+    "src/serialization.ts": {
+      "nodeIds": [
+        "artifact:derived-indexes",
+        "contract:authored-format",
+        "decision:single-canonical-file"
+      ],
+      "relationshipIds": []
+    },
+    "src/skills.ts": {
+      "nodeIds": [
+        "capability:install-agent-skill",
+        "component:skill-installer"
+      ],
+      "relationshipIds": [
+        "relationship:installer-files",
+        "relationship:installer-owns",
+        "relationship:installer-provides",
+        "relationship:installer-source"
+      ]
+    },
+    "src/validation.ts": {
+      "nodeIds": [
+        "boundary:declarations-not-proof",
+        "boundary:project-local-files",
+        "capability:validate-declarations",
+        "component:structural-validator",
+        "contract:logical-modules"
+      ],
+      "relationshipIds": [
+        "relationship:module-authority",
+        "relationship:validator-format",
+        "relationship:validator-modules",
+        "relationship:validator-owns",
+        "relationship:validator-proof",
+        "relationship:validator-provides"
+      ]
+    },
+    "test/consumer.mjs": {
+      "nodeIds": [
+        "boundary:declarations-not-proof",
+        "capability:ship-toolkit"
+      ],
+      "relationshipIds": [
+        "relationship:build-api",
+        "relationship:generator-proof"
+      ]
+    },
+    "test/foundation.test.js": {
+      "nodeIds": [
+        "contract:stable-locators"
+      ],
+      "relationshipIds": []
+    },
+    "test/toolkit.test.js": {
+      "nodeIds": [
+        "component:skill-installer"
+      ],
+      "relationshipIds": [
+        "relationship:generator-files"
+      ]
+    },
+    "tsconfig.json": {
+      "nodeIds": [
+        "decision:typescript-source"
+      ],
+      "relationshipIds": [
+        "relationship:typescript-build"
+      ]
+    }
+  }
+}

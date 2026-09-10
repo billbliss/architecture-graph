@@ -14,7 +14,7 @@ Open this repository's **Actions → Validate and package**, choose a successful
 
 | File | Why it is included |
 | --- | --- |
-| `architecture-graph-toolkit-<version>.tgz` | The package npm installs, including the coding-agent skill and MIT license |
+| `billbliss-architecture-graph-<version>.tgz` | The package npm installs, including the coding-agent skill and MIT license |
 | `SHA256SUMS` | A checksum to confirm the archive has not changed since it was built |
 | `package-metadata.json` | The version, source commit, and build run, so you can identify what you are trying |
 
@@ -28,7 +28,7 @@ shasum -a 256 -c SHA256SUMS
 sha256sum -c SHA256SUMS
 ```
 
-Choose the command for your system. Then copy the `.tgz` into your project's `vendor/` folder and follow the [installation steps](getting-started.md#2-install-it-in-the-project-you-want-to-model). The metadata identifies a build; it is not evidence that your application's architecture is correct.
+Choose the command for your system. Then copy the `.tgz` into your project's `vendor/` folder and run `npm install --save-dev ./vendor/billbliss-architecture-graph-0.3.0.tgz` from that project’s root (run `npm init -y` first if it has no manifest). Continue with [agent setup](getting-started.md#3-bootstrap-the-graph-with-your-coding-agent). The metadata identifies a build; it is not evidence that your application's architecture is correct.
 
 ## What runs automatically?
 
@@ -55,7 +55,7 @@ To test a downloaded archive with this checkout's examples, use `AG_TARBALL=/abs
 
 ## Sharing the source
 
-The project uses the MIT license. GitHub repository visibility and npm publication are separate choices. Making the repository public shares the source under that license; `private: true` in `package.json` still prevents accidental npm registry publishing and does not stop tarball installation.
+The project uses the MIT license. GitHub repository visibility and npm publication are separate choices. Making the repository public shares the source under that license; the package is configured for an explicit public npm release. Repository visibility and marketplace distribution remain unchanged by npm publication.
 
 A maintainer can change GitHub visibility after checking the build and trying its package. Public users need the installation guide and an honest explanation of the toolkit's limits; they do not need to read its [origin notes](history/README.md).
 

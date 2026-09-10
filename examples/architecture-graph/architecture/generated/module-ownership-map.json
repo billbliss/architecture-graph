@@ -1,0 +1,176 @@
+{
+  "modules": {
+    "module:context": {
+      "description": "Owns disposable lookup indexes and bounded retrieval. Imports validated project snapshots; exports context capability and index construction for loading/generation.",
+      "exports": [
+        "capability:retrieve-context",
+        "component:lookup-indexes"
+      ],
+      "id": "module:context",
+      "imports": [
+        "capability:load-project",
+        "component:artifact-generator",
+        "component:project-loader"
+      ],
+      "name": "Indexes and focused context",
+      "nodeIds": [
+        "artifact:derived-indexes",
+        "capability:retrieve-context",
+        "component:context-engine",
+        "component:lookup-indexes",
+        "contract:bounded-context",
+        "contract:stable-locators",
+        "decision:canonical-fallback"
+      ],
+      "relationshipIds": [
+        "relationship:context-authority",
+        "relationship:context-indexes",
+        "relationship:context-limits",
+        "relationship:context-owns",
+        "relationship:context-project",
+        "relationship:context-provides",
+        "relationship:fallback-generator",
+        "relationship:fallback-loader",
+        "relationship:indexes-locators",
+        "relationship:indexes-produce",
+        "relationship:locator-authority"
+      ]
+    },
+    "module:declarations": {
+      "description": "Owns authored meaning, project loading and structural checks. Exposes validated project snapshots, format/module contracts and file/proof boundaries.",
+      "exports": [
+        "boundary:declarations-not-proof",
+        "boundary:project-local-files",
+        "capability:load-project",
+        "component:declaration-model",
+        "component:project-loader",
+        "contract:authored-format"
+      ],
+      "id": "module:declarations",
+      "imports": [
+        "component:lookup-indexes"
+      ],
+      "name": "Declarations and validity",
+      "nodeIds": [
+        "boundary:declarations-not-proof",
+        "boundary:project-local-files",
+        "capability:load-project",
+        "capability:validate-declarations",
+        "component:declaration-model",
+        "component:project-loader",
+        "component:structural-validator",
+        "contract:authored-format",
+        "contract:logical-modules",
+        "decision:single-canonical-file"
+      ],
+      "relationshipIds": [
+        "relationship:loader-files",
+        "relationship:loader-indexes",
+        "relationship:loader-owns",
+        "relationship:loader-provides",
+        "relationship:loader-validates",
+        "relationship:module-authority",
+        "relationship:schema-authority",
+        "relationship:single-file-loader",
+        "relationship:single-file-modules",
+        "relationship:validator-format",
+        "relationship:validator-modules",
+        "relationship:validator-owns",
+        "relationship:validator-proof",
+        "relationship:validator-provides"
+      ]
+    },
+    "module:delivery": {
+      "description": "Owns shared skill installation, build/package delivery and adoption decisions. Imports public operations, schema authority, maintenance capabilities and project boundaries.",
+      "exports": [
+        "capability:install-agent-skill"
+      ],
+      "id": "module:delivery",
+      "imports": [
+        "boundary:declarations-not-proof",
+        "boundary:project-local-files",
+        "capability:maintain-guidance",
+        "capability:retrieve-context",
+        "component:declaration-model",
+        "component:public-entrypoints",
+        "contract:authored-format",
+        "contract:public-operations"
+      ],
+      "name": "Agent adoption and distribution",
+      "nodeIds": [
+        "artifact:bundled-skill",
+        "capability:install-agent-skill",
+        "capability:ship-toolkit",
+        "component:build-release",
+        "component:skill-installer",
+        "decision:agent-maintained-design",
+        "decision:human-ownership",
+        "decision:marketplace-readiness",
+        "decision:typescript-source",
+        "decision:windows-support"
+      ],
+      "relationshipIds": [
+        "relationship:agent-workflow",
+        "relationship:build-api",
+        "relationship:build-model",
+        "relationship:build-skill",
+        "relationship:delivery-owns",
+        "relationship:delivery-provides",
+        "relationship:human-api",
+        "relationship:human-model",
+        "relationship:installer-files",
+        "relationship:installer-owns",
+        "relationship:installer-provides",
+        "relationship:installer-source",
+        "relationship:marketplace-installer",
+        "relationship:skill-context",
+        "relationship:skill-maintenance",
+        "relationship:skill-proof",
+        "relationship:typescript-build",
+        "relationship:typescript-model",
+        "relationship:windows-delivery"
+      ]
+    },
+    "module:interfaces": {
+      "description": "Owns CLI/library entrypoints and generated guidance/drift. Coordinates declarations, context and installation without redefining their semantics.",
+      "exports": [
+        "capability:maintain-guidance",
+        "component:artifact-generator",
+        "component:public-entrypoints",
+        "contract:public-operations"
+      ],
+      "id": "module:interfaces",
+      "imports": [
+        "boundary:declarations-not-proof",
+        "boundary:project-local-files",
+        "capability:install-agent-skill",
+        "capability:load-project",
+        "capability:retrieve-context",
+        "component:lookup-indexes"
+      ],
+      "name": "Public interfaces and guidance",
+      "nodeIds": [
+        "artifact:guidance-summary",
+        "capability:maintain-guidance",
+        "component:artifact-generator",
+        "component:public-entrypoints",
+        "contract:public-operations"
+      ],
+      "relationshipIds": [
+        "relationship:api-authority",
+        "relationship:entrypoints-context",
+        "relationship:entrypoints-guidance",
+        "relationship:entrypoints-install",
+        "relationship:entrypoints-project",
+        "relationship:generator-files",
+        "relationship:generator-indexes",
+        "relationship:generator-output",
+        "relationship:generator-project",
+        "relationship:generator-proof",
+        "relationship:guidance-authority",
+        "relationship:guidance-owns",
+        "relationship:guidance-provides"
+      ]
+    }
+  }
+}

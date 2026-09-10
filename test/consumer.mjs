@@ -32,10 +32,10 @@ try {
   writeFileSync(join(consumer,'package.json'),'{"name":"isolated-ag-consumer","private":true,"type":"module"}');
   run(consumer,'npm',['install','--prefer-offline','--save-dev','--ignore-scripts','--no-audit','--no-fund',tarball]);
   for (const path of ['LICENSE','bin/ag.js','src/index.ts','lib/index.js','lib/index.d.ts','lib/index.d.ts.map','schema/graph.schema.json','docs/getting-started.md','examples/hello-world/README.md','skills/architecture-graph/SKILL.md','skills/architecture-graph/references/modeling.md']) {
-    assert(existsSync(join(consumer,'node_modules/@architecture-graph/toolkit',path)), `Missing packaged file: ${path}`);
+    assert(existsSync(join(consumer,'node_modules/@billbliss/architecture-graph',path)), `Missing packaged file: ${path}`);
   }
-  assert(!existsSync(join(consumer,'node_modules/@architecture-graph/toolkit/.git')));
-  assert(!existsSync(join(consumer,'node_modules/@architecture-graph/toolkit/examples/hello-world/node_modules')), 'The packaged example must not include installed dependencies');
+  assert(!existsSync(join(consumer,'node_modules/@billbliss/architecture-graph/.git')));
+  assert(!existsSync(join(consumer,'node_modules/@billbliss/architecture-graph/examples/hello-world/node_modules')), 'The packaged example must not include installed dependencies');
   ag(consumer,'skill','install','--agent','codex');
   assert(!existsSync(join(consumer,'.claude')), 'Codex-only install must not install a Claude skill');
   assert(!existsSync(join(consumer,'ag.config.json')), 'Skill installation must not create a graph configuration');
@@ -88,9 +88,9 @@ try {
   writeFileSync(join(consumer,'src/formatter.js'),'export function formatGreeting() { return "WRONG"; }\n');
   ag(consumer,'validate');ag(consumer,'check');run(consumer,'node',['--test','app.test.js'],1);
   log('PASS: intentionally wrong implementation passes AG validation/check but fails application tests, demonstrating the assurance limit.');
-  run(consumer,'node',['--input-type=module','-e','import { loadProject, getContext } from "@architecture-graph/toolkit"; if (!getContext(loadProject(), {id:"contract:greeting"}).nodes.length) process.exit(1);']);
+  run(consumer,'node',['--input-type=module','-e','import { loadProject, getContext } from "@billbliss/architecture-graph"; if (!getContext(loadProject(), {id:"contract:greeting"}).nodes.length) process.exit(1);']);
   log('PASS: public ESM package export resolves in isolated consumer.');
-  writeFileSync(join(consumer,'typed-consumer.mts'), `import { loadProject, getContext, type Graph, type ContextBundle } from '@architecture-graph/toolkit';
+  writeFileSync(join(consumer,'typed-consumer.mts'), `import { loadProject, getContext, type Graph, type ContextBundle } from '@billbliss/architecture-graph';
 const graph: Graph = loadProject().graph;
 const context: ContextBundle = getContext(loadProject(), {module: 'module:greetings'});
 // @ts-expect-error An invalid option must be rejected by the published declarations.

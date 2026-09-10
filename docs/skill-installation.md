@@ -1,6 +1,6 @@
 # Use AG with a coding agent
 
-A graph is useful only if someone keeps it meaningful. The companion skill gives a coding agent a repeatable way to read your design, preserve open questions, and update the graph as the software changes. It helps a future coding session start with the decisions you have already made.
+AG’s practical adoption model relies on a coding agent to keep the graph meaningful throughout development. People direct the architecture and review changes; the agent makes retrieval and record maintenance part of the normal coding workflow. The companion skill gives a coding agent a repeatable way to read your design, preserve open questions, and update the graph as the software changes. It helps a future coding session start with the decisions you have already made.
 
 The skill is a folder of instructions, included in the toolkit package. It is not a separate executable, hosted service, or Visual Studio extension. The toolkit does the mechanical checks; the agent does the reading and modeling with your review.
 
@@ -29,7 +29,7 @@ If you prefer to copy the folder yourself:
 
 ```sh
 mkdir -p .claude/skills
-cp -R node_modules/@architecture-graph/toolkit/skills/architecture-graph .claude/skills/
+cp -R node_modules/@billbliss/architecture-graph/skills/architecture-graph .claude/skills/
 ```
 
 Use `.agents/skills` instead for Codex. If the skill does not show up after installing, restart the agent. Installing the folder makes the skill available; it does not run it, and it does not create a graph.

@@ -4,6 +4,8 @@ AG's implementation is editable TypeScript in `src/`. The JavaScript under `lib/
 
 These instructions are for changing AG itself. To use AG with an application written in any language, install the packaged toolkit; you do not need its TypeScript compiler. See [language support and toolchain impact](languages-and-toolchain.md).
 
+Consult [AG's self-model](https://github.com/billbliss/architecture-graph/tree/main/examples/architecture-graph) before design changes and follow the root [maintenance instructions](https://github.com/billbliss/architecture-graph/blob/main/AGENTS.md). The root configuration selects the example graph while references point directly to this checkout's source. CI validates it and checks committed generated output before regeneration.
+
 From a clone of the repository:
 
 ```sh
@@ -34,3 +36,5 @@ The useful entry points are:
 The foundation tests include 5,000 nodes, high-fanout queries, logical module boundaries, YAML/JSON parity and stale/corrupt indexes. They check bounded work and observable behavior rather than using fragile wall-clock performance thresholds. A load still reads the full authored graph; reuse a loaded project for several library queries, and reload it after edits.
 
 Run `npm run package` and `npm run test:package` to test the exact distributable archive. Preserve the separation between authored design, derived indexes and assurance evidence when extending the toolkit. See [indexes and generation in CI](indexing-and-ci.md) for the cost of loading, querying and generation.
+
+Write Markdown prose with one paragraph per source line and use editor soft wrapping. Preserve structural line breaks in lists, tables, headings, code blocks, frontmatter and intentional Markdown hard breaks; do not manually wrap prose to a fixed column width.

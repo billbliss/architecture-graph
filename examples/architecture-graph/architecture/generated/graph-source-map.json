@@ -1,0 +1,469 @@
+{
+  "locators": {
+    "artifact:bundled-skill": {
+      "objectId": "artifact:bundled-skill",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "artifact:derived-indexes": {
+      "objectId": "artifact:derived-indexes",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "artifact:guidance-summary": {
+      "objectId": "artifact:guidance-summary",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "boundary:declarations-not-proof": {
+      "objectId": "boundary:declarations-not-proof",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "boundary:project-local-files": {
+      "objectId": "boundary:project-local-files",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "capability:install-agent-skill": {
+      "objectId": "capability:install-agent-skill",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "capability:load-project": {
+      "objectId": "capability:load-project",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "capability:maintain-guidance": {
+      "objectId": "capability:maintain-guidance",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "capability:retrieve-context": {
+      "objectId": "capability:retrieve-context",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "capability:ship-toolkit": {
+      "objectId": "capability:ship-toolkit",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "capability:validate-declarations": {
+      "objectId": "capability:validate-declarations",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "component:artifact-generator": {
+      "objectId": "component:artifact-generator",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "component:build-release": {
+      "objectId": "component:build-release",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "component:context-engine": {
+      "objectId": "component:context-engine",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "component:declaration-model": {
+      "objectId": "component:declaration-model",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "component:lookup-indexes": {
+      "objectId": "component:lookup-indexes",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "component:project-loader": {
+      "objectId": "component:project-loader",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "component:public-entrypoints": {
+      "objectId": "component:public-entrypoints",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "component:skill-installer": {
+      "objectId": "component:skill-installer",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "component:structural-validator": {
+      "objectId": "component:structural-validator",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "contract:authored-format": {
+      "objectId": "contract:authored-format",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "contract:bounded-context": {
+      "objectId": "contract:bounded-context",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "contract:logical-modules": {
+      "objectId": "contract:logical-modules",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "contract:public-operations": {
+      "objectId": "contract:public-operations",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "contract:stable-locators": {
+      "objectId": "contract:stable-locators",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "decision:agent-maintained-design": {
+      "objectId": "decision:agent-maintained-design",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "decision:canonical-fallback": {
+      "objectId": "decision:canonical-fallback",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "decision:human-ownership": {
+      "objectId": "decision:human-ownership",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "decision:marketplace-readiness": {
+      "objectId": "decision:marketplace-readiness",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "decision:single-canonical-file": {
+      "objectId": "decision:single-canonical-file",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "decision:typescript-source": {
+      "objectId": "decision:typescript-source",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "decision:windows-support": {
+      "objectId": "decision:windows-support",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "module:context": {
+      "objectId": "module:context",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "modules"
+    },
+    "module:declarations": {
+      "objectId": "module:declarations",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "modules"
+    },
+    "module:delivery": {
+      "objectId": "module:delivery",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "modules"
+    },
+    "module:interfaces": {
+      "objectId": "module:interfaces",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "modules"
+    },
+    "relationship:agent-workflow": {
+      "objectId": "relationship:agent-workflow",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:api-authority": {
+      "objectId": "relationship:api-authority",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:build-api": {
+      "objectId": "relationship:build-api",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:build-model": {
+      "objectId": "relationship:build-model",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:build-skill": {
+      "objectId": "relationship:build-skill",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:context-authority": {
+      "objectId": "relationship:context-authority",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:context-indexes": {
+      "objectId": "relationship:context-indexes",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:context-limits": {
+      "objectId": "relationship:context-limits",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:context-owns": {
+      "objectId": "relationship:context-owns",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:context-project": {
+      "objectId": "relationship:context-project",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:context-provides": {
+      "objectId": "relationship:context-provides",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:delivery-owns": {
+      "objectId": "relationship:delivery-owns",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:delivery-provides": {
+      "objectId": "relationship:delivery-provides",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:entrypoints-context": {
+      "objectId": "relationship:entrypoints-context",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:entrypoints-guidance": {
+      "objectId": "relationship:entrypoints-guidance",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:entrypoints-install": {
+      "objectId": "relationship:entrypoints-install",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:entrypoints-project": {
+      "objectId": "relationship:entrypoints-project",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:fallback-generator": {
+      "objectId": "relationship:fallback-generator",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:fallback-loader": {
+      "objectId": "relationship:fallback-loader",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:generator-files": {
+      "objectId": "relationship:generator-files",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:generator-indexes": {
+      "objectId": "relationship:generator-indexes",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:generator-output": {
+      "objectId": "relationship:generator-output",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:generator-project": {
+      "objectId": "relationship:generator-project",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:generator-proof": {
+      "objectId": "relationship:generator-proof",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:guidance-authority": {
+      "objectId": "relationship:guidance-authority",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:guidance-owns": {
+      "objectId": "relationship:guidance-owns",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:guidance-provides": {
+      "objectId": "relationship:guidance-provides",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:human-api": {
+      "objectId": "relationship:human-api",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:human-model": {
+      "objectId": "relationship:human-model",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:indexes-locators": {
+      "objectId": "relationship:indexes-locators",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:indexes-produce": {
+      "objectId": "relationship:indexes-produce",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:installer-files": {
+      "objectId": "relationship:installer-files",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:installer-owns": {
+      "objectId": "relationship:installer-owns",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:installer-provides": {
+      "objectId": "relationship:installer-provides",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:installer-source": {
+      "objectId": "relationship:installer-source",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:loader-files": {
+      "objectId": "relationship:loader-files",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:loader-indexes": {
+      "objectId": "relationship:loader-indexes",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:loader-owns": {
+      "objectId": "relationship:loader-owns",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:loader-provides": {
+      "objectId": "relationship:loader-provides",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:loader-validates": {
+      "objectId": "relationship:loader-validates",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:locator-authority": {
+      "objectId": "relationship:locator-authority",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:marketplace-installer": {
+      "objectId": "relationship:marketplace-installer",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:module-authority": {
+      "objectId": "relationship:module-authority",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:schema-authority": {
+      "objectId": "relationship:schema-authority",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:single-file-loader": {
+      "objectId": "relationship:single-file-loader",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:single-file-modules": {
+      "objectId": "relationship:single-file-modules",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:skill-context": {
+      "objectId": "relationship:skill-context",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:skill-maintenance": {
+      "objectId": "relationship:skill-maintenance",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:skill-proof": {
+      "objectId": "relationship:skill-proof",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:typescript-build": {
+      "objectId": "relationship:typescript-build",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:typescript-model": {
+      "objectId": "relationship:typescript-model",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:validator-format": {
+      "objectId": "relationship:validator-format",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:validator-modules": {
+      "objectId": "relationship:validator-modules",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:validator-owns": {
+      "objectId": "relationship:validator-owns",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:validator-proof": {
+      "objectId": "relationship:validator-proof",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:validator-provides": {
+      "objectId": "relationship:validator-provides",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:windows-delivery": {
+      "objectId": "relationship:windows-delivery",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    }
+  }
+}

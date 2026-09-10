@@ -1,0 +1,30 @@
+{
+  "guardrails": {
+    "boundary:declarations-not-proof": {
+      "guardedNodeIds": [
+        "artifact:bundled-skill",
+        "component:artifact-generator",
+        "component:structural-validator"
+      ],
+      "nodeId": "boundary:declarations-not-proof",
+      "relationshipIds": [
+        "relationship:generator-proof",
+        "relationship:skill-proof",
+        "relationship:validator-proof"
+      ]
+    },
+    "boundary:project-local-files": {
+      "guardedNodeIds": [
+        "component:artifact-generator",
+        "component:project-loader",
+        "component:skill-installer"
+      ],
+      "nodeId": "boundary:project-local-files",
+      "relationshipIds": [
+        "relationship:generator-files",
+        "relationship:installer-files",
+        "relationship:loader-files"
+      ]
+    }
+  }
+}

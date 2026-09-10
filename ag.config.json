@@ -1,0 +1,5 @@
+{
+  "configVersion": "1",
+  "graph": "examples/architecture-graph/architecture/graph.yaml",
+  "generated": "examples/architecture-graph/architecture/generated"
+}
