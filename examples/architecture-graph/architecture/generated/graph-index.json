@@ -261,12 +261,32 @@
       "status": "implemented"
     },
     "component:build-release": {
-      "description": "Compiles strict TypeScript to runnable JavaScript, declarations and source maps; refreshes schemas; packs a local archive with checksum/build metadata. CI verifies Linux Node 22/24 and macOS Node 22, then uploads archives; the workflow does not publish.",
+      "description": "Compiles strict TypeScript to runnable JavaScript, declarations and source maps; refreshes schemas; packs a local archive with checksum/build metadata. CI verifies Linux Node 22/24 and macOS Node 22, then uploads archives. Configured stable tag releases require environment approval before OIDC publication of the tested archive and registry installation checks.",
       "id": "component:build-release",
       "kind": "component",
       "module": "module:delivery",
       "name": "Build and package pipeline",
       "references": [
+        {
+          "kind": "implementation",
+          "path": "scripts/release-artifact.mjs"
+        },
+        {
+          "kind": "implementation",
+          "path": "scripts/check-release-environment.mjs"
+        },
+        {
+          "kind": "implementation",
+          "path": "scripts/publish.mjs"
+        },
+        {
+          "kind": "implementation",
+          "path": "scripts/verify-published.mjs"
+        },
+        {
+          "kind": "design",
+          "path": "docs/publishing.md"
+        },
         {
           "kind": "implementation",
           "path": "package.json"

@@ -38,3 +38,5 @@ The foundation tests include 5,000 nodes, high-fanout queries, logical module bo
 Run `npm run package` and `npm run test:package` to test the exact distributable archive. Preserve the separation between authored design, derived indexes and assurance evidence when extending the toolkit. See [indexes and generation in CI](indexing-and-ci.md) for the cost of loading, querying and generation.
 
 Write Markdown prose with one paragraph per source line and use editor soft wrapping. Preserve structural line breaks in lists, tables, headings, code blocks, frontmatter and intentional Markdown hard breaks; do not manually wrap prose to a fixed column width.
+
+For releases, follow [publishing](publishing.md): version tags select tested archives, an environment approval authorizes publication, and registry installation is checked afterward.

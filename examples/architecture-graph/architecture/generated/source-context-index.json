@@ -133,7 +133,25 @@
         "relationship:typescript-build"
       ]
     },
+    "scripts/check-release-environment.mjs": {
+      "nodeIds": [
+        "component:build-release"
+      ],
+      "relationshipIds": []
+    },
     "scripts/package.mjs": {
+      "nodeIds": [
+        "component:build-release"
+      ],
+      "relationshipIds": []
+    },
+    "scripts/publish.mjs": {
+      "nodeIds": [
+        "component:build-release"
+      ],
+      "relationshipIds": []
+    },
+    "scripts/release-artifact.mjs": {
       "nodeIds": [
         "component:build-release"
       ],
@@ -154,6 +172,12 @@
     "scripts/test-package.mjs": {
       "nodeIds": [
         "capability:ship-toolkit"
+      ],
+      "relationshipIds": []
+    },
+    "scripts/verify-published.mjs": {
+      "nodeIds": [
+        "component:build-release"
       ],
       "relationshipIds": []
     },

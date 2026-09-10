@@ -34,7 +34,7 @@ Choose the command for your system. Then copy the `.tgz` into your project's `ve
 
 The **Validate and package** workflow runs for pushes to `main`, pull requests targeting `main`, tags beginning with `v`, and manual requests from the Actions page. It tests on Linux with Node 22 and 24 and on macOS with Node 22. Packaging waits for those checks to pass.
 
-Each download remains available for 30 days. For a lasting release, attach the tested tarball and checksum to a GitHub Release. A version tag must match the package version—for example, `v0.3.0`. The workflow does not create a release or publish to npm for you.
+Each download remains available for 30 days. For a lasting release, attach the tested tarball and checksum to a GitHub Release. A version tag must match the package version—for example, `v0.3.0`. A version-tag push can publish the tested archive to npm after the release configuration check and environment approval; see [release setup](publishing.md). Branch pushes, pull requests and manual runs do not publish. The workflow does not create a GitHub Release.
 
 ## Build and try a local package
 
@@ -59,4 +59,4 @@ The project uses the MIT license. GitHub repository visibility and npm publicati
 
 A maintainer can change GitHub visibility after checking the build and trying its package. Public users need the installation guide and an honest explanation of the toolkit's limits; they do not need to read its [origin notes](history/README.md).
 
-Marketplace distribution is still in preparation. The included manifests do not publish or submit anything by themselves, and the current Actions workflow does not publish to npm or a plugin directory. See [publishing preparation](publishing.md) for validation and release steps.
+Marketplace distribution is still in preparation. The included manifests do not publish or submit anything by themselves, and npm publication requires an enabled, approved version-tag release; plugin directory submission is not automated. See [publishing preparation](publishing.md) for validation and release steps.
