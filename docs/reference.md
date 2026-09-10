@@ -29,6 +29,10 @@ A missing result means the graph has no matching record. It does not mean the af
 | `ag validate` | Finds malformed records, duplicate IDs, missing relationship endpoints, conflicting ownership, and broken file references |
 | `ag generate` | Writes a briefing and summary from the current graph |
 | `ag check` | Reports whether those generated files are missing or out of date, without changing them |
+| `ag skill install --agent claude` | Copies the bundled skill into `.claude/skills` so Claude Code can use it |
+| `ag skill install --agent codex` | Copies the bundled skill into `.agents/skills` so Codex can use it |
+
+`skill install` accepts both agents at once as `--agent claude,codex`, writes under `--root DIR` when the project is elsewhere, and refuses to replace an existing copy unless you add `--force`. It installs instructions; it does not create or change a graph. [Using AG with a coding agent](skill-installation.md) covers the Claude Code plugin alternative.
 
 `init` also accepts `--root DIR` to create the starter files elsewhere. The other commands accept `--config FILE`. Paths in the graph are relative to the directory containing that configuration file. The default is `ag.config.json` in the current directory; AG does not search parent folders for it.
 
@@ -72,7 +76,7 @@ const result = syncArtifacts(project, { check: true });
 
 Start with `loadProject`: it checks the configuration, graph, and file references, and rejects references into generated output. Treat a loaded project as a snapshot and reload after editing declarations. `loadProject(path, { forceCanonical: true })` bypasses the compiled cache. `validateGraph` checks a graph object and returns a list of `{code, at, message}` errors; it does not perform the additional configuration checks. Other operations throw errors for invalid inputs. `syncArtifacts` returns a `drift` list; without `check: true`, it writes the generated files.
 
-The package exports types including `Graph`, `GraphNode`, `Relationship`, `GraphModule`, `Project`, and `ContextBundle`, along with typed Zod schemas. It also exports `serializeGraph` and `parseDeclarations` for working with the authored format, and `initProject`, `renderArtifacts`, `formatContext`, `VERSION`, `LIMIT`, and `AGError`. Tools that read JSON can access the graph schema through `@architecture-graph/toolkit/schema`.
+The package exports types including `Graph`, `GraphNode`, `Relationship`, `GraphModule`, `Project`, and `ContextBundle`, along with typed Zod schemas. It also exports `serializeGraph` and `parseDeclarations` for working with the authored format, and `initProject`, `installSkill`, `renderArtifacts`, `formatContext`, `VERSION`, `LIMIT`, and `AGError`. Tools that read JSON can access the graph schema through `@architecture-graph/toolkit/schema`.
 
 ## One file, logical modules
 

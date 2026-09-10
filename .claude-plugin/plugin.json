@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "architecture-graph",
+  "displayName": "Architecture Graph",
+  "version": "0.3.0",
+  "description": "Create and maintain an architecture graph: the responsibilities, ownership, shared rules, boundaries, and open decisions behind a codebase.",
+  "author": {
+    "name": "Bill Bliss",
+    "url": "https://github.com/billbliss"
+  },
+  "homepage": "https://github.com/billbliss/architecture-graph",
+  "repository": "https://github.com/billbliss/architecture-graph",
+  "license": "MIT",
+  "keywords": ["architecture", "design", "documentation", "context"]
+}

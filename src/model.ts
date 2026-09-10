@@ -1,6 +1,6 @@
 import type { Config, Graph, GraphModule, GraphNode, Relationship } from './schema.js';
 
-export const VERSION = '0.2.0';
+export const VERSION = '0.3.0';
 export const LIMIT = 'Structural validation only; declarations and file existence do not prove implementation conformance.';
 export interface Locator { path: string; section: 'nodes' | 'relationships' | 'modules'; objectId: string }
 export interface SourceContext { nodeIds: string[]; relationshipIds: string[] }

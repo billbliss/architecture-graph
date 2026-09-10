@@ -26,6 +26,7 @@ The useful entry points are:
 | `src/compiled.ts` | Read and write disposable indexes with freshness checks |
 | `src/context.ts` | Retrieve bounded neighborhoods and report omissions |
 | `src/artifacts.ts` | Generate a short briefing, summary and indexes |
+| `src/skills.ts` | Install the bundled agent skill into a project |
 | `src/cli.ts` | Public command-line interface |
 
 `bin/ag.js` is only a small runtime launcher. Both source and generated type/source maps are included in the package. Consumers need Node, not a TypeScript compiler; contributors install the compiler through the project's development dependencies.

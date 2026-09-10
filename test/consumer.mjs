@@ -1,5 +1,8 @@
 import { stringify, parse } from 'yaml';
 // End-to-end lifecycle: only the packed public CLI and public package export run in consumers.
+// Installs use a throwaway cache to avoid inherited cache metadata. The override is AG_NPM_CACHE, not
+// npm_config_cache: npm exports its own config into script environments, so reading that variable
+// would silently reuse the caller's cache and let stale metadata decide what this test installs.
 import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, cpSync, rmSync, existsSync } from 'node:fs';
@@ -12,7 +15,7 @@ const example=join(repo,'examples/hello-world');
 const report=[];
 const log=message=>{report.push(message);console.log(message);};
 function run(cwd,bin,args,status=0) {
-  const result=spawnSync(bin,args,{cwd,encoding:'utf8',env:{...process.env,npm_config_cache:process.env.npm_config_cache ?? join(temporary,'npm-cache')}});
+  const result=spawnSync(bin,args,{cwd,encoding:'utf8',env:{...process.env,npm_config_cache:process.env.AG_NPM_CACHE ?? join(temporary,'npm-cache')}});
   assert.equal(result.status,status,`${bin} ${args.join(' ')}\n${result.stdout}\n${result.stderr}`);
   return result.stdout+result.stderr;
 }
@@ -22,7 +25,7 @@ try {
   let tarball = process.env.AG_TARBALL && resolve(process.env.AG_TARBALL);
   if (!tarball) {
     execFileSync('npm', ['run','build'], {cwd:repo,stdio:'inherit'});
-    const packed=JSON.parse(execFileSync('npm',['pack','--json','--pack-destination',temporary,'--ignore-scripts'],{cwd:repo,encoding:'utf8',env:{...process.env,npm_config_cache:process.env.npm_config_cache ?? join(temporary,'npm-cache')}}))[0];
+    const packed=JSON.parse(execFileSync('npm',['pack','--json','--pack-destination',temporary,'--ignore-scripts'],{cwd:repo,encoding:'utf8',env:{...process.env,npm_config_cache:process.env.AG_NPM_CACHE ?? join(temporary,'npm-cache')}}))[0];
     tarball=join(temporary,packed.filename);
   }
   const consumer=join(temporary,'isolated project');mkdirSync(consumer);
@@ -33,6 +36,20 @@ try {
   }
   assert(!existsSync(join(consumer,'node_modules/@architecture-graph/toolkit/.git')));
   assert(!existsSync(join(consumer,'node_modules/@architecture-graph/toolkit/examples/hello-world/node_modules')), 'The packaged example must not include installed dependencies');
+  ag(consumer,'skill','install','--agent','codex');
+  assert(!existsSync(join(consumer,'.claude')), 'Codex-only install must not install a Claude skill');
+  assert(!existsSync(join(consumer,'ag.config.json')), 'Skill installation must not create a graph configuration');
+  ag(consumer,'skill','install','--agent','claude');
+  for (const dir of ['.claude/skills','.agents/skills']) assert(existsSync(join(consumer,dir,'architecture-graph/SKILL.md')), `Skill missing from ${dir}`);
+  run(consumer,join(consumer,'node_modules/.bin/ag'),['skill','install','--agent','claude'],1);
+  const codexSkill = join(consumer,'.agents/skills/architecture-graph');
+  assert(existsSync(join(codexSkill,'references/modeling.md')));
+  writeFileSync(join(codexSkill,'SKILL.md'), 'local Codex edit');
+  run(consumer,join(consumer,'node_modules/.bin/ag'),['skill','install','--agent','codex'],1);
+  assert.equal(readFileSync(join(codexSkill,'SKILL.md'),'utf8'),'local Codex edit');
+  const replacement = JSON.parse(ag(consumer,'skill','install','--agent','codex','--force','--json'));
+  assert.equal(replacement.installed[0].replaced,true);
+  log('PASS: installed package places the shared skill in both the Claude Code and Codex project folders and refuses to overwrite a local copy.');
   ag(consumer,'init','--id','graph:hello-world','--title','Hello-world architecture');
   cpSync(join(example,'requirements.md'),join(consumer,'requirements.md'));
   const proposed=JSON.parse(readFileSync(join(example,'stages/proposed.json')));

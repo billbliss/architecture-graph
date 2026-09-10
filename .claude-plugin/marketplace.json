@@ -1,0 +1,14 @@
+{
+  "name": "architecture-graph",
+  "owner": {
+    "name": "Bill Bliss",
+    "url": "https://github.com/billbliss"
+  },
+  "plugins": [
+    {
+      "name": "architecture-graph",
+      "source": "./",
+      "description": "Create and maintain an architecture graph: the responsibilities, ownership, shared rules, boundaries, and open decisions behind a codebase."
+    }
+  ]
+}

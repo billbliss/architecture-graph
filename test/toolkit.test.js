@@ -1,9 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, writeFileSync, readFileSync, mkdirSync, symlinkSync, rmSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, readFileSync, mkdirSync, symlinkSync, rmSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
-import { VERSION, initProject, loadProject, validateGraph, getContext, syncArtifacts } from '../lib/index.js';
+import { join, dirname } from 'node:path';
+import { VERSION, initProject, loadProject, validateGraph, getContext, syncArtifacts, installSkill, SKILL_TARGETS, SKILL_NAME } from '../lib/index.js';
 const fixture = JSON.parse(readFileSync(new URL('../examples/hello-world/stages/proposed.json', import.meta.url)));
 function setup(t) {
   const root = mkdtempSync(join(tmpdir(),'ag-unit-'));
@@ -84,12 +84,48 @@ test('valid declaration does not check code behavior',t=>{
   p.graph.nodes[1].status='implemented';p.graph.nodes[1].references=[{kind:'implementation',path:'wrong.js'}];
   assert.deepEqual(validateGraph(p.graph,p.root),[]);
 });
-test('tool, manifest, and bundled skill versions stay compatible', () => {
+test('tool, manifest, plugin and bundled skill versions stay compatible', () => {
   const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url)));
   const skill = readFileSync(new URL('../skills/architecture-graph/SKILL.md', import.meta.url),'utf8');
+  const plugin = JSON.parse(readFileSync(new URL('../.claude-plugin/plugin.json', import.meta.url)));
+  const marketplace = JSON.parse(readFileSync(new URL('../.claude-plugin/marketplace.json', import.meta.url)));
   assert.equal(pkg.version, VERSION);
   assert(skill.includes(`version: "${VERSION}"`));
   assert.equal(pkg.bin.ag, 'bin/ag.js');
+  // Claude Code discovers a plugin's skills under skills/; the manifest only names the plugin.
+  assert.equal(plugin.name, SKILL_NAME);
+  assert.equal(plugin.version, VERSION);
+  assert(marketplace.plugins.some(entry => entry.name === plugin.name && entry.source === './'));
+});
+test('installing the skill serves each agent without replacing local edits', t => {
+  const root = mkdtempSync(join(tmpdir(),'ag-skill-'));
+  t.after(() => rmSync(root,{recursive:true,force:true}));
+  const installed = installSkill(root, ['claude','codex']);
+  assert.deepEqual(installed.map(i => i.path).sort(), Object.values(SKILL_TARGETS).map(dir => `${dir}/${SKILL_NAME}`).sort());
+  assert(installed.every(i => i.replaced === false));
+  for (const dir of Object.values(SKILL_TARGETS)) {
+    assert(existsSync(join(root,dir,SKILL_NAME,'SKILL.md')));
+    assert(existsSync(join(root,dir,SKILL_NAME,'references/modeling.md')));
+    for (const file of ['SKILL.md', 'references/modeling.md']) {
+      const installedFile = join(root,dir,SKILL_NAME,file);
+      for (const [,target] of readFileSync(installedFile,'utf8').matchAll(/\]\(([^)]+)\)/g)) {
+        if (!target.includes('://') && !target.startsWith('#')) assert(existsSync(join(dirname(installedFile),target)), `Broken installed skill link: ${target}`);
+      }
+    }
+  }
+  const edited = join(root,SKILL_TARGETS.claude,SKILL_NAME,'SKILL.md');
+  writeFileSync(edited,'local edit');
+  assert.throws(() => installSkill(root, ['claude']), /overwrite/);
+  assert.equal(readFileSync(edited,'utf8'),'local edit');
+  const replaced = installSkill(root, ['claude'], { force: true });
+  assert.equal(replaced[0].replaced, true);
+  assert(readFileSync(edited,'utf8').includes('name: architecture-graph'));
+});
+test('skill installation rejects an unknown agent before writing anything', t => {
+  const root = mkdtempSync(join(tmpdir(),'ag-skill-'));
+  t.after(() => rmSync(root,{recursive:true,force:true}));
+  assert.throws(() => installSkill(root, ['claude','gemini']), /Unknown agent/);
+  assert(!existsSync(join(root,SKILL_TARGETS.claude)));
 });
 test('generated symlinks are rejected before any output is overwritten', t => {
   const p = setup(t); const project = p.load();
@@ -98,4 +134,31 @@ test('generated symlinks are rejected before any output is overwritten', t => {
   symlinkSync(join(p.root,'keep.md'),join(p.root,'architecture/generated/guidance.md'));
   assert.throws(() => syncArtifacts(project), /Symlink/);
   assert.equal(readFileSync(join(p.root,'keep.md'),'utf8'),'original');
+});
+
+test('Codex installation preflights all destinations and rejects symlinks even with force', t => {
+  const root = mkdtempSync(join(tmpdir(), 'ag-skill-preflight-'));
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  installSkill(root, ['codex']);
+  const edited = join(root, '.agents/skills/architecture-graph/SKILL.md');
+  writeFileSync(edited, 'local Codex edits');
+  assert.throws(() => installSkill(root, ['claude', 'codex']), /overwrite/);
+  assert(!existsSync(join(root, '.claude')));
+  assert.equal(readFileSync(edited, 'utf8'), 'local Codex edits');
+  rmSync(join(root, '.agents'), { recursive: true });
+  mkdirSync(join(root, 'external'));
+  symlinkSync(join(root, 'external'), join(root, '.agents'));
+  assert.throws(() => installSkill(root, ['claude', 'codex'], { force: true }), /Symlink/);
+  assert(!existsSync(join(root, '.claude')));
+  assert(!existsSync(join(root, 'external/skills')));
+});
+
+test('agent validation rejects inherited object properties before creating the root', t => {
+  const parent = mkdtempSync(join(tmpdir(), 'ag-skill-agent-'));
+  t.after(() => rmSync(parent, { recursive: true, force: true }));
+  for (const agent of ['constructor', '__proto__', 'toString']) {
+    const root = join(parent, agent);
+    assert.throws(() => installSkill(root, [agent]), /Unknown agent/);
+    assert(!existsSync(root));
+  }
 });

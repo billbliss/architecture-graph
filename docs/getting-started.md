@@ -9,14 +9,14 @@ AG has three pieces:
 | Piece | What it does | Where it lives |
 | --- | --- | --- |
 | Toolkit | Provides commands to read the graph, check it, and generate guidance | Installed in your project's `node_modules` |
-| Codex skill (optional) | Gives Codex a method for creating and maintaining the graph | Copied into your project's `.agents/skills` |
+| Coding-agent skill (optional) | Gives Claude Code or Codex a method for creating and maintaining the graph | Installed into your project's `.claude/skills` or `.agents/skills` |
 | Your graph | Records your project's responsibilities, rules, relationships, and open decisions | Usually `architecture/graph.yaml` in your repository |
 
-You can use AG without Codex by editing the graph yourself. Adding the skill does not automatically create a graph or change your application.
+You can use AG without a coding agent by editing the graph yourself. Adding the skill does not automatically create a graph or change your application.
 
 ## 1. Get the package
 
-You need Node.js 22 or later and npm. The current package is `architecture-graph-toolkit-0.2.0.tgz`, an archive npm can install. It is not yet available by package name from the npm registry.
+You need Node.js 22 or later and npm. The current package is `architecture-graph-toolkit-0.3.0.tgz`, an archive npm can install. It is not yet available by package name from the npm registry.
 
 Download a successful build from the repository's **Actions → Validate and package → Artifacts**, and extract the ZIP. See [package downloads](github-packaging.md) for details and checksum instructions.
 
@@ -36,32 +36,33 @@ Go to **your project's root directory**. Put a copy of the downloaded or built `
 If your project does not have a `package.json`, run `npm init -y` first. This is just a way to install the AG tooling; your application does not have to use JavaScript.
 
 ```sh
-npm install --save-dev ./vendor/architecture-graph-toolkit-0.2.0.tgz
+npm install --save-dev ./vendor/architecture-graph-toolkit-0.3.0.tgz
 ./node_modules/.bin/ag --version
 ```
 
-npm installs the YAML and schema libraries along with the toolkit; an initial install needs registry access unless those dependencies are cached. The second command should print `0.2.0`. The toolkit is now installed, but it has not read your documents or created a design.
+npm installs the YAML and schema libraries along with the toolkit; an initial install needs registry access unless those dependencies are cached. The second command should print `0.3.0`. The toolkit is now installed, but it has not read your documents or created a design.
 
-## 3. Let Codex help, or create the graph yourself
+## 3. Let a coding agent help, or create the graph yourself
 
-### With Codex
+### With Claude Code or Codex
 
-Copy the bundled skill into the location Codex uses for project skills:
+Install the bundled skill where your agent reads project skills:
 
 ```sh
-mkdir -p .agents/skills
-cp -R node_modules/@architecture-graph/toolkit/skills/architecture-graph .agents/skills/
+./node_modules/.bin/ag skill install --agent claude
 ```
 
-For an existing skill installation, review local changes before replacing it. Open this project in Codex, then ask:
+Use `--agent codex` for Codex, or `--agent claude,codex` for both. The command writes to `.claude/skills` or `.agents/skills` and refuses to replace an existing copy; review local changes first, then repeat with `--force`. Claude Code users can install the skill as a plugin instead—see [using AG with a coding agent](skill-installation.md).
 
-> Use $architecture-graph to read our requirements and design documents and create a small initial architecture graph. Explain the responsibilities and boundaries you found. Keep proposals and unanswered questions explicit. Add a short instruction to AGENTS.md so future architectural changes consult and maintain the graph.
+Open this project in your agent, then ask:
 
-Point Codex to the documents that matter. Review the result together: does it capture the decisions you want the next developer to understand? This is what **bootstrapping** means here—building the first useful design record from the material you already have. The skill guides Codex; the command-line toolkit does not extract architecture from documents on its own.
+> Use the architecture-graph skill to read our requirements and design documents and create a small initial architecture graph. Explain the responsibilities and boundaries you found. Keep proposals and unanswered questions explicit. Add a short instruction to our project instructions file so future architectural changes consult and maintain the graph.
 
-See [using AG with Codex](skill-installation.md) for follow-up prompts and the project instruction.
+Point the agent to the documents that matter. Review the result together: does it capture the decisions you want the next developer to understand? This is what **bootstrapping** means here—building the first useful design record from the material you already have. The skill guides the agent; the command-line toolkit does not extract architecture from documents on its own.
 
-### Without Codex
+See [using AG with a coding agent](skill-installation.md) for follow-up prompts and the project instruction.
+
+### Without an agent
 
 Create the starter files:
 
@@ -86,7 +87,7 @@ Replace the starter’s `nodes: []` with `nodes:` followed by this list entry, i
 
 ## 4. Check and use the graph
 
-Once you or Codex have added the initial design:
+Once you or your agent have added the initial design:
 
 ```sh
 ./node_modules/.bin/ag validate
@@ -107,7 +108,7 @@ Use your own ID if you did not add the manual example above. Read the related re
 
 ## What to keep in version control
 
-Keep the graph, configuration, project instructions, and any copied skill alongside your code and design documents. Also keep `package.json`, `package-lock.json`, and the package archive in `vendor/` so teammates can run `npm ci`. If your repository ignores `.tgz` files, add an exception for that archive. Do not commit `node_modules`.
+Keep the graph, configuration, project instructions, and any installed skill folder alongside your code and design documents. Also keep `package.json`, `package-lock.json`, and the package archive in `vendor/` so teammates can run `npm ci`. If your repository ignores `.tgz` files, add an exception for that archive. Do not commit `node_modules`.
 
 For a first adoption, keeping the generated briefing in version control makes changes easy to review. Check it before regenerating when you want to detect stale output; generating first replaces the old output. The [reference](reference.md) explains the alternative of recreating it during a build.
 

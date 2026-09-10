@@ -49,4 +49,4 @@ These rules catch broken records. They cannot establish whether the graph covers
 
 ## Make shared boundaries visible
 
-Optional `modules` group related responsibilities inside the same canonical graph. Each module has an ID, name, description, and lists of imported and exported node IDs. A node can name its `module`. A relationship crossing modules requires the source module to import its target and the target module to export that node. This makes shared boundaries reviewable. See the [reference](../../../docs/reference.md) for the complete shape and additional relationship kinds.
+Optional `modules` group related responsibilities inside the same canonical graph. Each module has an ID, name, description, and lists of imported and exported node IDs. A node can name its `module`. A relationship crossing modules requires the source module to import its target and the target module to export that node. This makes shared boundaries reviewable. For the complete shape and additional relationship kinds, read `node_modules/@architecture-graph/toolkit/docs/reference.md` from the consuming project root.

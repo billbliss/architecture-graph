@@ -14,7 +14,7 @@ Open this repository's **Actions → Validate and package**, choose a successful
 
 | File | Why it is included |
 | --- | --- |
-| `architecture-graph-toolkit-<version>.tgz` | The package npm installs, including the Codex skill and MIT license |
+| `architecture-graph-toolkit-<version>.tgz` | The package npm installs, including the coding-agent skill and MIT license |
 | `SHA256SUMS` | A checksum to confirm the archive has not changed since it was built |
 | `package-metadata.json` | The version, source commit, and build run, so you can identify what you are trying |
 
@@ -34,7 +34,7 @@ Choose the command for your system. Then copy the `.tgz` into your project's `ve
 
 The **Validate and package** workflow runs for pushes to `main`, pull requests targeting `main`, tags beginning with `v`, and manual requests from the Actions page. It tests on Linux with Node 22 and 24 and on macOS with Node 22. Packaging waits for those checks to pass.
 
-Each download remains available for 30 days. For a lasting release, attach the tested tarball and checksum to a GitHub Release. A version tag must match the package version—for example, `v0.2.0`. The workflow does not create a release or publish to npm for you.
+Each download remains available for 30 days. For a lasting release, attach the tested tarball and checksum to a GitHub Release. A version tag must match the package version—for example, `v0.3.0`. The workflow does not create a release or publish to npm for you.
 
 ## Build and try a local package
 
@@ -51,8 +51,12 @@ npm run test:package
 
 To test a downloaded archive with this checkout's examples, use `AG_TARBALL=/absolute/path/package.tgz npm run test:consumer`.
 
+`test:consumer` installs into a throwaway npm cache so a run resolves dependencies from the registry rather than from whatever the machine happens to have cached. It therefore needs network access. Set `AG_NPM_CACHE=/absolute/path/cache` to reuse a warm cache instead, accepting that stale metadata can affect resolution or make an install fail. The exact runtime versions remain pinned; this test does not reproduce the consuming application’s lockfile.
+
 ## Sharing the source
 
 The project uses the MIT license. GitHub repository visibility and npm publication are separate choices. Making the repository public shares the source under that license; `private: true` in `package.json` still prevents accidental npm registry publishing and does not stop tarball installation.
 
 A maintainer can change GitHub visibility after checking the build and trying its package. Public users need the installation guide and an honest explanation of the toolkit's limits; they do not need to read its [origin notes](history/README.md).
+
+Marketplace distribution is still in preparation. The included manifests do not publish or submit anything by themselves, and the current Actions workflow does not publish to npm or a plugin directory. See [publishing preparation](publishing.md) for validation and release steps.

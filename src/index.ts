@@ -7,3 +7,5 @@ export { loadProject, initProject, AGError } from './project.js';
 export { getContext, formatContext } from './context.js';
 export { summarize, renderArtifacts, syncArtifacts } from './artifacts.js';
 export { serializeGraph, parseDeclarations } from './serialization.js';
+export { installSkill, bundledSkillPath, SKILL_NAME, SKILL_AGENTS, SKILL_TARGETS } from './skills.js';
+export type { SkillAgent, SkillInstallation } from './skills.js';

@@ -22,8 +22,8 @@ AG records what the software is intended to do. It does not prove that the code 
 ## Getting started: three separate steps
 
 1. **Install the toolkit in your project.** This adds the `ag` command, which reads and checks the graph.
-2. **Optionally add the Codex skill.** This teaches Codex how to help build and maintain the graph. It comes inside the toolkit download; it is not another service or subscription.
-3. **Create your project's first graph.** Read the project's requirements and design documents, then record the important responsibilities, rules, and open questions. You or Codex do this work; installation alone does not do it.
+2. **Optionally add the coding-agent skill.** This teaches Claude Code or Codex how to help build and maintain the graph. It comes inside the toolkit download; it is not another service or subscription.
+3. **Create your project's first graph.** Read the project's requirements and design documents, then record the important responsibilities, rules, and open questions. You or your coding agent do this work; installation alone does not do it.
 
 The toolkit currently comes as a downloadable `.tgz` package from GitHub Actions, or you can build it from this repository. It is already an npm package: you install the downloaded archive with npm. Publishing to the npm registry later would let you install by package name instead. You need Node.js 22 or later and npm. You do not need Visual Studio.
 
@@ -32,7 +32,7 @@ The toolkit currently comes as a downloadable `.tgz` package from GitHub Actions
 ## Where to go next
 
 - [Try the hello-world example](examples/hello-world/README.md) to see a design evolve alongside working code.
-- [Use AG with Codex](docs/skill-installation.md) to turn your documents into a useful starting graph.
+- [Use AG with a coding agent](docs/skill-installation.md)—Claude Code or Codex—to turn your documents into a useful starting graph.
 - [Keep context useful as the graph grows](docs/indexing-and-ci.md) with generated indexes and generation in GitHub Actions.
 - [Look up commands and file formats](docs/reference.md) when you need the details.
 - [Understand the limits and upgrades](docs/compatibility.md) to know what the checks do—and what they cannot tell you.
@@ -42,4 +42,4 @@ The [project history](docs/history/README.md) records how AG was created. It is 
 
 The toolkit is developed in TypeScript and ships JavaScript ready to run, with types and source maps for developers. Your project owns one YAML graph.
 
-Version **0.2.0** · [MIT licensed](LICENSE)
+Version **0.3.0** · [MIT licensed](LICENSE)

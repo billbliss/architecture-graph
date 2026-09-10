@@ -4,9 +4,11 @@ AG helps you keep a design record understandable and internally consistent. It c
 
 For example, a formatter can be recorded as the authority for greeting text while another component secretly builds its own greeting. AG checks the declaration, not the runtime behavior. Application tests and review still matter. The hello-world tests deliberately demonstrate that difference.
 
-## The 0.2.0 foundation
+## The 0.3.0 toolkit
 
-The toolkit and skill are **0.2.0**. Graph and configuration format **1** remain readable; generated artifacts use format **2**. New projects start with one YAML file. The toolkit also reads existing standalone JSON graphs, so changing formats is optional. Older toolkit versions may reject the added fields and vocabulary; compatibility is from 0.1 data to the 0.2 reader.
+The toolkit and skill are **0.3.0**. Graph and configuration format **1** remain readable; generated artifacts use format **2**. New projects start with one YAML file. The toolkit also reads existing standalone JSON graphs, so changing formats is optional. Older toolkit versions may reject the added fields and vocabulary; compatibility is from 0.1 data to the 0.3 reader.
+
+0.3.0 adds `ag skill install` and makes the bundled skill serve Claude Code and Codex from one folder. Graph data, configuration and generated formats are unchanged from 0.2.0; regenerate so the recorded tool version matches.
 
 TypeScript is now the editable implementation source. npm consumers run the compiled JavaScript without installing a compiler. The package includes declarations and source maps, so developers can navigate back to the source and use the library with type checking. See [developing the toolkit](development.md).
 
@@ -14,7 +16,7 @@ There is one authored graph per configuration. Logical modules, when useful, are
 
 ## Upgrade an existing standalone project
 
-1. Install the 0.2.0 package and refresh the copied skill after reviewing local changes.
+1. Install the 0.3.0 package and refresh the installed skill after reviewing local changes: `ag skill install --agent claude --force`, or `--agent codex`.
 2. Keep the existing JSON graph and configuration if desired; they remain supported. `ag init` is for new projects and will not overwrite your files.
 3. Run `ag validate`, then `ag generate` to rebuild the new indexes and briefing. Review the changes and run `ag check`.
 4. If you prefer YAML, convert the same graph data to one `.yaml` file and update `config.graph`. Compare the loaded data before removing the JSON file. Do not maintain two independent authored copies.
@@ -39,4 +41,4 @@ Compiled indexes are disposable. Their metadata checks graph identity, declarati
 
 ## Future versions
 
-Incompatible authored formats require a new format version and migration instructions. During 0.x, incompatible CLI/library changes require a minor release; compatible fixes use a patch release. Keep the toolkit, copied skill and project lockfile aligned. The Actions matrix covers Linux Node 22/24 and macOS Node 22; consult actual run results. Windows has not been tested.
+Incompatible authored formats require a new format version and migration instructions. During 0.x, new capabilities and incompatible CLI/library changes require a minor release; compatible fixes use a patch release. Keep the toolkit, installed skill and project lockfile aligned. The Actions matrix covers Linux Node 22/24 and macOS Node 22; consult actual run results. Windows has not been tested.
