@@ -1,10 +1,26 @@
-import { statSync } from 'node:fs';
+// Browser-safe: file access goes through a FileSource; no Node built-ins.
 import { GraphSchema, shapeErrors, type Graph, type Diagnostic, type NodeKind, type RelationshipKind } from './schema.js';
-import { localPath, messageOf } from './paths.js';
-import { checkSidecars } from './sidecars.js';
+import { assertProjectPath, messageOf, runAsync, runSync, statFile, type AsyncFileSource, type FileSource, type FileTask } from './files.js';
+import { sidecarRules } from './sidecars.js';
 
-/** Validate declarations and real references; this does not inspect implementation behavior. */
-export function validateGraph(value: unknown, root: string): Diagnostic[] {
+/** Validate declarations and real references from a synchronous file source; this does not inspect implementation behavior. */
+export function validateGraphSync(value: unknown, source: FileSource): Diagnostic[] {
+  return runSync(graphRules(value), source);
+}
+/** The same validation as {@link validateGraphSync}, reading files from an asynchronous source. */
+export function validateGraphAsync(value: unknown, source: AsyncFileSource): Promise<Diagnostic[]> {
+  return runAsync(graphRules(value), source);
+}
+
+function* referenceProblem(path: string): FileTask<string | null> {
+  try {
+    assertProjectPath(path);
+    const kind = yield* statFile(path);
+    return kind === 'file' ? null : kind === 'missing' ? 'file not found' : 'Reference must name a file';
+  } catch (error) { return messageOf(error); }
+}
+
+function* graphRules(value: unknown): FileTask<Diagnostic[]> {
   const errors = shapeErrors(value, GraphSchema);
   if (errors.length) return errors;
   const graph = value as Graph;
@@ -25,12 +41,7 @@ export function validateGraph(value: unknown, root: string): Diagnostic[] {
       add('implemented-source', item.id, 'Implemented declaration needs an implementation reference');
     }
     for (const ref of item.references) {
-      if (!checkedPaths.has(ref.path)) {
-        try {
-          if (!statSync(localPath(root, ref.path)).isFile()) throw new Error('Reference must name a file');
-          checkedPaths.set(ref.path, null);
-        } catch (error) { checkedPaths.set(ref.path, messageOf(error)); }
-      }
+      if (!checkedPaths.has(ref.path)) checkedPaths.set(ref.path, yield* referenceProblem(ref.path));
       const problem = checkedPaths.get(ref.path);
       if (problem) add('reference', item.id, `${ref.path}: ${problem}`);
     }
@@ -83,7 +94,7 @@ export function validateGraph(value: unknown, root: string): Diagnostic[] {
       }
     }
   }
-  errors.push(...checkSidecars(graph, root));
+  errors.push(...(yield* sidecarRules(graph)));
   // Each ownership link is visited once, including large chains.
   const finished = new Set<string>();
   for (const start of owners.keys()) {

@@ -1,11 +1,10 @@
-import { lstatSync, realpathSync } from 'node:fs';
-import { isAbsolute, resolve } from 'node:path';
+import { lstatSync, realpathSync, readFileSync, statSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { assertProjectPath, messageOf, type FileSource } from './files.js';
 
+export { messageOf };
 export function localPath(root: string, path: string): string {
-  if (!path || isAbsolute(path) || /[\\\x00-\x1f:]/.test(path)
-    || path.split('/').some(part => !part || part === '.' || part === '..')) {
-    throw new Error(`Expected normalized repository-relative path: ${path}`);
-  }
+  assertProjectPath(path);
   let current = realpathSync(root);
   for (const part of path.split('/')) {
     current = resolve(current, part);
@@ -17,4 +16,18 @@ export function localPath(root: string, path: string): string {
   }
   return current;
 }
-export const messageOf = (error: unknown): string => error instanceof Error ? error.message : String(error);
+
+/** Project files under a Node directory, with the symlink rule applied to every path. */
+export function nodeFileSource(root: string): FileSource {
+  return {
+    stat(path) {
+      const file = localPath(root, path);
+      try { return statSync(file).isFile() ? 'file' : 'other'; }
+      catch (error) {
+        if (error instanceof Error && 'code' in error && (error.code === 'ENOENT' || error.code === 'ENOTDIR')) return 'missing';
+        throw error;
+      }
+    },
+    read: path => readFileSync(localPath(root, path), 'utf8'),
+  };
+}

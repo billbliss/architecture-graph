@@ -3,7 +3,8 @@ import { dirname } from 'node:path';
 import { LIMIT, VERSION, type Project } from './model.js';
 import { byId, buildIndex } from './indexes.js';
 import { compiledArtifacts } from './compiled.js';
-import { declarationDigest, json } from './serialization.js';
+import { json } from './serialization.js';
+import { declarationDigest } from './digest.js';
 import { localPath } from './paths.js';
 import { SIDECAR_KINDS } from './sidecars.js';
 

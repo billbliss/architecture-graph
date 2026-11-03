@@ -14,6 +14,10 @@
       "types": "./lib/index.d.ts",
       "import": "./lib/index.js"
     },
+    "./core": {
+      "types": "./lib/core.d.ts",
+      "import": "./lib/core.js"
+    },
     "./schema": "./schema/graph.schema.json"
   },
   "files": [
@@ -56,6 +60,7 @@
   "devDependencies": {
     "@billbliss/architecture-graph": "^0.3.0",
     "@types/node": "22.20.2",
+    "esbuild": "0.28.2",
     "typescript": "5.9.3"
   },
   "types": "./lib/index.d.ts",

@@ -1,7 +1,6 @@
-import { createHash } from 'node:crypto';
+// Browser-safe: no Node built-ins. Digests live in digest.ts.
 import { parseDocument, stringify } from 'yaml';
-import type { Config, Graph } from './schema.js';
-import { byId } from './indexes.js';
+import type { Graph } from './schema.js';
 
 export const json = (value: unknown): string => JSON.stringify(value, null, 2) + '\n';
 export function stable(value: unknown): unknown {
@@ -11,13 +10,6 @@ export function stable(value: unknown): unknown {
       .map(([key, child]) => [key, stable(child)]));
   }
   return value;
-}
-export const digest = (value: string): string => createHash('sha256').update(value).digest('hex');
-export function declarationDigest(graph: Graph, config: Config): string {
-  return digest(JSON.stringify(stable({ config, graph: {
-    ...graph, nodes: [...graph.nodes].sort(byId), relationships: [...graph.relationships].sort(byId),
-    ...(graph.modules ? { modules: [...graph.modules].sort(byId) } : {}),
-  } })));
 }
 export function parseDeclarations(source: string, path: string): unknown {
   if (path.endsWith('.json')) JSON.parse(source); // Preserve strict JSON grammar for legacy input.
