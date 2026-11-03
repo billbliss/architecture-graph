@@ -189,7 +189,7 @@ nodes:
   - id: decision:browser-safe-core
     kind: decision
     name: Validation runs in browsers as well as Node
-    description: "Chosen and implemented: validation rules read files through a file source (stat and
+    description: "Chosen and implemented: validation rules read files through a file source (kind and
       read) and are written once as generators, run by a sync driver for the Node API and an async
       driver for browsers. The browser-safe part, including sidecar checks, is exported as
       @billbliss/architecture-graph/core and imports nothing from Node; a test bundles it for the

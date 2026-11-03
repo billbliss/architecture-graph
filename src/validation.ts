@@ -1,6 +1,6 @@
 // Browser-safe: file access goes through a FileSource; no Node built-ins.
 import { GraphSchema, shapeErrors, type Graph, type Diagnostic, type NodeKind, type RelationshipKind } from './schema.js';
-import { assertProjectPath, messageOf, runAsync, runSync, statFile, type AsyncFileSource, type FileSource, type FileTask } from './files.js';
+import { assertProjectPath, messageOf, runAsync, runSync, kindOf, type AsyncFileSource, type FileSource, type FileTask } from './files.js';
 import { sidecarRules } from './sidecars.js';
 
 /** Validate declarations and real references from a synchronous file source; this does not inspect implementation behavior. */
@@ -15,7 +15,7 @@ export function validateGraphAsync(value: unknown, source: AsyncFileSource): Pro
 function* referenceProblem(path: string): FileTask<string | null> {
   try {
     assertProjectPath(path);
-    const kind = yield* statFile(path);
+    const kind = yield* kindOf(path);
     return kind === 'file' ? null : kind === 'missing' ? 'file not found' : 'Reference must name a file';
   } catch (error) { return messageOf(error); }
 }

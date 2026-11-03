@@ -134,7 +134,7 @@ const graph = parseDeclarations(files['architecture/graph.yaml'], 'architecture/
 const errors = await validateGraph(graph, memoryFileSource(files));
 ```
 
-A file source answers two questions about a normalized project-relative path: `stat(path)` returns `'file'`, `'other'` (for example a directory) or `'missing'`, and `read(path)` returns the file's UTF-8 text. AG applies the path rules (no absolute paths, `..`, empty segments, backslashes or colons) before asking. A source throws to report that a file cannot be accessed, and its message becomes the diagnostic text.
+A file source answers two questions about a normalized project-relative path: `kind(path)` returns `'file'`, `'other'` (for example a directory) or `'missing'`, and `read(path)` returns the file's UTF-8 text. AG applies the path rules (no absolute paths, `..`, empty segments, backslashes or colons) before asking. A source throws to report that a file cannot be accessed, and its message becomes the diagnostic text.
 
 In the core, `validateGraph(graph, source)` and `sidecarValidator(source, schemaPath)` are asynchronous and accept sources whose methods return values or promises, as browser folder access and `fetch` do. `validateGraphSync` and `sidecarValidatorSync` take a synchronous source. All four run one set of rules, so the results are the same; the tests check this against the Node path for the bundled examples and for broken graphs and sidecars. `memoryFileSource(files)` serves a map of paths to text, with directories implied by file paths.
 

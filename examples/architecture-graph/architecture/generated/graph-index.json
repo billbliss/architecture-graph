@@ -675,7 +675,7 @@
       "status": "unresolved"
     },
     "decision:browser-safe-core": {
-      "description": "Chosen and implemented: validation rules read files through a file source (stat and read) and are written once as generators, run by a sync driver for the Node API and an async driver for browsers. The browser-safe part, including sidecar checks, is exported as @billbliss/architecture-graph/core and imports nothing from Node; a test bundles it for the browser platform. The viewer will supply folder and fetch sources and run the same validation as ag validate instead of a second implementation. This does not settle decision:authored-format-source.",
+      "description": "Chosen and implemented: validation rules read files through a file source (kind and read) and are written once as generators, run by a sync driver for the Node API and an async driver for browsers. The browser-safe part, including sidecar checks, is exported as @billbliss/architecture-graph/core and imports nothing from Node; a test bundles it for the browser platform. The viewer will supply folder and fetch sources and run the same validation as ag validate instead of a second implementation. This does not settle decision:authored-format-source.",
       "id": "decision:browser-safe-core",
       "kind": "decision",
       "module": "module:declarations",

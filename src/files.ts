@@ -10,14 +10,14 @@ export type FileKind = 'file' | 'other' | 'missing';
  */
 export interface FileSource {
   /** Kind of entry at the path; `missing` when nothing is there. */
-  stat(path: string): FileKind;
+  kind(path: string): FileKind;
   /** UTF-8 text of a regular file; throws when it cannot be read. */
   read(path: string): string;
 }
 
 /** Asynchronous file access, for browser folder handles or fetch. A {@link FileSource} also satisfies it. */
 export interface AsyncFileSource {
-  stat(path: string): FileKind | Promise<FileKind>;
+  kind(path: string): FileKind | Promise<FileKind>;
   read(path: string): string | Promise<string>;
 }
 
@@ -36,7 +36,7 @@ export function memoryFileSource(files: Record<string, string> | ReadonlyMap<str
   const entries = new Map<string, string>(files instanceof Map ? files : Object.entries(files as Record<string, string>));
   const isDirectory = (path: string): boolean => [...entries.keys()].some(key => key.startsWith(path + '/'));
   return {
-    stat: path => entries.has(path) ? 'file' : isDirectory(path) ? 'other' : 'missing',
+    kind: path => entries.has(path) ? 'file' : isDirectory(path) ? 'other' : 'missing',
     read: path => {
       const text = entries.get(path);
       if (text === undefined) throw new Error(isDirectory(path) ? 'not a file' : 'file not found');
@@ -45,7 +45,7 @@ export function memoryFileSource(files: Record<string, string> | ReadonlyMap<str
   };
 }
 
-type FileRequest = { op: 'stat'; path: string } | { op: 'read'; path: string };
+type FileRequest = { op: 'kind'; path: string } | { op: 'read'; path: string };
 
 /**
  * Validation rules are written once as generators that yield file requests. {@link runSync} and
@@ -53,7 +53,7 @@ type FileRequest = { op: 'stat'; path: string } | { op: 'read'; path: string };
  * error is thrown back into the generator at the request.
  */
 export type FileTask<T> = Generator<FileRequest, T, unknown>;
-export function* statFile(path: string): FileTask<FileKind> { return (yield { op: 'stat', path }) as FileKind; }
+export function* kindOf(path: string): FileTask<FileKind> { return (yield { op: 'kind', path }) as FileKind; }
 export function* readFile(path: string): FileTask<string> { return (yield { op: 'read', path }) as string; }
 
 export function runSync<T>(task: FileTask<T>, source: FileSource): T {
@@ -61,7 +61,7 @@ export function runSync<T>(task: FileTask<T>, source: FileSource): T {
   while (!step.done) {
     const request = step.value;
     let reply: unknown;
-    try { reply = request.op === 'stat' ? source.stat(request.path) : source.read(request.path); }
+    try { reply = request.op === 'kind' ? source.kind(request.path) : source.read(request.path); }
     catch (error) { step = task.throw(error); continue; }
     step = task.next(reply);
   }
@@ -73,7 +73,7 @@ export async function runAsync<T>(task: FileTask<T>, source: AsyncFileSource): P
   while (!step.done) {
     const request = step.value;
     let reply: unknown;
-    try { reply = await (request.op === 'stat' ? source.stat(request.path) : source.read(request.path)); }
+    try { reply = await (request.op === 'kind' ? source.kind(request.path) : source.read(request.path)); }
     catch (error) { step = task.throw(error); continue; }
     step = task.next(reply);
   }

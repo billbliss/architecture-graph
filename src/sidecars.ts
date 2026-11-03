@@ -3,7 +3,7 @@ import { Ajv, type AnySchema, type ErrorObject, type ValidateFunction } from 'aj
 import { Ajv2020 } from 'ajv/dist/2020.js';
 import addFormatsModule from 'ajv-formats';
 import type { Diagnostic, Graph, NodeKind } from './schema.js';
-import { assertProjectPath, messageOf, readFile, runAsync, runSync, statFile, type AsyncFileSource, type FileKind, type FileSource, type FileTask } from './files.js';
+import { assertProjectPath, messageOf, readFile, runAsync, runSync, kindOf, type AsyncFileSource, type FileKind, type FileSource, type FileTask } from './files.js';
 import { parseDeclarations } from './serialization.js';
 
 /** Node kinds that may carry schema and example sidecars. */
@@ -170,7 +170,7 @@ class SchemaChecker {
 
 /** What is at the path; unreadable or rejected paths count as missing. */
 function* fileKind(path: string): FileTask<FileKind> {
-  try { assertProjectPath(path); return yield* statFile(path); } catch { return 'missing'; }
+  try { assertProjectPath(path); return yield* kindOf(path); } catch { return 'missing'; }
 }
 
 /** Same result as Node's posix.normalize, which this module cannot import. */

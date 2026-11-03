@@ -20,7 +20,7 @@ export function localPath(root: string, path: string): string {
 /** Project files under a Node directory, with the symlink rule applied to every path. */
 export function nodeFileSource(root: string): FileSource {
   return {
-    stat(path) {
+    kind(path) {
       const file = localPath(root, path);
       try { return statSync(file).isFile() ? 'file' : 'other'; }
       catch (error) {

@@ -107,7 +107,7 @@ getContext(loadProject(), {depth: 'two'});
 console.log(graph.id, context.truncated);
 `);
   writeFileSync(join(consumer,'typed-core.mts'), `import { validateGraph, memoryFileSource, type AsyncFileSource, type Diagnostic } from '@billbliss/architecture-graph/core';
-const source: AsyncFileSource = { stat: async () => 'missing' as const, read: async () => '' };
+const source: AsyncFileSource = { kind: async () => 'missing' as const, read: async () => '' };
 const errors: Promise<Diagnostic[]> = validateGraph({}, source);
 // @ts-expect-error The core takes a file source, not a directory path.
 validateGraph({}, '.');

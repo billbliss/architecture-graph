@@ -55,7 +55,7 @@ function loadGraph(root) {
 }
 /** A source that answers every request asynchronously, as browser folder handles and fetch do. */
 const delayed = source => ({
-  stat: path => new Promise(done => setTimeout(() => done(source.stat(path)), 0)),
+  kind: path => new Promise(done => setTimeout(() => done(source.kind(path)), 0)),
   read: path => new Promise((done, fail) => setTimeout(() => { try { done(source.read(path)); } catch (error) { fail(error); } }, 0)),
 });
 async function sameEverywhere(root, graph, files) {
