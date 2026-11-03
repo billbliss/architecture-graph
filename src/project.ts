@@ -2,9 +2,10 @@ import { existsSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from
 import { basename, dirname, resolve } from 'node:path';
 import { ConfigSchema, shapeErrors, type Diagnostic, type Graph, type Config } from './schema.js';
 import type { Project } from './model.js';
-import { validateGraph } from './validation.js';
+import { validateGraph } from './node.js';
 import { localPath } from './paths.js';
-import { declarationDigest, json, parseDeclarations, serializeGraph } from './serialization.js';
+import { json, parseDeclarations, serializeGraph } from './serialization.js';
+import { declarationDigest } from './digest.js';
 import { readCompiled } from './compiled.js';
 import { buildIndex } from './indexes.js';
 

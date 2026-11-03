@@ -72,7 +72,9 @@ nodes:
     description: Checks shape, globally unique identities, endpoint kinds, references, ownership cycles,
       single owner/authority and module imports/exports. Checks sidecar placement, that each schema
       sidecar is valid JSON Schema and that every example conforms. Unresolved owner/authority
-      alternatives are excluded from conflict checks; unassigned nodes are permitted.
+      alternatives are excluded from conflict checks; unassigned nodes are permitted. Rules read files
+      only through a file source and run unchanged under a sync driver (Node) or an async driver
+      (browsers), so the browser-safe core and ag validate share one implementation.
     status: implemented
     module: module:declarations
     references:
@@ -80,6 +82,10 @@ nodes:
         path: src/validation.ts
       - kind: implementation
         path: src/sidecars.ts
+      - kind: implementation
+        path: src/files.ts
+      - kind: implementation
+        path: src/node.ts
       - kind: design
         path: docs/reference.md
   - id: capability:validate-declarations
@@ -100,12 +106,16 @@ nodes:
     name: Project-local file boundary
     description: Paths must be normalized, local to the configuration root, and free of parent
       traversal, absolute paths, URLs, wildcards and symlink traversal. Generated output must not
-      contain configuration, canonical graph, or referenced inputs.
+      contain configuration, canonical graph, or referenced inputs. The lexical path rule is
+      environment-neutral; the symlink rule belongs to file sources that can see links, such as the
+      Node source.
     status: implemented
     module: module:declarations
     references:
       - kind: implementation
         path: src/paths.ts
+      - kind: implementation
+        path: src/files.ts
       - kind: implementation
         path: src/project.ts
       - kind: implementation
@@ -179,14 +189,30 @@ nodes:
   - id: decision:browser-safe-core
     kind: decision
     name: Validation runs in browsers as well as Node
-    description: "Proposed: split validation so its rules read files through an abstract source, with
-      Node and browser implementations, and export the browser-safe part separately. The viewer then
-      runs the same validation as ag validate instead of a second implementation."
-    status: proposed
+    description: "Chosen and implemented: validation rules read files through a file source (kind and
+      read) and are written once as generators, run by a sync driver for the Node API and an async
+      driver for browsers. The browser-safe part, including sidecar checks, is exported as
+      @billbliss/architecture-graph/core and imports nothing from Node; a test bundles it for the
+      browser platform. The viewer will supply folder and fetch sources and run the same validation
+      as ag validate instead of a second implementation. This does not settle
+      decision:authored-format-source."
+    status: implemented
     module: module:declarations
     references:
       - kind: design
         path: docs/specs/website-and-viewer.md
+      - kind: design
+        path: docs/reference.md
+      - kind: implementation
+        path: src/files.ts
+      - kind: implementation
+        path: src/core.ts
+      - kind: implementation
+        path: src/validation.ts
+      - kind: implementation
+        path: src/sidecars.ts
+      - kind: implementation
+        path: test/core.test.js
   - id: decision:single-canonical-file
     kind: decision
     name: Keep one canonical graph
@@ -359,7 +385,7 @@ nodes:
     kind: component
     name: CLI and typed library
     description: The small bin launcher runs compiled CLI code; the public ESM library exports the same
-      toolkit operations and types. CLI dispatch owns option validation, JSON/text rendering, and
+      toolkit operations and types, and a separate core entry point exports browser-safe validation. CLI dispatch owns option validation, JSON/text rendering, and
       exit codes; it does not contain separate architecture semantics.
     status: implemented
     module: module:interfaces
@@ -371,6 +397,8 @@ nodes:
       - kind: implementation
         path: src/index.ts
       - kind: implementation
+        path: src/core.ts
+      - kind: implementation
         path: package.json
       - kind: design
         path: docs/reference.md
@@ -381,6 +409,8 @@ nodes:
       invalid projects; validateGraph returns diagnostics and omits configuration-specific checks.
       Consumers should load through loadProject before querying and reload after edits.
       sidecarValidator compiles a schema sidecar with validation's rules and throws if it is invalid.
+      The core entry point offers the same validation from a file source, async by default with sync
+      variants; the main entry point's synchronous root-path functions are unchanged.
     status: implemented
     module: module:interfaces
     references:
@@ -390,6 +420,10 @@ nodes:
         path: src/project.ts
       - kind: implementation
         path: src/index.ts
+      - kind: implementation
+        path: src/core.ts
+      - kind: implementation
+        path: src/node.ts
       - kind: design
         path: docs/reference.md
   - id: component:skill-installer
@@ -1198,10 +1232,16 @@ relationships:
     from: decision:browser-safe-core
     to: component:structural-validator
     description: File existence and sidecar reads move behind a file-source interface.
-    status: proposed
+    status: implemented
     references:
       - kind: design
         path: docs/specs/website-and-viewer.md
+      - kind: implementation
+        path: src/files.ts
+      - kind: implementation
+        path: src/validation.ts
+      - kind: implementation
+        path: src/sidecars.ts
   - id: relationship:website-delivery
     kind: affects
     from: decision:website-and-viewer

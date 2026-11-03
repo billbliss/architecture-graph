@@ -1,10 +1,9 @@
-import { existsSync, readFileSync } from 'node:fs';
-import { posix } from 'node:path';
+// Browser-safe: file access goes through a FileSource; no Node built-ins.
 import { Ajv, type AnySchema, type ErrorObject, type ValidateFunction } from 'ajv';
 import { Ajv2020 } from 'ajv/dist/2020.js';
 import addFormatsModule from 'ajv-formats';
 import type { Diagnostic, Graph, NodeKind } from './schema.js';
-import { localPath, messageOf } from './paths.js';
+import { assertProjectPath, messageOf, readFile, runAsync, runSync, kindOf, type AsyncFileSource, type FileKind, type FileSource, type FileTask } from './files.js';
 import { parseDeclarations } from './serialization.js';
 
 /** Node kinds that may carry schema and example sidecars. */
@@ -23,10 +22,10 @@ const addFormats = addFormatsModule as unknown as (ajv: Ajv) => Ajv;
  * Check sidecar placement, schemas and examples. Sidecars are checked against each other only;
  * nothing here reads implementation source or proves the code produces data of this shape.
  */
-export function checkSidecars(graph: Graph, root: string): Diagnostic[] {
+export function* sidecarRules(graph: Graph): FileTask<Diagnostic[]> {
   const errors: Diagnostic[] = [];
   const add = (code: string, at: string, message: string): void => { errors.push({ code, at, message }); };
-  const checker = new SchemaChecker(root);
+  const checker = new SchemaChecker();
   for (const edge of graph.relationships) {
     for (const ref of edge.references) {
       if (ref.kind === 'schema' || ref.kind === 'example') add('sidecar-kind', edge.id, `${ref.kind} references are not allowed on relationships: ${ref.path}`);
@@ -45,7 +44,7 @@ export function checkSidecars(graph: Graph, root: string): Diagnostic[] {
     const schemaRef = schemas[0];
     let validate: ValidateFunction | null = null;
     if (schemaRef) {
-      const result = checker.compile(schemaRef.path);
+      const result = yield* checker.compile(schemaRef.path);
       if (typeof result === 'string') add('sidecar-schema', node.id, `${schemaRef.path}: ${result}`);
       else validate = result;
     }
@@ -54,10 +53,9 @@ export function checkSidecars(graph: Graph, root: string): Diagnostic[] {
         add('sidecar-example-parse', node.id, `${example.path}: examples must be .json, .yaml or .yml files`);
         continue;
       }
-      const file = existingFile(root, example.path);
-      if (!file) continue; // The general reference check reports missing files.
+      if ((yield* fileKind(example.path)) !== 'file') continue; // The general reference check reports these.
       let value: unknown;
-      try { value = parseDeclarations(readFileSync(file, 'utf8'), example.path); }
+      try { value = parseDeclarations(yield* readFile(example.path), example.path); }
       catch (error) { add('sidecar-example-parse', node.id, `${example.path}: ${messageOf(error)}`); continue; }
       if (validate && !validate(value)) {
         add('sidecar-example', node.id, `${example.path} does not match ${schemaRef!.path}: ${describe(validate.errors)}`);
@@ -74,9 +72,19 @@ export interface SidecarCheck { valid: boolean; errors: string[] }
  * Compile a project's schema sidecar with the same rules and $ref resolution as validation, for use
  * in a project's own conformance tests. Throws when the schema itself is invalid.
  */
-export function sidecarValidator(root: string, schemaPath: string): (value: unknown) => SidecarCheck {
-  const validate = new SchemaChecker(root).compile(schemaPath);
+export function sidecarValidatorSync(source: FileSource, schemaPath: string): (value: unknown) => SidecarCheck {
+  return checkWith(runSync(compileSidecar(schemaPath), source));
+}
+/** {@link sidecarValidatorSync} reading schema files from an asynchronous source. */
+export async function sidecarValidatorAsync(source: AsyncFileSource, schemaPath: string): Promise<(value: unknown) => SidecarCheck> {
+  return checkWith(await runAsync(compileSidecar(schemaPath), source));
+}
+function* compileSidecar(schemaPath: string): FileTask<ValidateFunction> {
+  const validate = yield* new SchemaChecker().compile(schemaPath);
   if (typeof validate === 'string') throw new Error(`${schemaPath}: ${validate}`);
+  return validate;
+}
+function checkWith(validate: ValidateFunction): (value: unknown) => SidecarCheck {
   return value => validate(value) ? { valid: true, errors: [] }
     : { valid: false, errors: (validate.errors ?? []).map(error => `${error.instancePath || '/'} ${error.message ?? 'is invalid'}`) };
 }
@@ -86,21 +94,20 @@ class SchemaChecker {
   private readonly compiled = new Map<string, ValidateFunction | string>();
   private readonly loaded = new Map<string, { schema: Record<string, unknown>; dialect: Dialect } | string>();
   private readonly engines = new Map<Dialect, Ajv>();
-  constructor(private readonly root: string) {}
 
-  compile(path: string): ValidateFunction | string {
+  *compile(path: string): FileTask<ValidateFunction | string> {
     const cached = this.compiled.get(path);
     if (cached) return cached;
     let result: ValidateFunction | string;
-    try { result = this.compileUncached(path); }
+    try { result = yield* this.compileUncached(path); }
     catch (error) { result = messageOf(error); }
     this.compiled.set(path, result);
     return result;
   }
 
-  private compileUncached(path: string): ValidateFunction | string {
+  private *compileUncached(path: string): FileTask<ValidateFunction | string> {
     if (!path.endsWith('.json')) return 'schemas must be .json files';
-    const rootSchema = this.load(path);
+    const rootSchema = yield* this.load(path);
     if (typeof rootSchema === 'string') return rootSchema;
     // Load every file reachable through relative $ref before compiling.
     const pending = [path], seen = new Set<string>();
@@ -108,7 +115,7 @@ class SchemaChecker {
       const current = pending.pop()!;
       if (seen.has(current)) continue;
       seen.add(current);
-      const entry = this.load(current);
+      const entry = yield* this.load(current);
       if (typeof entry === 'string') return current === path ? entry : `referenced schema ${current}: ${entry}`;
       if (entry.dialect !== rootSchema.dialect) return `referenced schema ${current} uses ${entry.dialect}, but ${path} uses ${rootSchema.dialect}`;
       for (const ref of refsOf(entry.schema)) {
@@ -126,15 +133,15 @@ class SchemaChecker {
     return validate;
   }
 
-  private load(path: string): { schema: Record<string, unknown>; dialect: Dialect } | string {
+  private *load(path: string): FileTask<{ schema: Record<string, unknown>; dialect: Dialect } | string> {
     const cached = this.loaded.get(path);
     if (cached) return cached;
     let result: { schema: Record<string, unknown>; dialect: Dialect } | string;
-    const file = existingFile(this.root, path);
-    if (!file) result = 'file not found';
+    const kind = yield* fileKind(path);
+    if (kind !== 'file') result = kind === 'missing' ? 'file not found' : 'not a file';
     else {
       try {
-        const value: unknown = JSON.parse(readFileSync(file, 'utf8'));
+        const value: unknown = JSON.parse(yield* readFile(path));
         if (value === null || typeof value !== 'object' || Array.isArray(value)) result = 'a schema must be a JSON object';
         else {
           const declared = (value as Record<string, unknown>).$schema;
@@ -161,8 +168,25 @@ class SchemaChecker {
   }
 }
 
-function existingFile(root: string, path: string): string | null {
-  try { const file = localPath(root, path); return existsSync(file) ? file : null; } catch { return null; }
+/** What is at the path; unreadable or rejected paths count as missing. */
+function* fileKind(path: string): FileTask<FileKind> {
+  try { assertProjectPath(path); return yield* kindOf(path); } catch { return 'missing'; }
+}
+
+/** Same result as Node's posix.normalize, which this module cannot import. */
+export function normalizePosix(path: string): string {
+  if (!path) return '.';
+  const absolute = path.startsWith('/'), trailing = path.endsWith('/');
+  const parts: string[] = [];
+  for (const part of path.split('/')) {
+    if (!part || part === '.') continue;
+    if (part !== '..') parts.push(part);
+    else if (parts.length && parts[parts.length - 1] !== '..') parts.pop();
+    else if (!absolute) parts.push('..');
+  }
+  const joined = parts.join('/');
+  if (absolute) return '/' + joined + (trailing && joined ? '/' : '');
+  return (joined || '.') + (trailing ? '/' : '');
 }
 
 function refsOf(value: unknown, found: string[] = []): string[] {
@@ -183,7 +207,7 @@ function resolveRef(from: string, ref: string): string | { error: string } {
   if (!url.href.startsWith(BASE)) return { error: 'only project-local relative references are supported; AG does not fetch schemas' };
   const target = decodeURIComponent(url.pathname.slice(1));
   if (target === from) return '';
-  if (posix.normalize(target) !== target) return { error: 'reference is not a normalized project path' };
+  if (normalizePosix(target) !== target) return { error: 'reference is not a normalized project path' };
   return target;
 }
 

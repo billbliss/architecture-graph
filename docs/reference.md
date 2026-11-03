@@ -120,7 +120,27 @@ const { valid, errors } = check(actualOutput);
 
 Start with `loadProject`: it checks the configuration, graph, and file references, and rejects references into generated output. Treat a loaded project as a snapshot and reload after editing declarations. `loadProject(path, { forceCanonical: true })` bypasses the compiled cache. `validateGraph` checks a graph object and returns a list of `{code, at, message}` errors; it does not perform the additional configuration checks. Other operations throw errors for invalid inputs. `syncArtifacts` returns a `drift` list; without `check: true`, it writes the generated files.
 
-The package exports types including `Graph`, `GraphNode`, `Relationship`, `GraphModule`, `Project`, and `ContextBundle`, along with typed Zod schemas. It also exports `serializeGraph` and `parseDeclarations` for working with the authored format, `sidecarValidator` and `SIDECAR_KINDS` for contract sidecars, and `initProject`, `installSkill`, `renderArtifacts`, `formatContext`, `VERSION`, `LIMIT`, and `AGError`. Tools that read JSON can access the graph schema through `@billbliss/architecture-graph/schema`.
+The package exports types including `Graph`, `GraphNode`, `Relationship`, `GraphModule`, `Project`, and `ContextBundle`, along with typed Zod schemas. It also exports `serializeGraph` and `parseDeclarations` for working with the authored format, `sidecarValidator` and `SIDECAR_KINDS` for contract sidecars, `nodeFileSource` and the `FileSource` types described below, and `initProject`, `installSkill`, `renderArtifacts`, `formatContext`, `VERSION`, `LIMIT`, and `AGError`. Tools that read JSON can access the graph schema through `@billbliss/architecture-graph/schema`.
+
+### Validating without Node: the browser-safe core
+
+`@billbliss/architecture-graph/core` runs the same validation as `ag validate` and `validateGraph`, including sidecar checks, in any JavaScript environment. It imports nothing from Node, directly or through its dependencies (Zod, yaml, Ajv and ajv-formats), and reads project files only through a file source that you supply:
+
+```js
+import { validateGraph, validateGraphSync, memoryFileSource, parseDeclarations } from '@billbliss/architecture-graph/core';
+
+const files = { 'architecture/graph.yaml': graphText, 'requirements.md': requirementsText };
+const graph = parseDeclarations(files['architecture/graph.yaml'], 'architecture/graph.yaml');
+const errors = await validateGraph(graph, memoryFileSource(files));
+```
+
+A file source answers two questions about a normalized project-relative path: `kind(path)` returns `'file'`, `'other'` (for example a directory) or `'missing'`, and `read(path)` returns the file's UTF-8 text. AG applies the path rules (no absolute paths, `..`, empty segments, backslashes or colons) before asking. A source throws to report that a file cannot be accessed, and its message becomes the diagnostic text.
+
+In the core, `validateGraph(graph, source)` and `sidecarValidator(source, schemaPath)` are asynchronous and accept sources whose methods return values or promises, as browser folder access and `fetch` do. `validateGraphSync` and `sidecarValidatorSync` take a synchronous source. All four run one set of rules, so the results are the same; the tests check this against the Node path for the bundled examples and for broken graphs and sidecars. `memoryFileSource(files)` serves a map of paths to text, with directories implied by file paths.
+
+The main package entry point is unchanged for Node callers: `validateGraph(graph, root)` and `sidecarValidator(root, schemaPath)` stay synchronous and use `nodeFileSource(root)`, which also rejects paths that pass through symlinks. The core cannot see symlinks, so a source for another environment decides what links mean for it. The core does not load configuration files, generate output, or provide context; those remain Node operations.
+
+Two cautions for browser use. Ajv compiles schemas into functions at run time, so a page with a Content Security Policy that forbids `unsafe-eval` cannot check sidecars. Parse error messages for malformed JSON come from the JavaScript engine, so their wording can differ between browsers and Node; the diagnostic code and location do not.
 
 ## One file, logical modules
 

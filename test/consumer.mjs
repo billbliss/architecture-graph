@@ -31,7 +31,7 @@ try {
   const consumer=join(temporary,'isolated project');mkdirSync(consumer);
   writeFileSync(join(consumer,'package.json'),'{"name":"isolated-ag-consumer","private":true,"type":"module"}');
   run(consumer,'npm',['install','--prefer-offline','--save-dev','--ignore-scripts','--no-audit','--no-fund',tarball]);
-  for (const path of ['LICENSE','bin/ag.js','src/index.ts','lib/index.js','lib/index.d.ts','lib/index.d.ts.map','schema/graph.schema.json','docs/getting-started.md','examples/hello-world/README.md','skills/architecture-graph/SKILL.md','skills/architecture-graph/references/modeling.md']) {
+  for (const path of ['LICENSE','bin/ag.js','src/index.ts','lib/index.js','lib/index.d.ts','lib/core.js','lib/core.d.ts','lib/index.d.ts.map','schema/graph.schema.json','docs/getting-started.md','examples/hello-world/README.md','skills/architecture-graph/SKILL.md','skills/architecture-graph/references/modeling.md']) {
     assert(existsSync(join(consumer,'node_modules/@billbliss/architecture-graph',path)), `Missing packaged file: ${path}`);
   }
   assert(!existsSync(join(consumer,'node_modules/@billbliss/architecture-graph/.git')));
@@ -90,6 +90,15 @@ try {
   log('PASS: intentionally wrong implementation passes AG validation/check but fails application tests, demonstrating the assurance limit.');
   run(consumer,'node',['--input-type=module','-e','import { loadProject, getContext } from "@billbliss/architecture-graph"; if (!getContext(loadProject(), {id:"contract:greeting"}).nodes.length) process.exit(1);']);
   log('PASS: public ESM package export resolves in isolated consumer.');
+  run(consumer,'node',['--input-type=module','-e',`import { readFileSync } from 'node:fs';
+import { validateGraph, validateGraphSync, memoryFileSource, parseDeclarations } from '@billbliss/architecture-graph/core';
+const files = { 'architecture/graph.yaml': readFileSync('architecture/graph.yaml', 'utf8') };
+for (const path of ['requirements.md','src/formatter.js','src/greeter.js','src/cli.js','app.test.js']) files[path] = readFileSync(path, 'utf8');
+const graph = parseDeclarations(files['architecture/graph.yaml'], 'architecture/graph.yaml');
+const source = memoryFileSource(files);
+if (validateGraphSync(graph, source).length || (await validateGraph(graph, source)).length) process.exit(1);
+if (!(await validateGraph(graph, memoryFileSource({}))).some(error => error.code === 'reference')) process.exit(2);`]);
+  log('PASS: browser-safe core export validates the same project from in-memory files in isolated consumer.');
   writeFileSync(join(consumer,'typed-consumer.mts'), `import { loadProject, getContext, type Graph, type ContextBundle } from '@billbliss/architecture-graph';
 const graph: Graph = loadProject().graph;
 const context: ContextBundle = getContext(loadProject(), {module: 'module:greetings'});
@@ -97,6 +106,15 @@ const context: ContextBundle = getContext(loadProject(), {module: 'module:greeti
 getContext(loadProject(), {depth: 'two'});
 console.log(graph.id, context.truncated);
 `);
+  writeFileSync(join(consumer,'typed-core.mts'), `import { validateGraph, memoryFileSource, type AsyncFileSource, type Diagnostic } from '@billbliss/architecture-graph/core';
+const source: AsyncFileSource = { kind: async () => 'missing' as const, read: async () => '' };
+const errors: Promise<Diagnostic[]> = validateGraph({}, source);
+// @ts-expect-error The core takes a file source, not a directory path.
+validateGraph({}, '.');
+console.log(errors, memoryFileSource({}));
+`);
+  run(consumer,process.execPath,[join(repo,'node_modules/typescript/bin/tsc'),'--noEmit','--strict','--skipLibCheck','--target','ES2022','--module','NodeNext','--moduleResolution','NodeNext','--lib','ES2022,DOM','typed-core.mts']);
+  log('PASS: installed core TypeScript declarations accept an async file source and reject a directory path.');
   run(consumer,process.execPath,[join(repo,'node_modules/typescript/bin/tsc'),'--noEmit','--strict','--skipLibCheck','--target','ES2022','--module','NodeNext','--moduleResolution','NodeNext','typed-consumer.mts']);
   log('PASS: installed public TypeScript declarations accept valid usage and reject an invalid option.');
   // Verify the checked-in example against the same package, without changing its manifest.

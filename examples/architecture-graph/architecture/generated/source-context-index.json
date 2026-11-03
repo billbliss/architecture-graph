@@ -109,7 +109,8 @@
         "component:structural-validator",
         "contract:bounded-context",
         "contract:logical-modules",
-        "contract:public-operations"
+        "contract:public-operations",
+        "decision:browser-safe-core"
       ],
       "relationshipIds": []
     },
@@ -329,6 +330,24 @@
         "relationship:context-provides"
       ]
     },
+    "src/core.ts": {
+      "nodeIds": [
+        "component:public-entrypoints",
+        "contract:public-operations",
+        "decision:browser-safe-core"
+      ],
+      "relationshipIds": []
+    },
+    "src/files.ts": {
+      "nodeIds": [
+        "boundary:project-local-files",
+        "component:structural-validator",
+        "decision:browser-safe-core"
+      ],
+      "relationshipIds": [
+        "relationship:browser-core-validator"
+      ]
+    },
     "src/index.ts": {
       "nodeIds": [
         "component:public-entrypoints",
@@ -361,6 +380,13 @@
       "relationshipIds": [
         "relationship:context-project"
       ]
+    },
+    "src/node.ts": {
+      "nodeIds": [
+        "component:structural-validator",
+        "contract:public-operations"
+      ],
+      "relationshipIds": []
     },
     "src/paths.ts": {
       "nodeIds": [
@@ -415,9 +441,11 @@
     "src/sidecars.ts": {
       "nodeIds": [
         "component:structural-validator",
+        "decision:browser-safe-core",
         "decision:contract-sidecars"
       ],
       "relationshipIds": [
+        "relationship:browser-core-validator",
         "relationship:sidecars-validator"
       ]
     },
@@ -439,9 +467,11 @@
         "boundary:project-local-files",
         "capability:validate-declarations",
         "component:structural-validator",
-        "contract:logical-modules"
+        "contract:logical-modules",
+        "decision:browser-safe-core"
       ],
       "relationshipIds": [
+        "relationship:browser-core-validator",
         "relationship:module-authority",
         "relationship:validator-format",
         "relationship:validator-modules",
@@ -459,6 +489,12 @@
         "relationship:build-api",
         "relationship:generator-proof"
       ]
+    },
+    "test/core.test.js": {
+      "nodeIds": [
+        "decision:browser-safe-core"
+      ],
+      "relationshipIds": []
     },
     "test/foundation.test.js": {
       "nodeIds": [

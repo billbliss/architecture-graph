@@ -2,7 +2,8 @@ import { existsSync, readFileSync } from 'node:fs';
 import type { Config } from './schema.js';
 import type { GraphIndex } from './model.js';
 import { VERSION } from './model.js';
-import { digest, json, stable } from './serialization.js';
+import { json, stable } from './serialization.js';
+import { digest } from './digest.js';
 import { localPath, messageOf } from './paths.js';
 
 const files = {
