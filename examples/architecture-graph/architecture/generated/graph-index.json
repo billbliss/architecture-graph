@@ -650,6 +650,20 @@
       ],
       "status": "unresolved"
     },
+    "decision:browser-safe-core": {
+      "description": "Proposed: split validation so its rules read files through an abstract source, with Node and browser implementations, and export the browser-safe part separately. The viewer then runs the same validation as ag validate instead of a second implementation.",
+      "id": "decision:browser-safe-core",
+      "kind": "decision",
+      "module": "module:declarations",
+      "name": "Validation runs in browsers as well as Node",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/specs/website-and-viewer.md"
+        }
+      ],
+      "status": "proposed"
+    },
     "decision:canonical-fallback": {
       "description": "Chosen and implemented: absent, stale or corrupt indexes cause canonical fallback. Generation rebuilds from declarations even when a loaded cache exists. A maliciously forged cache and metadata are outside the integrity guarantee.",
       "id": "decision:canonical-fallback",
@@ -812,6 +826,20 @@
       ],
       "status": "implemented"
     },
+    "decision:website-and-viewer": {
+      "description": "Proposed: a static site in site/ (Astro, Cloudflare Pages) renders docs/ and examples/ and hosts a client-side viewer for any AG graph. Graph content never leaves the browser. The site is not part of the npm package.",
+      "id": "decision:website-and-viewer",
+      "kind": "decision",
+      "module": "module:delivery",
+      "name": "architecturegraph.dev site and browser viewer",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/specs/website-and-viewer.md"
+        }
+      ],
+      "status": "proposed"
+    },
     "decision:windows-support": {
       "description": "Open: compatibility docs explicitly say Windows is untested and CI has no Windows job. Decide whether to add a supported Windows test target or continue documenting the gap; Node portability alone does not resolve it.",
       "id": "decision:windows-support",
@@ -867,6 +895,20 @@
       ],
       "status": "implemented",
       "to": "contract:public-operations"
+    },
+    "relationship:browser-core-validator": {
+      "description": "File existence and sidecar reads move behind a file-source interface.",
+      "from": "decision:browser-safe-core",
+      "id": "relationship:browser-core-validator",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/specs/website-and-viewer.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "component:structural-validator"
     },
     "relationship:build-api": {
       "description": "Packaged exports and launcher point to compiled entrypoints; isolated consumers exercise the actual archive.",
@@ -1757,6 +1799,20 @@
       ],
       "status": "implemented",
       "to": "capability:validate-declarations"
+    },
+    "relationship:website-delivery": {
+      "description": "The site deploys separately; site/ stays out of the packaged toolkit.",
+      "from": "decision:website-and-viewer",
+      "id": "relationship:website-delivery",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/specs/website-and-viewer.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "capability:ship-toolkit"
     },
     "relationship:windows-delivery": {
       "description": "Adding a supported platform would require CI and packaged consumer evidence; current matrix leaves Windows untested.",

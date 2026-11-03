@@ -1,16 +1,16 @@
 {
   "artifactVersion": "2",
   "toolVersion": "0.3.1",
-  "declarationDigest": "8f8a718c2e6e65a7981ac6b693f7fd160b0892b7ac9061518cdfd099a2a9c944",
+  "declarationDigest": "e85ae60be15e607b72d0c8f38bd1efb36814677bbcf7d07b57d0af097eb81fbb",
   "graphId": "graph:architecture-graph",
   "title": "Architecture Graph architecture",
   "scope": "AG 0.3.1: declarations, context, interfaces and delivery. Software ownership is modeled; human assignments remain open. Excludes predecessor internals, explorer UI and implementation assurance.",
   "limitation": "Structural validation only; declarations and file existence do not prove implementation conformance.",
-  "nodes": 35,
-  "relationships": 62,
+  "nodes": 37,
+  "relationships": 64,
   "modules": 4,
   "statuses": {
-    "proposed": 0,
+    "proposed": 2,
     "implemented": 31,
     "unresolved": 4
   },

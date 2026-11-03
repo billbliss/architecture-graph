@@ -138,6 +138,16 @@
         "relationship:sidecar-workflow-skill"
       ]
     },
+    "docs/specs/website-and-viewer.md": {
+      "nodeIds": [
+        "decision:browser-safe-core",
+        "decision:website-and-viewer"
+      ],
+      "relationshipIds": [
+        "relationship:browser-core-validator",
+        "relationship:website-delivery"
+      ]
+    },
     "examples/architecture-graph/contracts/bounded-context.schema.json": {
       "nodeIds": [
         "contract:bounded-context"
