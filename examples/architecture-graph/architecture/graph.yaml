@@ -176,6 +176,17 @@ nodes:
         path: docs/development.md
       - kind: design
         path: docs/compatibility.md
+  - id: decision:browser-safe-core
+    kind: decision
+    name: Validation runs in browsers as well as Node
+    description: "Proposed: split validation so its rules read files through an abstract source, with
+      Node and browser implementations, and export the browser-safe part separately. The viewer then
+      runs the same validation as ag validate instead of a second implementation."
+    status: proposed
+    module: module:declarations
+    references:
+      - kind: design
+        path: docs/specs/website-and-viewer.md
   - id: decision:single-canonical-file
     kind: decision
     name: Keep one canonical graph
@@ -508,6 +519,17 @@ nodes:
         path: skills/architecture-graph/SKILL.md
       - kind: implementation
         path: skills/architecture-graph/references/modeling.md
+  - id: decision:website-and-viewer
+    kind: decision
+    name: architecturegraph.dev site and browser viewer
+    description: "Proposed: a static site in site/ (Astro, Cloudflare Pages) renders docs/ and examples/
+      and hosts a client-side viewer for any AG graph. Graph content never leaves the browser. The site
+      is not part of the npm package."
+    status: proposed
+    module: module:delivery
+    references:
+      - kind: design
+        path: docs/specs/website-and-viewer.md
   - id: decision:agent-maintained-design
     kind: decision
     name: Agent-maintained, human-directed design
@@ -1171,6 +1193,24 @@ relationships:
         path: docs/specs/sidecar-workflow.md
       - kind: implementation
         path: skills/architecture-graph/SKILL.md
+  - id: relationship:browser-core-validator
+    kind: affects
+    from: decision:browser-safe-core
+    to: component:structural-validator
+    description: File existence and sidecar reads move behind a file-source interface.
+    status: proposed
+    references:
+      - kind: design
+        path: docs/specs/website-and-viewer.md
+  - id: relationship:website-delivery
+    kind: affects
+    from: decision:website-and-viewer
+    to: capability:ship-toolkit
+    description: The site deploys separately; site/ stays out of the packaged toolkit.
+    status: proposed
+    references:
+      - kind: design
+        path: docs/specs/website-and-viewer.md
 modules:
   - id: module:declarations
     name: Declarations and validity

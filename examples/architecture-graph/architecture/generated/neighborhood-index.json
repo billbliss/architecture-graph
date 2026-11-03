@@ -83,6 +83,7 @@
       "inbound": [
         "relationship:delivery-owns",
         "relationship:delivery-provides",
+        "relationship:website-delivery",
         "relationship:windows-delivery"
       ],
       "outbound": []
@@ -191,6 +192,7 @@
     },
     "component:structural-validator": {
       "inbound": [
+        "relationship:browser-core-validator",
         "relationship:sidecars-validator"
       ],
       "outbound": [
@@ -254,6 +256,12 @@
         "relationship:format-source-model"
       ]
     },
+    "decision:browser-safe-core": {
+      "inbound": [],
+      "outbound": [
+        "relationship:browser-core-validator"
+      ]
+    },
     "decision:canonical-fallback": {
       "inbound": [],
       "outbound": [
@@ -299,6 +307,12 @@
       "outbound": [
         "relationship:typescript-build",
         "relationship:typescript-model"
+      ]
+    },
+    "decision:website-and-viewer": {
+      "inbound": [],
+      "outbound": [
+        "relationship:website-delivery"
       ]
     },
     "decision:windows-support": {

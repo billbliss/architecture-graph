@@ -135,6 +135,11 @@
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "nodes"
     },
+    "decision:browser-safe-core": {
+      "objectId": "decision:browser-safe-core",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
     "decision:canonical-fallback": {
       "objectId": "decision:canonical-fallback",
       "path": "examples/architecture-graph/architecture/graph.yaml",
@@ -170,6 +175,11 @@
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "nodes"
     },
+    "decision:website-and-viewer": {
+      "objectId": "decision:website-and-viewer",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
     "decision:windows-support": {
       "objectId": "decision:windows-support",
       "path": "examples/architecture-graph/architecture/graph.yaml",
@@ -202,6 +212,11 @@
     },
     "relationship:api-authority": {
       "objectId": "relationship:api-authority",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:browser-core-validator": {
+      "objectId": "relationship:browser-core-validator",
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "relationships"
     },
@@ -497,6 +512,11 @@
     },
     "relationship:validator-provides": {
       "objectId": "relationship:validator-provides",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:website-delivery": {
+      "objectId": "relationship:website-delivery",
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "relationships"
     },
