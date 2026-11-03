@@ -22,7 +22,11 @@ The useful entry points are:
 | Source | Responsibility |
 | --- | --- |
 | `src/schema.ts` | Shared graph types and runtime schema |
+| `src/core.ts` | Browser-safe entry point (`@billbliss/architecture-graph/core`) |
+| `src/files.ts` | File-source interface, project path rule, and the sync and async drivers that run validation rules |
 | `src/validation.ts` | Relationship, ownership, module and reference rules |
+| `src/sidecars.ts` | Schema and example sidecar checks with Ajv |
+| `src/paths.ts`, `src/node.ts` | Node file source with symlink checks, and the synchronous Node validation API |
 | `src/project.ts` | Load one authored file with explicit project configuration |
 | `src/indexes.ts` | Build stable lookup tables from validated declarations |
 | `src/compiled.ts` | Read and write disposable indexes with freshness checks |
@@ -30,6 +34,8 @@ The useful entry points are:
 | `src/artifacts.ts` | Generate a short briefing, summary and indexes |
 | `src/skills.ts` | Install the bundled agent skill into a project |
 | `src/cli.ts` | Public command-line interface |
+
+Validation rules are generators that yield file requests, so one set of rules serves both synchronous Node callers and asynchronous browser callers. Modules reachable from `src/core.ts` must not import Node built-ins, even indirectly: `test/core.test.js` bundles the core for the browser platform with esbuild, fails on any `node:` import, and runs the bundle in a context without `process`, `require` or `Buffer`. Keep Node-only work, such as digests in `src/digest.ts`, in separate modules.
 
 `bin/ag.js` is only a small runtime launcher. Both source and generated type/source maps are included in the package. Consumers need Node, not a TypeScript compiler; contributors install the compiler through the project's development dependencies.
 

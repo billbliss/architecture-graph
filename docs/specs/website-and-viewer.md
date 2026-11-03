@@ -140,6 +140,7 @@ Status is visible everywhere: proposed nodes are outlined dashed, unresolved one
 ## Changes to AG
 
 1. **Browser-safe validation core.** Validation currently reads the file system directly. Split it so the rules run against an abstract file source (`exists(path)` and `read(path)`), with a Node implementation for the CLI and library and a browser implementation for the viewer. Export the browser-safe part as a separate package entry point, for example `@billbliss/architecture-graph/core`, that imports nothing from Node. Sidecar checking moves with it; Ajv, Zod and yaml all run in browsers.
+   *Status: implemented in stage 2, with two differences from the text above.* The file source has `stat(path)`, returning `file`, `other` or `missing`, instead of `exists(path)`, because validation must tell a directory from a file. The toolkit ships the Node source and an in-memory source; the folder-handle and `fetch` sources belong to the viewer (stages 3 and 4) and implement the same asynchronous interface. See [the library reference](../reference.md#validating-without-node-the-browser-safe-core).
 2. **AG's own graph.** Record this specification as a proposed decision, and a second proposed decision for the browser-safe core affecting the validator. The open question about code-first versus schema-first authoring stays open; the viewer uses the toolkit's validation code, so it does not force a decision.
 
 ## Delivery in stages

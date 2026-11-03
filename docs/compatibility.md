@@ -16,11 +16,19 @@ TypeScript is now the editable implementation source. npm consumers run the comp
 
 There is one authored graph per configuration. Logical modules, when useful, are groups inside that file. The graph can grow while node, relationship, file, guardrail and module indexes provide focused access. Context output has explicit limits and reports truncation. Loading still parses and validates the entire authored file; free-text queries scan records. These are local file tools, not an incremental graph database.
 
-## Unreleased: contract sidecars
+## Unreleased
+
+### Contract sidecars
 
 The next release adds `schema` and `example` reference kinds so that contract, data_object and artifact nodes can carry a JSON Schema and example payloads, which validation checks against each other. See [the specification](specs/contract-sidecars.md) and [commands and files](reference.md#contract-schemas-and-examples). The graph format stays **1**: graphs that use the new reference kinds need this toolkit version, and older versions reject them, as with earlier vocabulary additions.
 
 `summary.json` gains a `sidecars` section and `guidance.md` gains one sentence about sidecar coverage, so existing generated output is stale after upgrading. Run `ag generate` once and commit the result. Ajv and ajv-formats become runtime dependencies for checking sidecars; Zod still defines and validates the graph format itself.
+
+### Browser-safe validation core
+
+The next release adds `@billbliss/architecture-graph/core`, an entry point that runs the same validation as `ag validate`, including sidecar checks, without Node: rules read files through a file source, so a browser can supply files from a folder, `fetch` or memory. See [the library reference](reference.md#validating-without-node-the-browser-safe-core). The core offers an asynchronous `validateGraph(graph, source)` and `sidecarValidator(source, path)` alongside synchronous `validateGraphSync` and `sidecarValidatorSync`. The main entry point keeps its synchronous `validateGraph(graph, root)` and `sidecarValidator(root, path)` and adds `nodeFileSource`.
+
+Two diagnostic messages change so that they are the same in every environment and no longer include absolute local paths. A reference to a missing file now reads `<path>: file not found` instead of Node's `ENOENT: no such file or directory, stat '<absolute path>'`. A schema sidecar path that names a directory now reads `<path>: not a file` instead of Node's `EISDIR` text. Codes and locations are unchanged, as is every other message. Graph, configuration and generated formats are unchanged.
 
 ## Upgrade an existing standalone project
 
