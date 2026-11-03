@@ -16,6 +16,12 @@ TypeScript is now the editable implementation source. npm consumers run the comp
 
 There is one authored graph per configuration. Logical modules, when useful, are groups inside that file. The graph can grow while node, relationship, file, guardrail and module indexes provide focused access. Context output has explicit limits and reports truncation. Loading still parses and validates the entire authored file; free-text queries scan records. These are local file tools, not an incremental graph database.
 
+## Unreleased: contract sidecars
+
+The next release adds `schema` and `example` reference kinds so that contract, data_object and artifact nodes can carry a JSON Schema and example payloads, which validation checks against each other. See [the specification](specs/contract-sidecars.md) and [commands and files](reference.md#contract-schemas-and-examples). The graph format stays **1**: graphs that use the new reference kinds need this toolkit version, and older versions reject them, as with earlier vocabulary additions.
+
+`summary.json` gains a `sidecars` section and `guidance.md` gains one sentence about sidecar coverage, so existing generated output is stale after upgrading. Run `ag generate` once and commit the result. Ajv and ajv-formats become runtime dependencies for checking sidecars; Zod still defines and validates the graph format itself.
+
 ## Upgrade an existing standalone project
 
 1. Install the 0.3.1 package and refresh the installed skill after reviewing local changes: `ag skill install --agent claude --force`, or `--agent codex`.

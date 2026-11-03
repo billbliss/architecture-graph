@@ -1,7 +1,7 @@
 {
   "artifactVersion": "2",
   "toolVersion": "0.3.1",
-  "declarationDigest": "c4f1044c10089c78c0ce145b8278300defdb9184917cc6b74e5fd91a58d3033c",
+  "declarationDigest": "8299a788a86979813a0ad9f281db2f3d96469c7950091846349e2b9d6338e8f4",
   "graphId": "graph:task-manager",
   "title": "Task manager architecture",
   "scope": "Design-stage model of a task list manager with reminders, offline sync, notifications and search. Nothing is implemented; contracts point to draft JSON Schemas and example payloads.",
@@ -51,5 +51,11 @@
       "id": "relationship:recurrence-model-task",
       "description": "One record or one per occurrence changes the task shape."
     }
-  ]
+  ],
+  "sidecars": {
+    "eligible": 4,
+    "withSchema": 4,
+    "withExamples": 4,
+    "withoutSchema": []
+  }
 }

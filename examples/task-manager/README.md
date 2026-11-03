@@ -16,7 +16,7 @@ It is a design-stage model: there is no application code. Every record is `propo
 
 ## Contract files
 
-Each contract node references a draft JSON Schema in [`contracts/`](contracts/) and an example payload in [`contracts/examples/`](contracts/examples/). These are ordinary `design` references for now. The [contract sidecars specification](../../docs/specs/contract-sidecars.md) proposes dedicated `schema` and `example` reference kinds, with AG checking that each example matches its schema, and adopts this naming as the default location. Once that is implemented, this example will switch to the new reference kinds.
+Each contract node has a `schema` reference to a draft JSON Schema in [`contracts/`](contracts/) and an `example` reference to a payload in [`contracts/examples/`](contracts/examples/). `ag validate` checks that each schema is valid and that each example matches it, including the `$ref` from `task-changed.schema.json` to `task.schema.json`. These are [contract sidecars](../../docs/specs/contract-sidecars.md). Passing shows the files agree with each other; with no implementation here, it says nothing about code.
 
 ## Run it
 
@@ -27,6 +27,7 @@ node bin/ag.js validate --config examples/task-manager/ag.config.json
 node bin/ag.js check --config examples/task-manager/ag.config.json
 node bin/ag.js context --config examples/task-manager/ag.config.json --id contract:task-changed
 node bin/ag.js context --config examples/task-manager/ag.config.json --module module:sync
+node bin/ag.js summary --config examples/task-manager/ag.config.json
 ```
 
 Validation checks the records and that referenced files exist. It does not show that the design is good or that any future implementation follows it.

@@ -34,6 +34,10 @@ nodes:
         path: src/serialization.ts
       - kind: design
         path: docs/compatibility.md
+      - kind: schema
+        path: schema/graph.schema.json
+      - kind: example
+        path: examples/hello-world/architecture/graph.yaml
   - id: component:project-loader
     kind: component
     name: Project loader
@@ -66,13 +70,16 @@ nodes:
     kind: component
     name: Structural validator
     description: Checks shape, globally unique identities, endpoint kinds, references, ownership cycles,
-      single owner/authority and module imports/exports. Unresolved owner/authority alternatives are
-      excluded from conflict checks; unassigned nodes are permitted.
+      single owner/authority and module imports/exports. Checks sidecar placement, that each schema
+      sidecar is valid JSON Schema and that every example conforms. Unresolved owner/authority
+      alternatives are excluded from conflict checks; unassigned nodes are permitted.
     status: implemented
     module: module:declarations
     references:
       - kind: implementation
         path: src/validation.ts
+      - kind: implementation
+        path: src/sidecars.ts
       - kind: design
         path: docs/reference.md
   - id: capability:validate-declarations
@@ -140,15 +147,21 @@ nodes:
   - id: decision:contract-sidecars
     kind: decision
     name: Contracts carry schema and example sidecars
-    description: "Proposed: schema and example reference kinds attach a JSON Schema and example payloads
-      to contract, data_object and artifact nodes. Validation checks the schema and that examples
-      conform, using Ajv; Zod still defines the authored format. AG does not read source code to write
-      or verify sidecars."
-    status: proposed
+    description: "Chosen and implemented: schema and example reference kinds attach a JSON Schema and
+      example payloads to contract, data_object and artifact nodes. Validation checks the schema and
+      that examples conform, using Ajv; Zod still defines the authored format. AG does not read source
+      code to write or verify sidecars."
+    status: implemented
     module: module:declarations
     references:
       - kind: design
         path: docs/specs/contract-sidecars.md
+      - kind: implementation
+        path: src/sidecars.ts
+      - kind: implementation
+        path: src/schema.ts
+      - kind: implementation
+        path: src/artifacts.ts
   - id: decision:authored-format-source
     kind: decision
     name: Code-first or schema-first authored format?
@@ -224,6 +237,10 @@ nodes:
         path: test/foundation.test.js
       - kind: design
         path: docs/foundation.md
+      - kind: schema
+        path: examples/architecture-graph/contracts/stable-locators.schema.json
+      - kind: example
+        path: examples/architecture-graph/contracts/examples/stable-locators.json
   - id: component:context-engine
     kind: component
     name: Context retrieval
@@ -267,6 +284,10 @@ nodes:
         path: src/model.ts
       - kind: design
         path: docs/reference.md
+      - kind: schema
+        path: examples/architecture-graph/contracts/bounded-context.schema.json
+      - kind: example
+        path: examples/architecture-graph/contracts/examples/bounded-context.json
   - id: decision:canonical-fallback
     kind: decision
     name: Canonical declarations outrank cache
@@ -348,6 +369,7 @@ nodes:
     description: CLI errors exit 1; stale check exits 2; success exits 0. Library loadProject throws on
       invalid projects; validateGraph returns diagnostics and omits configuration-specific checks.
       Consumers should load through loadProject before querying and reload after edits.
+      sidecarValidator compiles a schema sidecar with validation's rules and throws if it is invalid.
     status: implemented
     module: module:interfaces
     references:
@@ -474,14 +496,18 @@ nodes:
   - id: decision:sidecar-maintenance-workflow
     kind: decision
     name: Agents maintain contract sidecars
-    description: "Proposed: the bundled skill creates sidecars for data-shaped contracts during bootstrap,
-      updates them in the same change as the code, and backfills from the summary's withoutSchema
-      list. Behavioral contracts get no invented schema."
-    status: proposed
+    description: "Chosen and implemented: the bundled skill creates sidecars for data-shaped contracts
+      during bootstrap, updates them in the same change as the code, and backfills from the summary's
+      withoutSchema list. Behavioral contracts get no invented schema."
+    status: implemented
     module: module:delivery
     references:
       - kind: design
         path: docs/specs/sidecar-workflow.md
+      - kind: implementation
+        path: skills/architecture-graph/SKILL.md
+      - kind: implementation
+        path: skills/architecture-graph/references/modeling.md
   - id: decision:agent-maintained-design
     kind: decision
     name: Agent-maintained, human-directed design
@@ -1099,19 +1125,23 @@ relationships:
     from: decision:contract-sidecars
     to: contract:authored-format
     description: Adds schema and example reference kinds within format 1.
-    status: proposed
+    status: implemented
     references:
       - kind: design
         path: docs/specs/contract-sidecars.md
+      - kind: implementation
+        path: src/schema.ts
   - id: relationship:sidecars-validator
     kind: affects
     from: decision:contract-sidecars
     to: component:structural-validator
     description: Validation gains sidecar placement, schema and example-conformance checks.
-    status: proposed
+    status: implemented
     references:
       - kind: design
         path: docs/specs/contract-sidecars.md
+      - kind: implementation
+        path: src/sidecars.ts
   - id: relationship:format-source-format
     kind: affects
     from: decision:authored-format-source
@@ -1135,10 +1165,12 @@ relationships:
     from: decision:sidecar-maintenance-workflow
     to: artifact:bundled-skill
     description: The shared instructions gain sidecar creation, update and backfill steps.
-    status: proposed
+    status: implemented
     references:
       - kind: design
         path: docs/specs/sidecar-workflow.md
+      - kind: implementation
+        path: skills/architecture-graph/SKILL.md
 modules:
   - id: module:declarations
     name: Declarations and validity

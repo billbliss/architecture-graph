@@ -47,6 +47,20 @@ References must use local paths within the project, without symlinks, parent tra
 
 These rules catch broken records. They cannot establish whether the graph covers everything important, whether all design statements agree in meaning, or whether the program respects its boundaries.
 
+## Show the shape of shared data
+
+When a `contract`, `data_object` or `artifact` has a concrete data shape that crosses a boundary (an API payload, an event, a stored record, a file format, structured command output), give it sidecars: one `schema` reference to a JSON Schema and one or more `example` references. Do not invent a schema for a contract that is a rule rather than data, such as exit codes, ordering, idempotency or limits; describe it in prose and with `preserves` and `constrained_by` relationships instead.
+
+Take the schema from the best available source, in this order:
+
+1. A schema the project's build already produces (OpenAPI, protobuf converted to JSON Schema, Zod's `z.toJSONSchema`, Pydantic's `model_json_schema`, `ts-json-schema-generator`). Reference that file; do not copy it.
+2. A schema written from the implementation's types. Say which type it mirrors in the node's description.
+3. For proposed work, a schema written from the requirements.
+
+Prefer examples captured from real output or tests, then fixtures, then hand-written ones. Keep them small, and never include secrets or personal data.
+
+New sidecars conventionally go in `contracts/<name>.schema.json` and `contracts/examples/<name>.json`, where `<name>` is the node ID without its prefix. `ag validate` checks that the schema is valid JSON Schema and that every example matches it; relative `$ref` between project files work. Passing shows only that the files agree with each other, not that the code produces that data. For an important contract, suggest a project test that validates real output with `sidecarValidator`.
+
 ## Make shared boundaries visible
 
 Optional `modules` group related responsibilities inside the same canonical graph. Each module has an ID, name, description, and lists of imported and exported node IDs. A node can name its `module`. A relationship crossing modules requires the source module to import its target and the target module to export that node. This makes shared boundaries reviewable. For the complete shape and additional relationship kinds, read `node_modules/@billbliss/architecture-graph/docs/reference.md` from the consuming project root.

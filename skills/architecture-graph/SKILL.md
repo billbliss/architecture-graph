@@ -21,6 +21,8 @@ Distinguish agreed requirements from inferred proposals. Record contradictions, 
 
 If no graph exists, run `ag init --id graph:<project> --title "<project> architecture"`. This creates empty files, not an inferred design. Fill in the scope and initial records from what you read. Planned work does not need invented implementation files or evidence.
 
+For contracts with a concrete data shape that are most likely to be changed or misunderstood, add schema and example sidecars as the modeling guide describes. Do not block the first record on complete coverage.
+
 Add a short reminder to the project's agent instructions file—`AGENTS.md` for Codex, `CLAUDE.md` for Claude Code—to consult AG before design changes and maintain it alongside the code. Preserve other project instructions. Run `ag validate`, `ag generate`, and `ag check`, then review whether the result explains the design and keeps uncertainty visible.
 
 ## Maintain: start a change with the design in view
@@ -30,5 +32,7 @@ Use `ag context --file <project-relative-path>` or `ag context --id <id>` before
 Use `--module <id>` or `--guardrail <id>` for a known boundary or rule. Inspect `truncated` and warnings: a bounded result may omit relevant records. Narrow the query or deliberately adjust its limits before assuming the context is complete. Generated indexes are disposable; missing or stale indexes fall back to the canonical file.
 
 Read the returned records and referenced files, including owners, authorities, rules, and open decisions. Update the graph when the design changes. Keep IDs stable through file moves. Mark records implemented only when real implementation exists, adding implementation references to implemented ideas and relationships while retaining design references.
+
+When a change touches the data shape of a contract that has sidecars, update its schema and examples in the same change, or rerun the build that generates the schema. To backfill an existing graph, work through `ag summary`'s `sidecars.withoutSchema` list: add sidecars for data shapes and leave contracts that are rules without one.
 
 Run appropriate application tests, then `ag validate`, `ag generate`, and `ag check`. Review the graph and generated briefing together. Fix stale guidance by updating the graph and regenerating. Report checks of the records separately from tests of behavior: AG does not establish that code follows the design.

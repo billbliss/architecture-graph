@@ -54,6 +54,39 @@ You can change either configured path. Keep the generated folder separate from t
 
 References must name existing local files using paths such as `requirements.md` or `src/formatter.js`. URLs, wildcard patterns, links to files through symlinks, and paths outside the project are not supported. Planned work does not need an invented source file.
 
+## Contract schemas and examples
+
+A `contract`, `data_object` or `artifact` node can carry sidecar files that describe its data shape: one `schema` reference to a JSON Schema and any number of `example` references to example payloads.
+
+```yaml
+references:
+  - kind: design
+    path: requirements.md
+  - kind: schema
+    path: contracts/task-changed.schema.json
+  - kind: example
+    path: contracts/examples/task-changed.json
+```
+
+`ag validate`, and every command that loads a project, checks that:
+
+| Diagnostic | Check |
+| --- | --- |
+| `sidecar-kind` | Sidecar references appear only on contract, data_object and artifact nodes, never on relationships |
+| `sidecar-schema-count` | A node has at most one schema |
+| `sidecar-example-without-schema` | A node with examples also has a schema |
+| `sidecar-schema` | The schema is a `.json` file holding valid JSON Schema (draft 2020-12, or draft-07 when `$schema` says so), with no unknown keywords or formats, and every `$ref` resolves |
+| `sidecar-example-parse` | Each example is a `.json`, `.yaml` or `.yml` file with one document |
+| `sidecar-example` | Each example matches the schema, including `format` values such as `date-time` |
+
+A `$ref` to a relative path, such as `task.schema.json` or `../../schema/graph.schema.json#/properties/nodes/items`, resolves against the referencing file and must stay inside the project. AG never fetches schemas over the network.
+
+New sidecars conventionally live at `contracts/<name>.schema.json` and `contracts/examples/<name>.json`, where `<name>` is the node ID without its prefix. The reference is what counts: if the build already produces a schema elsewhere, reference that file instead of copying it. Sidecars are ordinary references for lookup, so `ag context --file contracts/task.schema.json` finds the contract.
+
+`ag summary` reports `sidecars.eligible`, `withSchema`, `withExamples` and `withoutSchema`, the list of eligible nodes with no schema yet. A missing schema is not an error; contracts that are rules rather than data shapes need none. The [modeling guide](../skills/architecture-graph/references/modeling.md) explains when to add sidecars.
+
+Passing these checks shows that the schema and examples agree with each other, not that the code produces or accepts that data. To check the code, add a test that runs it and validates the output with `sidecarValidator` (see below).
+
 ## Checking generated output in a build
 
 If you commit the generated files, run `ag check` before regenerating to catch an out-of-date briefing. In this repository, the test workflow also compares regenerated example guidance against the committed version.
@@ -74,9 +107,20 @@ const summary = summarize(project);
 const result = syncArtifacts(project, { check: true });
 ```
 
+To check that real output still matches a contract's schema sidecar, compile it with the same rules and `$ref` resolution as validation:
+
+```js
+import { sidecarValidator } from '@billbliss/architecture-graph';
+
+const check = sidecarValidator(project.root, 'contracts/task-changed.schema.json');
+const { valid, errors } = check(actualOutput);
+```
+
+`sidecarValidator` throws when the schema itself is invalid.
+
 Start with `loadProject`: it checks the configuration, graph, and file references, and rejects references into generated output. Treat a loaded project as a snapshot and reload after editing declarations. `loadProject(path, { forceCanonical: true })` bypasses the compiled cache. `validateGraph` checks a graph object and returns a list of `{code, at, message}` errors; it does not perform the additional configuration checks. Other operations throw errors for invalid inputs. `syncArtifacts` returns a `drift` list; without `check: true`, it writes the generated files.
 
-The package exports types including `Graph`, `GraphNode`, `Relationship`, `GraphModule`, `Project`, and `ContextBundle`, along with typed Zod schemas. It also exports `serializeGraph` and `parseDeclarations` for working with the authored format, and `initProject`, `installSkill`, `renderArtifacts`, `formatContext`, `VERSION`, `LIMIT`, and `AGError`. Tools that read JSON can access the graph schema through `@billbliss/architecture-graph/schema`.
+The package exports types including `Graph`, `GraphNode`, `Relationship`, `GraphModule`, `Project`, and `ContextBundle`, along with typed Zod schemas. It also exports `serializeGraph` and `parseDeclarations` for working with the authored format, `sidecarValidator` and `SIDECAR_KINDS` for contract sidecars, and `initProject`, `installSkill`, `renderArtifacts`, `formatContext`, `VERSION`, `LIMIT`, and `AGError`. Tools that read JSON can access the graph schema through `@billbliss/architecture-graph/schema`.
 
 ## One file, logical modules
 

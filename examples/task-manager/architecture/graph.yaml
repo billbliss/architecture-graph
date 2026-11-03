@@ -80,9 +80,9 @@ nodes:
     references:
       - kind: design
         path: requirements.md
-      - kind: design
+      - kind: schema
         path: contracts/task.schema.json
-      - kind: design
+      - kind: example
         path: contracts/examples/task.json
     module: module:tasks
   - id: contract:task-changed
@@ -94,9 +94,9 @@ nodes:
     references:
       - kind: design
         path: requirements.md
-      - kind: design
+      - kind: schema
         path: contracts/task-changed.schema.json
-      - kind: design
+      - kind: example
         path: contracts/examples/task-changed.json
     module: module:tasks
   - id: boundary:task-state-authority
@@ -156,9 +156,9 @@ nodes:
     references:
       - kind: design
         path: requirements.md
-      - kind: design
+      - kind: schema
         path: contracts/reminder-due.schema.json
-      - kind: design
+      - kind: example
         path: contracts/examples/reminder-due.json
     module: module:reminders
   - id: boundary:no-reminders-for-completed
@@ -219,9 +219,9 @@ nodes:
     references:
       - kind: design
         path: requirements.md
-      - kind: design
+      - kind: schema
         path: contracts/change-set.schema.json
-      - kind: design
+      - kind: example
         path: contracts/examples/change-set.json
     module: module:sync
   - id: boundary:no-silent-loss

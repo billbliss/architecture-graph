@@ -1,6 +1,6 @@
 # Maintaining contract sidecars
 
-**Status:** Proposed. Target release: 0.4.0, together with [contract sidecars](contract-sidecars.md).
+**Status:** Implemented, not yet released. Target release: 0.4.0, together with [contract sidecars](contract-sidecars.md).
 
 ## Problem
 

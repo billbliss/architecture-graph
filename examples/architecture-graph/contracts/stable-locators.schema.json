@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Locator",
+  "description": "Identifies a declaration by graph file, section and stable object ID. It does not identify implementation symbols or line numbers.",
+  "type": "object",
+  "required": ["path", "section", "objectId"],
+  "additionalProperties": false,
+  "properties": {
+    "path": { "type": "string", "minLength": 1, "description": "Configured graph file, relative to the configuration directory." },
+    "section": { "enum": ["nodes", "relationships", "modules"] },
+    "objectId": { "type": "string", "pattern": "^[a-z][a-z0-9_-]*:[a-z0-9][a-z0-9._-]*$", "description": "Stable ID of the node, relationship or module." }
+  }
+}

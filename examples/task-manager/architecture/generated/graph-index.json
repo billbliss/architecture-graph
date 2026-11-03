@@ -236,11 +236,11 @@
           "path": "requirements.md"
         },
         {
-          "kind": "design",
+          "kind": "schema",
           "path": "contracts/change-set.schema.json"
         },
         {
-          "kind": "design",
+          "kind": "example",
           "path": "contracts/examples/change-set.json"
         }
       ],
@@ -258,11 +258,11 @@
           "path": "requirements.md"
         },
         {
-          "kind": "design",
+          "kind": "schema",
           "path": "contracts/reminder-due.schema.json"
         },
         {
-          "kind": "design",
+          "kind": "example",
           "path": "contracts/examples/reminder-due.json"
         }
       ],
@@ -280,11 +280,11 @@
           "path": "requirements.md"
         },
         {
-          "kind": "design",
+          "kind": "schema",
           "path": "contracts/task.schema.json"
         },
         {
-          "kind": "design",
+          "kind": "example",
           "path": "contracts/examples/task.json"
         }
       ],
@@ -302,11 +302,11 @@
           "path": "requirements.md"
         },
         {
-          "kind": "design",
+          "kind": "schema",
           "path": "contracts/task-changed.schema.json"
         },
         {
-          "kind": "design",
+          "kind": "example",
           "path": "contracts/examples/task-changed.json"
         }
       ],

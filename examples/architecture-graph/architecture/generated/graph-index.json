@@ -447,7 +447,7 @@
       "status": "implemented"
     },
     "component:structural-validator": {
-      "description": "Checks shape, globally unique identities, endpoint kinds, references, ownership cycles, single owner/authority and module imports/exports. Unresolved owner/authority alternatives are excluded from conflict checks; unassigned nodes are permitted.",
+      "description": "Checks shape, globally unique identities, endpoint kinds, references, ownership cycles, single owner/authority and module imports/exports. Checks sidecar placement, that each schema sidecar is valid JSON Schema and that every example conforms. Unresolved owner/authority alternatives are excluded from conflict checks; unassigned nodes are permitted.",
       "id": "component:structural-validator",
       "kind": "component",
       "module": "module:declarations",
@@ -456,6 +456,10 @@
         {
           "kind": "implementation",
           "path": "src/validation.ts"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/sidecars.ts"
         },
         {
           "kind": "design",
@@ -482,6 +486,14 @@
         {
           "kind": "design",
           "path": "docs/compatibility.md"
+        },
+        {
+          "kind": "schema",
+          "path": "schema/graph.schema.json"
+        },
+        {
+          "kind": "example",
+          "path": "examples/hello-world/architecture/graph.yaml"
         }
       ],
       "status": "implemented"
@@ -504,6 +516,14 @@
         {
           "kind": "design",
           "path": "docs/reference.md"
+        },
+        {
+          "kind": "schema",
+          "path": "examples/architecture-graph/contracts/bounded-context.schema.json"
+        },
+        {
+          "kind": "example",
+          "path": "examples/architecture-graph/contracts/examples/bounded-context.json"
         }
       ],
       "status": "implemented"
@@ -531,7 +551,7 @@
       "status": "implemented"
     },
     "contract:public-operations": {
-      "description": "CLI errors exit 1; stale check exits 2; success exits 0. Library loadProject throws on invalid projects; validateGraph returns diagnostics and omits configuration-specific checks. Consumers should load through loadProject before querying and reload after edits.",
+      "description": "CLI errors exit 1; stale check exits 2; success exits 0. Library loadProject throws on invalid projects; validateGraph returns diagnostics and omits configuration-specific checks. Consumers should load through loadProject before querying and reload after edits. sidecarValidator compiles a schema sidecar with validation's rules and throws if it is invalid.",
       "id": "contract:public-operations",
       "kind": "contract",
       "module": "module:interfaces",
@@ -578,6 +598,14 @@
         {
           "kind": "design",
           "path": "docs/foundation.md"
+        },
+        {
+          "kind": "schema",
+          "path": "examples/architecture-graph/contracts/stable-locators.schema.json"
+        },
+        {
+          "kind": "example",
+          "path": "examples/architecture-graph/contracts/examples/stable-locators.json"
         }
       ],
       "status": "implemented"
@@ -649,7 +677,7 @@
       "status": "implemented"
     },
     "decision:contract-sidecars": {
-      "description": "Proposed: schema and example reference kinds attach a JSON Schema and example payloads to contract, data_object and artifact nodes. Validation checks the schema and that examples conform, using Ajv; Zod still defines the authored format. AG does not read source code to write or verify sidecars.",
+      "description": "Chosen and implemented: schema and example reference kinds attach a JSON Schema and example payloads to contract, data_object and artifact nodes. Validation checks the schema and that examples conform, using Ajv; Zod still defines the authored format. AG does not read source code to write or verify sidecars.",
       "id": "decision:contract-sidecars",
       "kind": "decision",
       "module": "module:declarations",
@@ -658,9 +686,21 @@
         {
           "kind": "design",
           "path": "docs/specs/contract-sidecars.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/sidecars.ts"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/schema.ts"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/artifacts.ts"
         }
       ],
-      "status": "proposed"
+      "status": "implemented"
     },
     "decision:human-ownership": {
       "description": "Modeling question: docs identify source responsibilities but do not assign human reviewers for schemas, public API and releases. Keep software ownership here; decide whether named maintainer/team ownership belongs in this graph or separate repository governance.",
@@ -699,7 +739,7 @@
       "status": "unresolved"
     },
     "decision:sidecar-maintenance-workflow": {
-      "description": "Proposed: the bundled skill creates sidecars for data-shaped contracts during bootstrap, updates them in the same change as the code, and backfills from the summary's withoutSchema list. Behavioral contracts get no invented schema.",
+      "description": "Chosen and implemented: the bundled skill creates sidecars for data-shaped contracts during bootstrap, updates them in the same change as the code, and backfills from the summary's withoutSchema list. Behavioral contracts get no invented schema.",
       "id": "decision:sidecar-maintenance-workflow",
       "kind": "decision",
       "module": "module:delivery",
@@ -708,9 +748,17 @@
         {
           "kind": "design",
           "path": "docs/specs/sidecar-workflow.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "skills/architecture-graph/SKILL.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "skills/architecture-graph/references/modeling.md"
         }
       ],
-      "status": "proposed"
+      "status": "implemented"
     },
     "decision:single-canonical-file": {
       "description": "Chosen and implemented: logical modules remain within one authored YAML/JSON file. Generated indexes support focused retrieval while configuration selects the authoritative file.",
@@ -1485,9 +1533,13 @@
         {
           "kind": "design",
           "path": "docs/specs/sidecar-workflow.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "skills/architecture-graph/SKILL.md"
         }
       ],
-      "status": "proposed",
+      "status": "implemented",
       "to": "artifact:bundled-skill"
     },
     "relationship:sidecars-format": {
@@ -1499,9 +1551,13 @@
         {
           "kind": "design",
           "path": "docs/specs/contract-sidecars.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/schema.ts"
         }
       ],
-      "status": "proposed",
+      "status": "implemented",
       "to": "contract:authored-format"
     },
     "relationship:sidecars-validator": {
@@ -1513,9 +1569,13 @@
         {
           "kind": "design",
           "path": "docs/specs/contract-sidecars.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/sidecars.ts"
         }
       ],
-      "status": "proposed",
+      "status": "implemented",
       "to": "component:structural-validator"
     },
     "relationship:single-file-loader": {

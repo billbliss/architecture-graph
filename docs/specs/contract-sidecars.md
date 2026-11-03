@@ -1,6 +1,6 @@
 # Contract sidecars
 
-**Status:** Proposed. Target release: 0.4.0. Graph and configuration format: **1** (additive vocabulary).
+**Status:** Implemented, not yet released. Target release: 0.4.0. Graph and configuration format: **1** (additive vocabulary).
 
 ## Problem
 
@@ -99,12 +99,13 @@ A valid schema and passing examples show that the sidecar files agree with each 
 1. `src/schema.ts`: extend the reference kind enum.
 2. New `src/sidecars.ts`: load, compile and check sidecars; return diagnostics.
 3. `src/validation.ts`: call sidecar checks after reference-existence checks, with the rules above.
-4. `src/artifacts.ts`: add the `sidecars` summary section and the guidance sentence.
-5. `package.json`: add `ajv` and `ajv-formats` as pinned runtime dependencies.
-6. Tests: each diagnostic code; draft-07 and 2020-12; a cross-file `$ref`; YAML examples; a schema outside `contracts/`; a project with no sidecars (no change in diagnostics); summary counts.
-7. Documentation: [commands and files](../reference.md), [the compatibility page](../compatibility.md), and [the modeling guide](../../skills/architecture-graph/references/modeling.md).
-8. AG's own graph: backfill sidecars for its data-shaped contracts and mark this decision implemented with implementation references.
-9. The [task-manager example](../../examples/task-manager/README.md): change its contract references from `design` to `schema` and `example`.
+4. `src/index.ts`: export `sidecarValidator`, which compiles a schema sidecar with the same rules and `$ref` resolution, so projects can test real output against it.
+5. `src/artifacts.ts`: add the `sidecars` summary section and the guidance sentence.
+6. `package.json`: add `ajv` and `ajv-formats` as pinned runtime dependencies.
+7. Tests: each diagnostic code; draft-07 and 2020-12; a cross-file `$ref`; YAML examples; a schema outside `contracts/`; a project with no sidecars (no change in diagnostics); summary counts.
+8. Documentation: [commands and files](../reference.md), [the compatibility page](../compatibility.md), and [the modeling guide](../../skills/architecture-graph/references/modeling.md).
+9. AG's own graph: backfill sidecars for its data-shaped contracts and mark this decision implemented with implementation references.
+10. The [task-manager example](../../examples/task-manager/README.md): change its contract references from `design` to `schema` and `example`.
 
 ## Open questions
 

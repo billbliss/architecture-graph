@@ -1,7 +1,7 @@
 {
   "artifactVersion": "2",
   "toolVersion": "0.3.1",
-  "declarationDigest": "cd379625e771a8a5c9e5aca49cb3ecb4e8fcd094d7705f070f7b985c29434e21",
+  "declarationDigest": "8f8a718c2e6e65a7981ac6b693f7fd160b0892b7ac9061518cdfd099a2a9c944",
   "graphId": "graph:architecture-graph",
   "title": "Architecture Graph architecture",
   "scope": "AG 0.3.1: declarations, context, interfaces and delivery. Software ownership is modeled; human assignments remain open. Excludes predecessor internals, explorer UI and implementation assurance.",
@@ -10,8 +10,8 @@
   "relationships": 62,
   "modules": 4,
   "statuses": {
-    "proposed": 2,
-    "implemented": 29,
+    "proposed": 0,
+    "implemented": 31,
     "unresolved": 4
   },
   "unresolved": [
@@ -55,5 +55,17 @@
       "id": "relationship:windows-delivery",
       "description": "Adding a supported platform would require CI and packaged consumer evidence; current matrix leaves Windows untested."
     }
-  ]
+  ],
+  "sidecars": {
+    "eligible": 8,
+    "withSchema": 3,
+    "withExamples": 3,
+    "withoutSchema": [
+      "artifact:bundled-skill",
+      "artifact:derived-indexes",
+      "artifact:guidance-summary",
+      "contract:logical-modules",
+      "contract:public-operations"
+    ]
+  }
 }
