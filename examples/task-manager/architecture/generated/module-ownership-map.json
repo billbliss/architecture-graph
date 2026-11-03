@@ -1,0 +1,188 @@
+{
+  "modules": {
+    "module:clients": {
+      "description": "The web app, mobile app and command-line tool people use. They show tasks and ask other modules to change them.",
+      "exports": [
+        "surface:mobile-app"
+      ],
+      "id": "module:clients",
+      "imports": [
+        "boundary:no-silent-loss",
+        "capability:manage-tasks",
+        "capability:search-tasks",
+        "capability:sync-offline-changes",
+        "component:offline-queue",
+        "contract:task"
+      ],
+      "name": "Clients",
+      "nodeIds": [
+        "surface:cli",
+        "surface:mobile-app",
+        "surface:web-app"
+      ],
+      "relationshipIds": [
+        "relationship:cli-task",
+        "relationship:cli-tasks",
+        "relationship:mobile-no-loss",
+        "relationship:mobile-queue",
+        "relationship:mobile-sync",
+        "relationship:mobile-task",
+        "relationship:web-search",
+        "relationship:web-task",
+        "relationship:web-tasks"
+      ]
+    },
+    "module:notifications": {
+      "description": "Delivers push and email notifications.",
+      "exports": [],
+      "id": "module:notifications",
+      "imports": [
+        "contract:reminder-due",
+        "contract:task-changed"
+      ],
+      "name": "Notifications",
+      "nodeIds": [
+        "capability:notify-user",
+        "component:notifier"
+      ],
+      "relationshipIds": [
+        "relationship:notifier-assignments",
+        "relationship:notifier-owns",
+        "relationship:notifier-provides",
+        "relationship:notifier-reminders"
+      ]
+    },
+    "module:reminders": {
+      "description": "Schedules and fires reminders and handles snoozing.",
+      "exports": [
+        "capability:schedule-reminders",
+        "contract:reminder-due"
+      ],
+      "id": "module:reminders",
+      "imports": [
+        "boundary:task-state-authority",
+        "capability:manage-tasks",
+        "contract:task-changed",
+        "surface:mobile-app"
+      ],
+      "name": "Reminders",
+      "nodeIds": [
+        "boundary:no-reminders-for-completed",
+        "capability:schedule-reminders",
+        "component:reminder-scheduler",
+        "contract:reminder-due",
+        "decision:offline-reminders"
+      ],
+      "relationshipIds": [
+        "relationship:offline-reminders-mobile",
+        "relationship:offline-reminders-scheduler",
+        "relationship:reminder-due-authority",
+        "relationship:scheduler-completed",
+        "relationship:scheduler-owns",
+        "relationship:scheduler-provides",
+        "relationship:scheduler-snooze",
+        "relationship:scheduler-task-authority",
+        "relationship:scheduler-task-changes"
+      ]
+    },
+    "module:search": {
+      "description": "Keeps a searchable copy of tasks.",
+      "exports": [
+        "capability:search-tasks"
+      ],
+      "id": "module:search",
+      "imports": [
+        "contract:task",
+        "contract:task-changed"
+      ],
+      "name": "Search",
+      "nodeIds": [
+        "capability:search-tasks",
+        "component:search-indexer"
+      ],
+      "relationshipIds": [
+        "relationship:indexer-owns",
+        "relationship:indexer-provides",
+        "relationship:indexer-task",
+        "relationship:indexer-task-changes"
+      ]
+    },
+    "module:sync": {
+      "description": "Keeps offline devices in step without losing their edits.",
+      "exports": [
+        "boundary:no-silent-loss",
+        "capability:sync-offline-changes",
+        "component:offline-queue"
+      ],
+      "id": "module:sync",
+      "imports": [
+        "boundary:task-state-authority",
+        "capability:manage-tasks",
+        "contract:task",
+        "contract:task-changed"
+      ],
+      "name": "Offline sync",
+      "nodeIds": [
+        "boundary:no-silent-loss",
+        "capability:sync-offline-changes",
+        "component:offline-queue",
+        "component:sync-engine",
+        "contract:change-set",
+        "decision:conflict-resolution"
+      ],
+      "relationshipIds": [
+        "relationship:change-set-authority",
+        "relationship:conflict-change-set",
+        "relationship:conflict-sync",
+        "relationship:queue-change-set",
+        "relationship:queue-no-loss",
+        "relationship:sync-apply",
+        "relationship:sync-change-set-once",
+        "relationship:sync-no-loss",
+        "relationship:sync-owns",
+        "relationship:sync-provides",
+        "relationship:sync-task",
+        "relationship:sync-task-authority",
+        "relationship:sync-task-changes"
+      ]
+    },
+    "module:tasks": {
+      "description": "Owns task state, its shape, recurrence and the task-changed event every other module reacts to.",
+      "exports": [
+        "boundary:task-state-authority",
+        "capability:manage-tasks",
+        "contract:task",
+        "contract:task-changed"
+      ],
+      "id": "module:tasks",
+      "imports": [
+        "capability:schedule-reminders"
+      ],
+      "name": "Tasks",
+      "nodeIds": [
+        "boundary:task-state-authority",
+        "capability:manage-tasks",
+        "component:recurrence-rules",
+        "component:task-service",
+        "component:task-store",
+        "contract:task",
+        "contract:task-changed",
+        "decision:events-after-commit",
+        "decision:recurrence-model"
+      ],
+      "relationshipIds": [
+        "relationship:events-after-commit-event",
+        "relationship:recurrence-model-rules",
+        "relationship:recurrence-model-task",
+        "relationship:task-authority",
+        "relationship:task-changed-after-commit",
+        "relationship:task-changed-authority",
+        "relationship:task-service-next-reminder",
+        "relationship:task-service-owns",
+        "relationship:task-service-provides",
+        "relationship:task-service-recurrence",
+        "relationship:task-service-store"
+      ]
+    }
+  }
+}

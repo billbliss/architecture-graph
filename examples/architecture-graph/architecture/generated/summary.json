@@ -1,20 +1,24 @@
 {
   "artifactVersion": "2",
   "toolVersion": "0.3.1",
-  "declarationDigest": "67cf60908679375de96c627dfb54ca6729e76029f12149efae2c456473e70b46",
+  "declarationDigest": "8f8a718c2e6e65a7981ac6b693f7fd160b0892b7ac9061518cdfd099a2a9c944",
   "graphId": "graph:architecture-graph",
   "title": "Architecture Graph architecture",
   "scope": "AG 0.3.1: declarations, context, interfaces and delivery. Software ownership is modeled; human assignments remain open. Excludes predecessor internals, explorer UI and implementation assurance.",
   "limitation": "Structural validation only; declarations and file existence do not prove implementation conformance.",
-  "nodes": 32,
-  "relationships": 57,
+  "nodes": 35,
+  "relationships": 62,
   "modules": 4,
   "statuses": {
     "proposed": 0,
-    "implemented": 29,
-    "unresolved": 3
+    "implemented": 31,
+    "unresolved": 4
   },
   "unresolved": [
+    {
+      "id": "decision:authored-format-source",
+      "description": "Open: Zod definitions in src/schema.ts generate the published JSON Schema today. A hand-written JSON Schema as the source would make the language-neutral contract authoritative for other readers such as a browser viewer, at the cost of rewriting working validation. Revisit when a viewer reads the published schema."
+    },
     {
       "id": "decision:human-ownership",
       "description": "Modeling question: docs identify source responsibilities but do not assign human reviewers for schemas, public API and releases. Keep software ownership here; decide whether named maintainer/team ownership belongs in this graph or separate repository governance."
@@ -26,6 +30,14 @@
     {
       "id": "decision:windows-support",
       "description": "Open: compatibility docs explicitly say Windows is untested and CI has no Windows job. Decide whether to add a supported Windows test target or continue documenting the gap; Node portability alone does not resolve it."
+    },
+    {
+      "id": "relationship:format-source-format",
+      "description": "Determines which artifact is the authoritative definition of the authored format."
+    },
+    {
+      "id": "relationship:format-source-model",
+      "description": "Schema-first would replace the Zod definitions with a hand-written schema and validator."
     },
     {
       "id": "relationship:human-api",
@@ -43,5 +55,17 @@
       "id": "relationship:windows-delivery",
       "description": "Adding a supported platform would require CI and packaged consumer evidence; current matrix leaves Windows untested."
     }
-  ]
+  ],
+  "sidecars": {
+    "eligible": 8,
+    "withSchema": 3,
+    "withExamples": 3,
+    "withoutSchema": [
+      "artifact:bundled-skill",
+      "artifact:derived-indexes",
+      "artifact:guidance-summary",
+      "contract:logical-modules",
+      "contract:public-operations"
+    ]
+  }
 }

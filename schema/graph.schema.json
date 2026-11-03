@@ -76,7 +76,9 @@
                   "type": "string",
                   "enum": [
                     "design",
-                    "implementation"
+                    "implementation",
+                    "schema",
+                    "example"
                   ]
                 },
                 "path": {
@@ -183,7 +185,9 @@
                   "type": "string",
                   "enum": [
                     "design",
-                    "implementation"
+                    "implementation",
+                    "schema",
+                    "example"
                   ]
                 },
                 "path": {

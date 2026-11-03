@@ -29,6 +29,7 @@
         "boundary:declarations-not-proof",
         "capability:validate-declarations",
         "contract:authored-format",
+        "decision:authored-format-source",
         "decision:canonical-fallback",
         "decision:windows-support"
       ],
@@ -40,10 +41,13 @@
       "nodeIds": [
         "component:build-release",
         "component:declaration-model",
+        "decision:authored-format-source",
         "decision:human-ownership",
         "decision:typescript-source"
       ],
       "relationshipIds": [
+        "relationship:format-source-format",
+        "relationship:format-source-model",
         "relationship:human-api",
         "relationship:human-model"
       ]
@@ -117,6 +121,53 @@
       ],
       "relationshipIds": []
     },
+    "docs/specs/contract-sidecars.md": {
+      "nodeIds": [
+        "decision:contract-sidecars"
+      ],
+      "relationshipIds": [
+        "relationship:sidecars-format",
+        "relationship:sidecars-validator"
+      ]
+    },
+    "docs/specs/sidecar-workflow.md": {
+      "nodeIds": [
+        "decision:sidecar-maintenance-workflow"
+      ],
+      "relationshipIds": [
+        "relationship:sidecar-workflow-skill"
+      ]
+    },
+    "examples/architecture-graph/contracts/bounded-context.schema.json": {
+      "nodeIds": [
+        "contract:bounded-context"
+      ],
+      "relationshipIds": []
+    },
+    "examples/architecture-graph/contracts/examples/bounded-context.json": {
+      "nodeIds": [
+        "contract:bounded-context"
+      ],
+      "relationshipIds": []
+    },
+    "examples/architecture-graph/contracts/examples/stable-locators.json": {
+      "nodeIds": [
+        "contract:stable-locators"
+      ],
+      "relationshipIds": []
+    },
+    "examples/architecture-graph/contracts/stable-locators.schema.json": {
+      "nodeIds": [
+        "contract:stable-locators"
+      ],
+      "relationshipIds": []
+    },
+    "examples/hello-world/architecture/graph.yaml": {
+      "nodeIds": [
+        "contract:authored-format"
+      ],
+      "relationshipIds": []
+    },
     "package.json": {
       "nodeIds": [
         "capability:ship-toolkit",
@@ -132,6 +183,12 @@
         "relationship:delivery-provides",
         "relationship:typescript-build"
       ]
+    },
+    "schema/graph.schema.json": {
+      "nodeIds": [
+        "contract:authored-format"
+      ],
+      "relationshipIds": []
     },
     "scripts/check-release-environment.mjs": {
       "nodeIds": [
@@ -184,10 +241,12 @@
     "skills/architecture-graph/SKILL.md": {
       "nodeIds": [
         "artifact:bundled-skill",
-        "decision:agent-maintained-design"
+        "decision:agent-maintained-design",
+        "decision:sidecar-maintenance-workflow"
       ],
       "relationshipIds": [
         "relationship:agent-workflow",
+        "relationship:sidecar-workflow-skill",
         "relationship:skill-context",
         "relationship:skill-maintenance",
         "relationship:skill-proof"
@@ -195,7 +254,8 @@
     },
     "skills/architecture-graph/references/modeling.md": {
       "nodeIds": [
-        "artifact:bundled-skill"
+        "artifact:bundled-skill",
+        "decision:sidecar-maintenance-workflow"
       ],
       "relationshipIds": []
     },
@@ -204,7 +264,8 @@
         "artifact:guidance-summary",
         "capability:maintain-guidance",
         "component:artifact-generator",
-        "decision:canonical-fallback"
+        "decision:canonical-fallback",
+        "decision:contract-sidecars"
       ],
       "relationshipIds": [
         "relationship:fallback-generator",
@@ -323,10 +384,12 @@
         "component:declaration-model",
         "contract:authored-format",
         "contract:logical-modules",
+        "decision:contract-sidecars",
         "decision:typescript-source"
       ],
       "relationshipIds": [
         "relationship:schema-authority",
+        "relationship:sidecars-format",
         "relationship:single-file-modules",
         "relationship:typescript-model"
       ]
@@ -338,6 +401,15 @@
         "decision:single-canonical-file"
       ],
       "relationshipIds": []
+    },
+    "src/sidecars.ts": {
+      "nodeIds": [
+        "component:structural-validator",
+        "decision:contract-sidecars"
+      ],
+      "relationshipIds": [
+        "relationship:sidecars-validator"
+      ]
     },
     "src/skills.ts": {
       "nodeIds": [

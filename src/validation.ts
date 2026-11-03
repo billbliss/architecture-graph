@@ -1,6 +1,7 @@
 import { statSync } from 'node:fs';
 import { GraphSchema, shapeErrors, type Graph, type Diagnostic, type NodeKind, type RelationshipKind } from './schema.js';
 import { localPath, messageOf } from './paths.js';
+import { checkSidecars } from './sidecars.js';
 
 /** Validate declarations and real references; this does not inspect implementation behavior. */
 export function validateGraph(value: unknown, root: string): Diagnostic[] {
@@ -82,6 +83,7 @@ export function validateGraph(value: unknown, root: string): Diagnostic[] {
       }
     }
   }
+  errors.push(...checkSidecars(graph, root));
   // Each ownership link is visited once, including large chains.
   const finished = new Set<string>();
   for (const start of owners.keys()) {

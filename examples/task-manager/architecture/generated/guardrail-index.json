@@ -1,0 +1,37 @@
+{
+  "guardrails": {
+    "boundary:no-reminders-for-completed": {
+      "guardedNodeIds": [
+        "component:reminder-scheduler"
+      ],
+      "nodeId": "boundary:no-reminders-for-completed",
+      "relationshipIds": [
+        "relationship:scheduler-completed"
+      ]
+    },
+    "boundary:no-silent-loss": {
+      "guardedNodeIds": [
+        "component:offline-queue",
+        "component:sync-engine",
+        "surface:mobile-app"
+      ],
+      "nodeId": "boundary:no-silent-loss",
+      "relationshipIds": [
+        "relationship:mobile-no-loss",
+        "relationship:queue-no-loss",
+        "relationship:sync-no-loss"
+      ]
+    },
+    "boundary:task-state-authority": {
+      "guardedNodeIds": [
+        "component:reminder-scheduler",
+        "component:sync-engine"
+      ],
+      "nodeId": "boundary:task-state-authority",
+      "relationshipIds": [
+        "relationship:scheduler-task-authority",
+        "relationship:sync-task-authority"
+      ]
+    }
+  }
+}

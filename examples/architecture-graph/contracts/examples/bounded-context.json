@@ -1,0 +1,134 @@
+{
+  "graphId": "graph:architecture-graph",
+  "limitation": "Structural validation only; declarations and file existence do not prove implementation conformance.",
+  "readSource": "compiled_artifact",
+  "fallbackReason": null,
+  "seeds": [
+    "contract:stable-locators"
+  ],
+  "nodes": [
+    {
+      "description": "Builds node, relationship, neighborhood, source, module, cross-module, guardrail and stable locator tables. Cache reads verify metadata and checksums and fall back on missing, stale or damaged files.",
+      "id": "component:lookup-indexes",
+      "kind": "component",
+      "module": "module:context",
+      "name": "Lookup indexes and cache",
+      "references": [
+        {
+          "kind": "implementation",
+          "path": "src/indexes.ts"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/compiled.ts"
+        },
+        {
+          "kind": "design",
+          "path": "docs/indexing-and-ci.md"
+        }
+      ],
+      "status": "implemented"
+    },
+    {
+      "description": "A locator identifies the configured graph file, section and stable object ID. Insertion and reorder do not change record identity; locators do not identify implementation symbols or line numbers.",
+      "id": "contract:stable-locators",
+      "kind": "contract",
+      "module": "module:context",
+      "name": "Stable declaration locators",
+      "references": [
+        {
+          "kind": "implementation",
+          "path": "src/indexes.ts"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/model.ts"
+        },
+        {
+          "kind": "implementation",
+          "path": "test/foundation.test.js"
+        },
+        {
+          "kind": "design",
+          "path": "docs/foundation.md"
+        },
+        {
+          "kind": "schema",
+          "path": "examples/architecture-graph/contracts/stable-locators.schema.json"
+        },
+        {
+          "kind": "example",
+          "path": "examples/architecture-graph/contracts/examples/stable-locators.json"
+        }
+      ],
+      "status": "implemented"
+    }
+  ],
+  "relationships": [
+    {
+      "description": "Index construction retains IDs through source order changes.",
+      "from": "component:lookup-indexes",
+      "id": "relationship:indexes-locators",
+      "kind": "preserves",
+      "references": [
+        {
+          "kind": "implementation",
+          "path": "src/indexes.ts"
+        }
+      ],
+      "status": "implemented",
+      "to": "contract:stable-locators"
+    },
+    {
+      "description": "Index construction defines record identity through graph file, section and object ID.",
+      "from": "component:lookup-indexes",
+      "id": "relationship:locator-authority",
+      "kind": "authority_for",
+      "references": [
+        {
+          "kind": "implementation",
+          "path": "src/indexes.ts"
+        }
+      ],
+      "status": "implemented",
+      "to": "contract:stable-locators"
+    }
+  ],
+  "modules": [
+    {
+      "id": "module:context",
+      "name": "Indexes and focused context",
+      "description": "Owns disposable lookup indexes and bounded retrieval. Imports validated project snapshots; exports context capability and index construction for loading/generation."
+    }
+  ],
+  "crossModuleDependencies": [],
+  "locators": {
+    "component:lookup-indexes": {
+      "objectId": "component:lookup-indexes",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "contract:stable-locators": {
+      "objectId": "contract:stable-locators",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "relationship:indexes-locators": {
+      "objectId": "relationship:indexes-locators",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:locator-authority": {
+      "objectId": "relationship:locator-authority",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    }
+  },
+  "truncated": false,
+  "warnings": [],
+  "stats": {
+    "seedCandidates": 1,
+    "nodesVisited": 2,
+    "relationshipsExamined": 6
+  }
+}

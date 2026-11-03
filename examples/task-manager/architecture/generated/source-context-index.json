@@ -1,0 +1,135 @@
+{
+  "sources": {
+    "contracts/change-set.schema.json": {
+      "nodeIds": [
+        "contract:change-set"
+      ],
+      "relationshipIds": []
+    },
+    "contracts/examples/change-set.json": {
+      "nodeIds": [
+        "contract:change-set"
+      ],
+      "relationshipIds": []
+    },
+    "contracts/examples/reminder-due.json": {
+      "nodeIds": [
+        "contract:reminder-due"
+      ],
+      "relationshipIds": []
+    },
+    "contracts/examples/task-changed.json": {
+      "nodeIds": [
+        "contract:task-changed"
+      ],
+      "relationshipIds": []
+    },
+    "contracts/examples/task.json": {
+      "nodeIds": [
+        "contract:task"
+      ],
+      "relationshipIds": []
+    },
+    "contracts/reminder-due.schema.json": {
+      "nodeIds": [
+        "contract:reminder-due"
+      ],
+      "relationshipIds": []
+    },
+    "contracts/task-changed.schema.json": {
+      "nodeIds": [
+        "contract:task-changed"
+      ],
+      "relationshipIds": []
+    },
+    "contracts/task.schema.json": {
+      "nodeIds": [
+        "contract:task"
+      ],
+      "relationshipIds": []
+    },
+    "requirements.md": {
+      "nodeIds": [
+        "boundary:no-reminders-for-completed",
+        "boundary:no-silent-loss",
+        "boundary:task-state-authority",
+        "capability:manage-tasks",
+        "capability:notify-user",
+        "capability:schedule-reminders",
+        "capability:search-tasks",
+        "capability:sync-offline-changes",
+        "component:notifier",
+        "component:offline-queue",
+        "component:recurrence-rules",
+        "component:reminder-scheduler",
+        "component:search-indexer",
+        "component:sync-engine",
+        "component:task-service",
+        "component:task-store",
+        "contract:change-set",
+        "contract:reminder-due",
+        "contract:task",
+        "contract:task-changed",
+        "decision:conflict-resolution",
+        "decision:events-after-commit",
+        "decision:offline-reminders",
+        "decision:recurrence-model",
+        "surface:cli",
+        "surface:mobile-app",
+        "surface:web-app"
+      ],
+      "relationshipIds": [
+        "relationship:change-set-authority",
+        "relationship:cli-task",
+        "relationship:cli-tasks",
+        "relationship:conflict-change-set",
+        "relationship:conflict-sync",
+        "relationship:events-after-commit-event",
+        "relationship:indexer-owns",
+        "relationship:indexer-provides",
+        "relationship:indexer-task",
+        "relationship:indexer-task-changes",
+        "relationship:mobile-no-loss",
+        "relationship:mobile-queue",
+        "relationship:mobile-sync",
+        "relationship:mobile-task",
+        "relationship:notifier-assignments",
+        "relationship:notifier-owns",
+        "relationship:notifier-provides",
+        "relationship:notifier-reminders",
+        "relationship:offline-reminders-mobile",
+        "relationship:offline-reminders-scheduler",
+        "relationship:queue-change-set",
+        "relationship:queue-no-loss",
+        "relationship:recurrence-model-rules",
+        "relationship:recurrence-model-task",
+        "relationship:reminder-due-authority",
+        "relationship:scheduler-completed",
+        "relationship:scheduler-owns",
+        "relationship:scheduler-provides",
+        "relationship:scheduler-snooze",
+        "relationship:scheduler-task-authority",
+        "relationship:scheduler-task-changes",
+        "relationship:sync-apply",
+        "relationship:sync-change-set-once",
+        "relationship:sync-no-loss",
+        "relationship:sync-owns",
+        "relationship:sync-provides",
+        "relationship:sync-task",
+        "relationship:sync-task-authority",
+        "relationship:sync-task-changes",
+        "relationship:task-authority",
+        "relationship:task-changed-after-commit",
+        "relationship:task-changed-authority",
+        "relationship:task-service-next-reminder",
+        "relationship:task-service-owns",
+        "relationship:task-service-provides",
+        "relationship:task-service-recurrence",
+        "relationship:task-service-store",
+        "relationship:web-search",
+        "relationship:web-task",
+        "relationship:web-tasks"
+      ]
+    }
+  }
+}

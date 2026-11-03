@@ -23,5 +23,13 @@
       "id": "relationship:localization",
       "description": "Localization would require a separate contract decision."
     }
-  ]
+  ],
+  "sidecars": {
+    "eligible": 1,
+    "withSchema": 0,
+    "withExamples": 0,
+    "withoutSchema": [
+      "contract:greeting"
+    ]
+  }
 }

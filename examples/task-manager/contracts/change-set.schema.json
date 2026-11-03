@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "change-set.schema.json",
+  "title": "ChangeSet",
+  "description": "Edits made on a device while offline, sent to the sync engine when the device reconnects.",
+  "type": "object",
+  "required": ["deviceId", "baseCursor", "changes"],
+  "additionalProperties": false,
+  "properties": {
+    "deviceId": { "type": "string" },
+    "baseCursor": { "type": "string", "description": "Last server state the device had seen before going offline." },
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["changeId", "taskId", "op", "baseVersion", "madeAt"],
+        "additionalProperties": false,
+        "properties": {
+          "changeId": { "type": "string", "description": "Unique per change; makes re-sending safe." },
+          "taskId": { "type": "string" },
+          "op": { "enum": ["create", "update", "complete", "reopen", "delete"] },
+          "baseVersion": { "type": "integer", "minimum": 0, "description": "Task version the edit was made against; a mismatch is a conflict." },
+          "fields": { "type": "object", "description": "New values for the changed fields." },
+          "madeAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  }
+}

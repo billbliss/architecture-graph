@@ -9,6 +9,7 @@ Start with the problem you want AG to help solve: making important design decisi
 | Have Claude Code or Codex help create and maintain the graph | [Using AG with a coding agent](skill-installation.md) |
 | See the complete idea in a small working example | [Hello-world](../examples/hello-world/README.md) |
 | Explore the toolkit's own responsibilities and decisions | [AG self-model](https://github.com/billbliss/architecture-graph/tree/main/examples/architecture-graph) |
+| Browse a familiar design with shared contracts and open questions | [Task manager](https://github.com/billbliss/architecture-graph/tree/main/examples/task-manager) |
 | Keep context useful as the graph grows | [Indexes and generation in CI](indexing-and-ci.md) |
 | Change or extend the toolkit | [Development](development.md) |
 | Inspect or troubleshoot the agent’s work manually | [Manual operation](manual-operation.md) |

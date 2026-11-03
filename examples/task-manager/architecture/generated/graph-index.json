@@ -1,0 +1,1116 @@
+{
+  "nodes": {
+    "boundary:no-reminders-for-completed": {
+      "description": "A completed or deleted task must not fire a reminder, even when the completion arrives just before the reminder would fire.",
+      "id": "boundary:no-reminders-for-completed",
+      "kind": "boundary",
+      "module": "module:reminders",
+      "name": "Completed tasks never fire reminders",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed"
+    },
+    "boundary:no-silent-loss": {
+      "description": "Every queued edit is either applied or reported back to the person as a conflict; none disappear without notice.",
+      "id": "boundary:no-silent-loss",
+      "kind": "boundary",
+      "module": "module:sync",
+      "name": "Offline edits are never silently lost",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed"
+    },
+    "boundary:task-state-authority": {
+      "description": "Reminders, sync and every client ask the task service to change a task; none of them write task state themselves.",
+      "id": "boundary:task-state-authority",
+      "kind": "boundary",
+      "module": "module:tasks",
+      "name": "Only the task service changes tasks",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed"
+    },
+    "capability:manage-tasks": {
+      "description": "Create, read, update, complete, reopen and delete tasks and lists.",
+      "id": "capability:manage-tasks",
+      "kind": "capability",
+      "module": "module:tasks",
+      "name": "Manage tasks",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed"
+    },
+    "capability:notify-user": {
+      "description": "Deliver a notification to a person on their preferred channels.",
+      "id": "capability:notify-user",
+      "kind": "capability",
+      "module": "module:notifications",
+      "name": "Notify people",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed"
+    },
+    "capability:schedule-reminders": {
+      "description": "Schedule, cancel, snooze and look up the next reminder for a task.",
+      "id": "capability:schedule-reminders",
+      "kind": "capability",
+      "module": "module:reminders",
+      "name": "Schedule reminders",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed"
+    },
+    "capability:search-tasks": {
+      "description": "Find tasks by text, list, assignee or due date.",
+      "id": "capability:search-tasks",
+      "kind": "capability",
+      "module": "module:search",
+      "name": "Search tasks",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed"
+    },
+    "capability:sync-offline-changes": {
+      "description": "Bring a device that was offline back in step with everyone else without losing its edits.",
+      "id": "capability:sync-offline-changes",
+      "kind": "capability",
+      "module": "module:sync",
+      "name": "Sync offline changes",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed"
+    },
+    "component:notifier": {
+      "description": "Sends push and email notifications when a reminder fires or someone is assigned a task.",
+      "id": "component:notifier",
+      "kind": "component",
+      "module": "module:notifications",
+      "name": "Notifier",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed"
+    },
+    "component:offline-queue": {
+      "description": "Holds edits made on a device while it is offline and sends them as a change set when it reconnects.",
+      "id": "component:offline-queue",
+      "kind": "component",
+      "module": "module:sync",
+      "name": "Offline queue",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed"
+    },
+    "component:recurrence-rules": {
+      "description": "Expands repeat rules such as \"every Monday\" into due times.",
+      "id": "component:recurrence-rules",
+      "kind": "component",
+      "module": "module:tasks",
+      "name": "Recurrence rules",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed"
+    },
+    "component:reminder-scheduler": {
+      "description": "Schedules reminders from task changes, fires them on time, and handles snoozing by asking the task service to move the due time.",
+      "id": "component:reminder-scheduler",
+      "kind": "component",
+      "module": "module:reminders",
+      "name": "Reminder scheduler",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed"
+    },
+    "component:search-indexer": {
+      "description": "Keeps a searchable copy of tasks up to date from task-changed events. Results can lag recent edits by a few seconds.",
+      "id": "component:search-indexer",
+      "kind": "component",
+      "module": "module:search",
+      "name": "Search indexer",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed"
+    },
+    "component:sync-engine": {
+      "description": "Applies change sets from reconnecting devices through the task service and pushes other people's changes back to devices.",
+      "id": "component:sync-engine",
+      "kind": "component",
+      "module": "module:sync",
+      "name": "Sync engine",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed"
+    },
+    "component:task-service": {
+      "description": "The only writer of task state. Validates and saves changes, then announces each saved change as a task-changed event.",
+      "id": "component:task-service",
+      "kind": "component",
+      "module": "module:tasks",
+      "name": "Task service",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed"
+    },
+    "component:task-store": {
+      "description": "Durable storage for tasks and lists, with a version number that increments on every saved change.",
+      "id": "component:task-store",
+      "kind": "component",
+      "module": "module:tasks",
+      "name": "Task store",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed"
+    },
+    "contract:change-set": {
+      "description": "Edits made offline: each with a unique change ID and the task version it was made against, so re-sending is safe and conflicts are detectable.",
+      "id": "contract:change-set",
+      "kind": "contract",
+      "module": "module:sync",
+      "name": "Change set",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        },
+        {
+          "kind": "schema",
+          "path": "contracts/change-set.schema.json"
+        },
+        {
+          "kind": "example",
+          "path": "contracts/examples/change-set.json"
+        }
+      ],
+      "status": "proposed"
+    },
+    "contract:reminder-due": {
+      "description": "Announced when a reminder fires: which task, who to remind, the due time, and snooze options.",
+      "id": "contract:reminder-due",
+      "kind": "contract",
+      "module": "module:reminders",
+      "name": "Reminder due",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        },
+        {
+          "kind": "schema",
+          "path": "contracts/reminder-due.schema.json"
+        },
+        {
+          "kind": "example",
+          "path": "contracts/examples/reminder-due.json"
+        }
+      ],
+      "status": "proposed"
+    },
+    "contract:task": {
+      "description": "The shape of a task returned to every client and consumer: title, notes, due time, list, assignee, completion state, next reminder and version.",
+      "id": "contract:task",
+      "kind": "contract",
+      "module": "module:tasks",
+      "name": "Task",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        },
+        {
+          "kind": "schema",
+          "path": "contracts/task.schema.json"
+        },
+        {
+          "kind": "example",
+          "path": "contracts/examples/task.json"
+        }
+      ],
+      "status": "proposed"
+    },
+    "contract:task-changed": {
+      "description": "Announced after a change is saved, never before. Carries the task after the change. May be delivered more than once, so consumers ignore events they have already seen.",
+      "id": "contract:task-changed",
+      "kind": "contract",
+      "module": "module:tasks",
+      "name": "Task changed",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        },
+        {
+          "kind": "schema",
+          "path": "contracts/task-changed.schema.json"
+        },
+        {
+          "kind": "example",
+          "path": "contracts/examples/task-changed.json"
+        }
+      ],
+      "status": "proposed"
+    },
+    "decision:conflict-resolution": {
+      "description": "Open: the last write wins, or edits are merged field by field. Merging keeps more work but makes the change-set format and the sync engine more complex.",
+      "id": "decision:conflict-resolution",
+      "kind": "decision",
+      "module": "module:sync",
+      "name": "How are sync conflicts resolved?",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "unresolved"
+    },
+    "decision:events-after-commit": {
+      "description": "Chosen: task-changed events are published after the change is durably saved, so no consumer reacts to a change that was rolled back.",
+      "id": "decision:events-after-commit",
+      "kind": "decision",
+      "module": "module:tasks",
+      "name": "Announce changes only after saving",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed"
+    },
+    "decision:offline-reminders": {
+      "description": "Open: schedule reminders on the device as well as the server, or accept that an offline phone misses them until it reconnects.",
+      "id": "decision:offline-reminders",
+      "kind": "decision",
+      "module": "module:reminders",
+      "name": "Do reminders fire on an offline phone?",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "unresolved"
+    },
+    "decision:recurrence-model": {
+      "description": "Open: one record whose due time moves forward on completion, or one record per occurrence. This changes the task shape, history and how reminders are scheduled.",
+      "id": "decision:recurrence-model",
+      "kind": "decision",
+      "module": "module:tasks",
+      "name": "How are repeating tasks stored?",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "unresolved"
+    },
+    "surface:cli": {
+      "description": "Adds, lists and completes tasks from a terminal. Online only.",
+      "id": "surface:cli",
+      "kind": "surface",
+      "module": "module:clients",
+      "name": "Command-line tool",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed"
+    },
+    "surface:mobile-app": {
+      "description": "Shows the same tasks on a phone, works offline, and receives push notifications.",
+      "id": "surface:mobile-app",
+      "kind": "surface",
+      "module": "module:clients",
+      "name": "Mobile app",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed"
+    },
+    "surface:web-app": {
+      "description": "Lists, edits and searches tasks in a browser. Always online; talks to the task service directly.",
+      "id": "surface:web-app",
+      "kind": "surface",
+      "module": "module:clients",
+      "name": "Web app",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed"
+    }
+  },
+  "relationships": {
+    "relationship:change-set-authority": {
+      "description": "Defines what a device sends when it reconnects.",
+      "from": "component:sync-engine",
+      "id": "relationship:change-set-authority",
+      "kind": "authority_for",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "contract:change-set"
+    },
+    "relationship:cli-task": {
+      "description": "Prints the task shape.",
+      "from": "surface:cli",
+      "id": "relationship:cli-task",
+      "kind": "consumes",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "contract:task"
+    },
+    "relationship:cli-tasks": {
+      "description": "Adds, lists and completes tasks.",
+      "from": "surface:cli",
+      "id": "relationship:cli-tasks",
+      "kind": "depends_on",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "capability:manage-tasks"
+    },
+    "relationship:conflict-change-set": {
+      "description": "Merging may require per-field base versions in each change.",
+      "from": "decision:conflict-resolution",
+      "id": "relationship:conflict-change-set",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "unresolved",
+      "to": "contract:change-set"
+    },
+    "relationship:conflict-sync": {
+      "description": "Field-level merging needs per-field versions in the sync engine.",
+      "from": "decision:conflict-resolution",
+      "id": "relationship:conflict-sync",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "unresolved",
+      "to": "component:sync-engine"
+    },
+    "relationship:events-after-commit-event": {
+      "description": "Consumers never see an event for a change that was not saved.",
+      "from": "decision:events-after-commit",
+      "id": "relationship:events-after-commit-event",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "contract:task-changed"
+    },
+    "relationship:indexer-owns": {
+      "description": "The indexer owns task search.",
+      "from": "component:search-indexer",
+      "id": "relationship:indexer-owns",
+      "kind": "owns",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "capability:search-tasks"
+    },
+    "relationship:indexer-provides": {
+      "description": "Clients search through the indexer.",
+      "from": "component:search-indexer",
+      "id": "relationship:indexer-provides",
+      "kind": "provides",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "capability:search-tasks"
+    },
+    "relationship:indexer-task": {
+      "description": "Indexes the fields of the task shape.",
+      "from": "component:search-indexer",
+      "id": "relationship:indexer-task",
+      "kind": "consumes",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "contract:task"
+    },
+    "relationship:indexer-task-changes": {
+      "description": "Updates the search copy after each change; ignores duplicate events.",
+      "from": "component:search-indexer",
+      "id": "relationship:indexer-task-changes",
+      "kind": "consumes",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "contract:task-changed"
+    },
+    "relationship:mobile-no-loss": {
+      "description": "Shows conflicts to the person instead of discarding edits.",
+      "from": "surface:mobile-app",
+      "id": "relationship:mobile-no-loss",
+      "kind": "constrained_by",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "boundary:no-silent-loss"
+    },
+    "relationship:mobile-queue": {
+      "description": "Queues edits made without a connection.",
+      "from": "surface:mobile-app",
+      "id": "relationship:mobile-queue",
+      "kind": "depends_on",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "component:offline-queue"
+    },
+    "relationship:mobile-sync": {
+      "description": "Catches up after being offline.",
+      "from": "surface:mobile-app",
+      "id": "relationship:mobile-sync",
+      "kind": "depends_on",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "capability:sync-offline-changes"
+    },
+    "relationship:mobile-task": {
+      "description": "Renders the task shape.",
+      "from": "surface:mobile-app",
+      "id": "relationship:mobile-task",
+      "kind": "consumes",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "contract:task"
+    },
+    "relationship:notifier-assignments": {
+      "description": "Notifies a person when a task is assigned to them.",
+      "from": "component:notifier",
+      "id": "relationship:notifier-assignments",
+      "kind": "consumes",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "contract:task-changed"
+    },
+    "relationship:notifier-owns": {
+      "description": "The notifier owns notification delivery.",
+      "from": "component:notifier",
+      "id": "relationship:notifier-owns",
+      "kind": "owns",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "capability:notify-user"
+    },
+    "relationship:notifier-provides": {
+      "description": "Notifications are delivered through the notifier.",
+      "from": "component:notifier",
+      "id": "relationship:notifier-provides",
+      "kind": "provides",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "capability:notify-user"
+    },
+    "relationship:notifier-reminders": {
+      "description": "Turns each fired reminder into a notification.",
+      "from": "component:notifier",
+      "id": "relationship:notifier-reminders",
+      "kind": "consumes",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "contract:reminder-due"
+    },
+    "relationship:offline-reminders-mobile": {
+      "description": "The mobile app may need to schedule local reminders.",
+      "from": "decision:offline-reminders",
+      "id": "relationship:offline-reminders-mobile",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "unresolved",
+      "to": "surface:mobile-app"
+    },
+    "relationship:offline-reminders-scheduler": {
+      "description": "Device-side scheduling would split reminder logic across server and phone.",
+      "from": "decision:offline-reminders",
+      "id": "relationship:offline-reminders-scheduler",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "unresolved",
+      "to": "component:reminder-scheduler"
+    },
+    "relationship:queue-change-set": {
+      "description": "Packages queued edits as a change set on reconnect.",
+      "from": "component:offline-queue",
+      "id": "relationship:queue-change-set",
+      "kind": "produces",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "contract:change-set"
+    },
+    "relationship:queue-no-loss": {
+      "description": "Keeps queued edits until the sync engine confirms them.",
+      "from": "component:offline-queue",
+      "id": "relationship:queue-no-loss",
+      "kind": "constrained_by",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "boundary:no-silent-loss"
+    },
+    "relationship:recurrence-model-rules": {
+      "description": "Determines whether rules move a due time forward or create new tasks.",
+      "from": "decision:recurrence-model",
+      "id": "relationship:recurrence-model-rules",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "unresolved",
+      "to": "component:recurrence-rules"
+    },
+    "relationship:recurrence-model-task": {
+      "description": "One record or one per occurrence changes the task shape.",
+      "from": "decision:recurrence-model",
+      "id": "relationship:recurrence-model-task",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "unresolved",
+      "to": "contract:task"
+    },
+    "relationship:reminder-due-authority": {
+      "description": "Defines the event announced when a reminder fires.",
+      "from": "component:reminder-scheduler",
+      "id": "relationship:reminder-due-authority",
+      "kind": "authority_for",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "contract:reminder-due"
+    },
+    "relationship:scheduler-completed": {
+      "description": "Rechecks completion just before firing.",
+      "from": "component:reminder-scheduler",
+      "id": "relationship:scheduler-completed",
+      "kind": "constrained_by",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "boundary:no-reminders-for-completed"
+    },
+    "relationship:scheduler-owns": {
+      "description": "The scheduler owns reminder scheduling.",
+      "from": "component:reminder-scheduler",
+      "id": "relationship:scheduler-owns",
+      "kind": "owns",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "capability:schedule-reminders"
+    },
+    "relationship:scheduler-provides": {
+      "description": "Other modules schedule and look up reminders through the scheduler.",
+      "from": "component:reminder-scheduler",
+      "id": "relationship:scheduler-provides",
+      "kind": "provides",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "capability:schedule-reminders"
+    },
+    "relationship:scheduler-snooze": {
+      "description": "Snoozing asks the task service to move the due time.",
+      "from": "component:reminder-scheduler",
+      "id": "relationship:scheduler-snooze",
+      "kind": "depends_on",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "capability:manage-tasks"
+    },
+    "relationship:scheduler-task-authority": {
+      "description": "Never writes task state directly, even when snoozing.",
+      "from": "component:reminder-scheduler",
+      "id": "relationship:scheduler-task-authority",
+      "kind": "constrained_by",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "boundary:task-state-authority"
+    },
+    "relationship:scheduler-task-changes": {
+      "description": "Schedules, moves or cancels reminders when due times change or tasks are completed.",
+      "from": "component:reminder-scheduler",
+      "id": "relationship:scheduler-task-changes",
+      "kind": "consumes",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "contract:task-changed"
+    },
+    "relationship:sync-apply": {
+      "description": "Applies incoming edits through the task service.",
+      "from": "component:sync-engine",
+      "id": "relationship:sync-apply",
+      "kind": "depends_on",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "capability:manage-tasks"
+    },
+    "relationship:sync-change-set-once": {
+      "description": "Applies each change at most once, using its change ID.",
+      "from": "component:sync-engine",
+      "id": "relationship:sync-change-set-once",
+      "kind": "preserves",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "contract:change-set"
+    },
+    "relationship:sync-no-loss": {
+      "description": "Reports every change it cannot apply back to the device as a conflict.",
+      "from": "component:sync-engine",
+      "id": "relationship:sync-no-loss",
+      "kind": "constrained_by",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "boundary:no-silent-loss"
+    },
+    "relationship:sync-owns": {
+      "description": "The sync engine owns offline sync.",
+      "from": "component:sync-engine",
+      "id": "relationship:sync-owns",
+      "kind": "owns",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "capability:sync-offline-changes"
+    },
+    "relationship:sync-provides": {
+      "description": "Devices reconcile offline edits through the sync engine.",
+      "from": "component:sync-engine",
+      "id": "relationship:sync-provides",
+      "kind": "provides",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "capability:sync-offline-changes"
+    },
+    "relationship:sync-task": {
+      "description": "Sends current task state to devices after reconnecting.",
+      "from": "component:sync-engine",
+      "id": "relationship:sync-task",
+      "kind": "consumes",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "contract:task"
+    },
+    "relationship:sync-task-authority": {
+      "description": "Never writes task state directly; conflicts are resolved through the task service.",
+      "from": "component:sync-engine",
+      "id": "relationship:sync-task-authority",
+      "kind": "constrained_by",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "boundary:task-state-authority"
+    },
+    "relationship:sync-task-changes": {
+      "description": "Pushes other people's changes to connected devices.",
+      "from": "component:sync-engine",
+      "id": "relationship:sync-task-changes",
+      "kind": "consumes",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "contract:task-changed"
+    },
+    "relationship:task-authority": {
+      "description": "Defines the task shape every client and consumer receives.",
+      "from": "component:task-service",
+      "id": "relationship:task-authority",
+      "kind": "authority_for",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "contract:task"
+    },
+    "relationship:task-changed-after-commit": {
+      "description": "Publishes only after saving, with a unique event ID per change.",
+      "from": "component:task-service",
+      "id": "relationship:task-changed-after-commit",
+      "kind": "preserves",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "contract:task-changed"
+    },
+    "relationship:task-changed-authority": {
+      "description": "Defines the event announced after each saved change.",
+      "from": "component:task-service",
+      "id": "relationship:task-changed-authority",
+      "kind": "authority_for",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "contract:task-changed"
+    },
+    "relationship:task-service-next-reminder": {
+      "description": "Looks up the next reminder time to include in each returned task.",
+      "from": "component:task-service",
+      "id": "relationship:task-service-next-reminder",
+      "kind": "consumes",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "capability:schedule-reminders"
+    },
+    "relationship:task-service-owns": {
+      "description": "The task service owns task management.",
+      "from": "component:task-service",
+      "id": "relationship:task-service-owns",
+      "kind": "owns",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "capability:manage-tasks"
+    },
+    "relationship:task-service-provides": {
+      "description": "Clients and other modules manage tasks through the task service.",
+      "from": "component:task-service",
+      "id": "relationship:task-service-provides",
+      "kind": "provides",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "capability:manage-tasks"
+    },
+    "relationship:task-service-recurrence": {
+      "description": "Computes the next due time of a repeating task.",
+      "from": "component:task-service",
+      "id": "relationship:task-service-recurrence",
+      "kind": "depends_on",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "component:recurrence-rules"
+    },
+    "relationship:task-service-store": {
+      "description": "Reads and writes tasks through the store.",
+      "from": "component:task-service",
+      "id": "relationship:task-service-store",
+      "kind": "depends_on",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "component:task-store"
+    },
+    "relationship:web-search": {
+      "description": "Offers search across lists.",
+      "from": "surface:web-app",
+      "id": "relationship:web-search",
+      "kind": "depends_on",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "capability:search-tasks"
+    },
+    "relationship:web-task": {
+      "description": "Renders the task shape.",
+      "from": "surface:web-app",
+      "id": "relationship:web-task",
+      "kind": "consumes",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "contract:task"
+    },
+    "relationship:web-tasks": {
+      "description": "Edits tasks through the task service.",
+      "from": "surface:web-app",
+      "id": "relationship:web-tasks",
+      "kind": "depends_on",
+      "references": [
+        {
+          "kind": "design",
+          "path": "requirements.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "capability:manage-tasks"
+    }
+  }
+}

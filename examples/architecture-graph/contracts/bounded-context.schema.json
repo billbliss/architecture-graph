@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ContextBundle",
+  "description": "Result of getContext and ag context --json. Output is bounded; callers must inspect truncated and warnings. Defined by the ContextBundle interface in src/model.ts.",
+  "type": "object",
+  "required": ["graphId", "limitation", "readSource", "fallbackReason", "seeds", "nodes", "relationships", "modules", "crossModuleDependencies", "locators", "truncated", "warnings", "stats"],
+  "additionalProperties": false,
+  "properties": {
+    "graphId": { "type": "string" },
+    "limitation": { "type": "string", "description": "Always states that declarations do not prove implementation conformance." },
+    "readSource": { "enum": ["compiled_artifact", "canonical_fallback"] },
+    "fallbackReason": { "type": ["string", "null"], "description": "Why compiled indexes were not used, or null." },
+    "seeds": { "type": "array", "items": { "type": "string" }, "description": "Node IDs matched by the lookup before traversal." },
+    "nodes": { "type": "array", "items": { "$ref": "../../../schema/graph.schema.json#/properties/nodes/items" } },
+    "relationships": { "type": "array", "items": { "$ref": "../../../schema/graph.schema.json#/properties/relationships/items" } },
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "description"],
+        "additionalProperties": false,
+        "properties": { "id": { "type": "string" }, "name": { "type": "string" }, "description": { "type": "string" } }
+      }
+    },
+    "crossModuleDependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["edgeId", "fromModule", "toModule", "targetId"],
+        "additionalProperties": false,
+        "properties": { "edgeId": { "type": "string" }, "fromModule": { "type": "string" }, "toModule": { "type": "string" }, "targetId": { "type": "string" } }
+      }
+    },
+    "locators": { "type": "object", "additionalProperties": { "$ref": "stable-locators.schema.json" } },
+    "truncated": { "type": "boolean", "description": "True when a size or traversal limit omitted records." },
+    "warnings": { "type": "array", "items": { "type": "string" } },
+    "stats": {
+      "type": "object",
+      "required": ["seedCandidates", "nodesVisited", "relationshipsExamined"],
+      "additionalProperties": false,
+      "properties": {
+        "seedCandidates": { "type": "integer", "minimum": 0 },
+        "nodesVisited": { "type": "integer", "minimum": 0 },
+        "relationshipsExamined": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

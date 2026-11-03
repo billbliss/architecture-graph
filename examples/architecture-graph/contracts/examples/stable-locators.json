@@ -1,0 +1,5 @@
+{
+  "path": "examples/architecture-graph/architecture/graph.yaml",
+  "section": "nodes",
+  "objectId": "contract:bounded-context"
+}
