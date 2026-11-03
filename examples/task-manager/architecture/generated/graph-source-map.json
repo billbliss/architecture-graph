@@ -1,0 +1,419 @@
+{
+  "locators": {
+    "boundary:no-reminders-for-completed": {
+      "objectId": "boundary:no-reminders-for-completed",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "boundary:no-silent-loss": {
+      "objectId": "boundary:no-silent-loss",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "boundary:task-state-authority": {
+      "objectId": "boundary:task-state-authority",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "capability:manage-tasks": {
+      "objectId": "capability:manage-tasks",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "capability:notify-user": {
+      "objectId": "capability:notify-user",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "capability:schedule-reminders": {
+      "objectId": "capability:schedule-reminders",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "capability:search-tasks": {
+      "objectId": "capability:search-tasks",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "capability:sync-offline-changes": {
+      "objectId": "capability:sync-offline-changes",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "component:notifier": {
+      "objectId": "component:notifier",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "component:offline-queue": {
+      "objectId": "component:offline-queue",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "component:recurrence-rules": {
+      "objectId": "component:recurrence-rules",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "component:reminder-scheduler": {
+      "objectId": "component:reminder-scheduler",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "component:search-indexer": {
+      "objectId": "component:search-indexer",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "component:sync-engine": {
+      "objectId": "component:sync-engine",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "component:task-service": {
+      "objectId": "component:task-service",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "component:task-store": {
+      "objectId": "component:task-store",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "contract:change-set": {
+      "objectId": "contract:change-set",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "contract:reminder-due": {
+      "objectId": "contract:reminder-due",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "contract:task": {
+      "objectId": "contract:task",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "contract:task-changed": {
+      "objectId": "contract:task-changed",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "decision:conflict-resolution": {
+      "objectId": "decision:conflict-resolution",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "decision:events-after-commit": {
+      "objectId": "decision:events-after-commit",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "decision:offline-reminders": {
+      "objectId": "decision:offline-reminders",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "decision:recurrence-model": {
+      "objectId": "decision:recurrence-model",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "module:clients": {
+      "objectId": "module:clients",
+      "path": "architecture/graph.yaml",
+      "section": "modules"
+    },
+    "module:notifications": {
+      "objectId": "module:notifications",
+      "path": "architecture/graph.yaml",
+      "section": "modules"
+    },
+    "module:reminders": {
+      "objectId": "module:reminders",
+      "path": "architecture/graph.yaml",
+      "section": "modules"
+    },
+    "module:search": {
+      "objectId": "module:search",
+      "path": "architecture/graph.yaml",
+      "section": "modules"
+    },
+    "module:sync": {
+      "objectId": "module:sync",
+      "path": "architecture/graph.yaml",
+      "section": "modules"
+    },
+    "module:tasks": {
+      "objectId": "module:tasks",
+      "path": "architecture/graph.yaml",
+      "section": "modules"
+    },
+    "relationship:change-set-authority": {
+      "objectId": "relationship:change-set-authority",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:cli-task": {
+      "objectId": "relationship:cli-task",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:cli-tasks": {
+      "objectId": "relationship:cli-tasks",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:conflict-change-set": {
+      "objectId": "relationship:conflict-change-set",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:conflict-sync": {
+      "objectId": "relationship:conflict-sync",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:events-after-commit-event": {
+      "objectId": "relationship:events-after-commit-event",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:indexer-owns": {
+      "objectId": "relationship:indexer-owns",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:indexer-provides": {
+      "objectId": "relationship:indexer-provides",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:indexer-task": {
+      "objectId": "relationship:indexer-task",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:indexer-task-changes": {
+      "objectId": "relationship:indexer-task-changes",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:mobile-no-loss": {
+      "objectId": "relationship:mobile-no-loss",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:mobile-queue": {
+      "objectId": "relationship:mobile-queue",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:mobile-sync": {
+      "objectId": "relationship:mobile-sync",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:mobile-task": {
+      "objectId": "relationship:mobile-task",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:notifier-assignments": {
+      "objectId": "relationship:notifier-assignments",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:notifier-owns": {
+      "objectId": "relationship:notifier-owns",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:notifier-provides": {
+      "objectId": "relationship:notifier-provides",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:notifier-reminders": {
+      "objectId": "relationship:notifier-reminders",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:offline-reminders-mobile": {
+      "objectId": "relationship:offline-reminders-mobile",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:offline-reminders-scheduler": {
+      "objectId": "relationship:offline-reminders-scheduler",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:queue-change-set": {
+      "objectId": "relationship:queue-change-set",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:queue-no-loss": {
+      "objectId": "relationship:queue-no-loss",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:recurrence-model-rules": {
+      "objectId": "relationship:recurrence-model-rules",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:recurrence-model-task": {
+      "objectId": "relationship:recurrence-model-task",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:reminder-due-authority": {
+      "objectId": "relationship:reminder-due-authority",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:scheduler-completed": {
+      "objectId": "relationship:scheduler-completed",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:scheduler-owns": {
+      "objectId": "relationship:scheduler-owns",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:scheduler-provides": {
+      "objectId": "relationship:scheduler-provides",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:scheduler-snooze": {
+      "objectId": "relationship:scheduler-snooze",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:scheduler-task-authority": {
+      "objectId": "relationship:scheduler-task-authority",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:scheduler-task-changes": {
+      "objectId": "relationship:scheduler-task-changes",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:sync-apply": {
+      "objectId": "relationship:sync-apply",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:sync-change-set-once": {
+      "objectId": "relationship:sync-change-set-once",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:sync-no-loss": {
+      "objectId": "relationship:sync-no-loss",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:sync-owns": {
+      "objectId": "relationship:sync-owns",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:sync-provides": {
+      "objectId": "relationship:sync-provides",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:sync-task": {
+      "objectId": "relationship:sync-task",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:sync-task-authority": {
+      "objectId": "relationship:sync-task-authority",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:sync-task-changes": {
+      "objectId": "relationship:sync-task-changes",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:task-authority": {
+      "objectId": "relationship:task-authority",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:task-changed-after-commit": {
+      "objectId": "relationship:task-changed-after-commit",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:task-changed-authority": {
+      "objectId": "relationship:task-changed-authority",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:task-service-next-reminder": {
+      "objectId": "relationship:task-service-next-reminder",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:task-service-owns": {
+      "objectId": "relationship:task-service-owns",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:task-service-provides": {
+      "objectId": "relationship:task-service-provides",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:task-service-recurrence": {
+      "objectId": "relationship:task-service-recurrence",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:task-service-store": {
+      "objectId": "relationship:task-service-store",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:web-search": {
+      "objectId": "relationship:web-search",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:web-task": {
+      "objectId": "relationship:web-task",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:web-tasks": {
+      "objectId": "relationship:web-tasks",
+      "path": "architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "surface:cli": {
+      "objectId": "surface:cli",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "surface:mobile-app": {
+      "objectId": "surface:mobile-app",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "surface:web-app": {
+      "objectId": "surface:web-app",
+      "path": "architecture/graph.yaml",
+      "section": "nodes"
+    }
+  }
+}

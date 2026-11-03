@@ -4,7 +4,8 @@
       "inbound": [
         "relationship:agent-workflow",
         "relationship:build-skill",
-        "relationship:installer-source"
+        "relationship:installer-source",
+        "relationship:sidecar-workflow-skill"
       ],
       "outbound": [
         "relationship:skill-context",
@@ -135,6 +136,7 @@
     "component:declaration-model": {
       "inbound": [
         "relationship:build-model",
+        "relationship:format-source-model",
         "relationship:typescript-model"
       ],
       "outbound": [
@@ -188,7 +190,9 @@
       ]
     },
     "component:structural-validator": {
-      "inbound": [],
+      "inbound": [
+        "relationship:sidecars-validator"
+      ],
       "outbound": [
         "relationship:module-authority",
         "relationship:validator-format",
@@ -200,8 +204,10 @@
     },
     "contract:authored-format": {
       "inbound": [
+        "relationship:format-source-format",
         "relationship:human-model",
         "relationship:schema-authority",
+        "relationship:sidecars-format",
         "relationship:validator-format"
       ],
       "outbound": []
@@ -241,11 +247,25 @@
         "relationship:agent-workflow"
       ]
     },
+    "decision:authored-format-source": {
+      "inbound": [],
+      "outbound": [
+        "relationship:format-source-format",
+        "relationship:format-source-model"
+      ]
+    },
     "decision:canonical-fallback": {
       "inbound": [],
       "outbound": [
         "relationship:fallback-generator",
         "relationship:fallback-loader"
+      ]
+    },
+    "decision:contract-sidecars": {
+      "inbound": [],
+      "outbound": [
+        "relationship:sidecars-format",
+        "relationship:sidecars-validator"
       ]
     },
     "decision:human-ownership": {
@@ -259,6 +279,12 @@
       "inbound": [],
       "outbound": [
         "relationship:marketplace-installer"
+      ]
+    },
+    "decision:sidecar-maintenance-workflow": {
+      "inbound": [],
+      "outbound": [
+        "relationship:sidecar-workflow-skill"
       ]
     },
     "decision:single-canonical-file": {

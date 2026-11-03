@@ -1,0 +1,21 @@
+{
+  "deviceId": "phone_sam",
+  "baseCursor": "c_000182",
+  "changes": [
+    {
+      "changeId": "chg_a1",
+      "taskId": "task_01HZX3",
+      "op": "update",
+      "baseVersion": 3,
+      "fields": { "dueAt": "2026-11-14T17:00:00Z" },
+      "madeAt": "2026-11-02T20:58:40Z"
+    },
+    {
+      "changeId": "chg_a2",
+      "taskId": "task_01J0B7",
+      "op": "complete",
+      "baseVersion": 2,
+      "madeAt": "2026-11-02T21:03:15Z"
+    }
+  ]
+}

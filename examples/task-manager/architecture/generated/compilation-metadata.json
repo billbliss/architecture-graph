@@ -1,0 +1,15 @@
+{
+  "artifactVersion": "2",
+  "toolVersion": "0.3.1",
+  "graphId": "graph:task-manager",
+  "declarationDigest": "c4f1044c10089c78c0ce145b8278300defdb9184917cc6b74e5fd91a58d3033c",
+  "checksums": {
+    "graph-index.json": "99281e0a196ba0736ca77c52394c4f4ecfd2503bd22f1c2242ed9542793350bd",
+    "source-context-index.json": "b85744904e03f38c124f29822c4842e44bc2ac396c656b2947b5b971a0f93756",
+    "neighborhood-index.json": "431e51b7370937b041a9ccdc6421c18c20c83445ac4b80c9f034564c8d278973",
+    "module-ownership-map.json": "9818a541c707d64680e9886e843dd09c5e23757a7b0cb18307203bbe56d73f40",
+    "cross-module-dependency-index.json": "1ef2ad0eef7f882377b6d4a79e415b66b2fe7fe2af426378f762d8fef6c9051e",
+    "guardrail-index.json": "4c9fa1059274de3942f3f69354b2d78fe53688e1989aab8cb0dd44d44d9786ec",
+    "graph-source-map.json": "7c2c972f02a0fe35b265c9c68ccdf16611aec1ba5a18ecd1735ee698dff12b13"
+  }
+}

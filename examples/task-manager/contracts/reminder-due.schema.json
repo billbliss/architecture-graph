@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "reminder-due.schema.json",
+  "title": "ReminderDue",
+  "description": "Announced by the reminder scheduler when a reminder fires.",
+  "type": "object",
+  "required": ["reminderId", "taskId", "personId", "taskTitle", "dueAt", "firedAt"],
+  "additionalProperties": false,
+  "properties": {
+    "reminderId": { "type": "string" },
+    "taskId": { "type": "string" },
+    "personId": { "type": "string", "description": "Who should be reminded." },
+    "taskTitle": { "type": "string", "description": "Copied at fire time so a notification can be shown without another lookup." },
+    "dueAt": { "type": "string", "format": "date-time" },
+    "firedAt": { "type": "string", "format": "date-time" },
+    "snoozeOptions": { "type": "array", "items": { "type": "string", "description": "ISO 8601 duration, such as PT15M." } }
+  }
+}

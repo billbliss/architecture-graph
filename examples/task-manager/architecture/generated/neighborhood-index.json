@@ -1,0 +1,243 @@
+{
+  "neighborhoods": {
+    "boundary:no-reminders-for-completed": {
+      "inbound": [
+        "relationship:scheduler-completed"
+      ],
+      "outbound": []
+    },
+    "boundary:no-silent-loss": {
+      "inbound": [
+        "relationship:mobile-no-loss",
+        "relationship:queue-no-loss",
+        "relationship:sync-no-loss"
+      ],
+      "outbound": []
+    },
+    "boundary:task-state-authority": {
+      "inbound": [
+        "relationship:scheduler-task-authority",
+        "relationship:sync-task-authority"
+      ],
+      "outbound": []
+    },
+    "capability:manage-tasks": {
+      "inbound": [
+        "relationship:cli-tasks",
+        "relationship:scheduler-snooze",
+        "relationship:sync-apply",
+        "relationship:task-service-owns",
+        "relationship:task-service-provides",
+        "relationship:web-tasks"
+      ],
+      "outbound": []
+    },
+    "capability:notify-user": {
+      "inbound": [
+        "relationship:notifier-owns",
+        "relationship:notifier-provides"
+      ],
+      "outbound": []
+    },
+    "capability:schedule-reminders": {
+      "inbound": [
+        "relationship:scheduler-owns",
+        "relationship:scheduler-provides",
+        "relationship:task-service-next-reminder"
+      ],
+      "outbound": []
+    },
+    "capability:search-tasks": {
+      "inbound": [
+        "relationship:indexer-owns",
+        "relationship:indexer-provides",
+        "relationship:web-search"
+      ],
+      "outbound": []
+    },
+    "capability:sync-offline-changes": {
+      "inbound": [
+        "relationship:mobile-sync",
+        "relationship:sync-owns",
+        "relationship:sync-provides"
+      ],
+      "outbound": []
+    },
+    "component:notifier": {
+      "inbound": [],
+      "outbound": [
+        "relationship:notifier-assignments",
+        "relationship:notifier-owns",
+        "relationship:notifier-provides",
+        "relationship:notifier-reminders"
+      ]
+    },
+    "component:offline-queue": {
+      "inbound": [
+        "relationship:mobile-queue"
+      ],
+      "outbound": [
+        "relationship:queue-change-set",
+        "relationship:queue-no-loss"
+      ]
+    },
+    "component:recurrence-rules": {
+      "inbound": [
+        "relationship:recurrence-model-rules",
+        "relationship:task-service-recurrence"
+      ],
+      "outbound": []
+    },
+    "component:reminder-scheduler": {
+      "inbound": [
+        "relationship:offline-reminders-scheduler"
+      ],
+      "outbound": [
+        "relationship:reminder-due-authority",
+        "relationship:scheduler-completed",
+        "relationship:scheduler-owns",
+        "relationship:scheduler-provides",
+        "relationship:scheduler-snooze",
+        "relationship:scheduler-task-authority",
+        "relationship:scheduler-task-changes"
+      ]
+    },
+    "component:search-indexer": {
+      "inbound": [],
+      "outbound": [
+        "relationship:indexer-owns",
+        "relationship:indexer-provides",
+        "relationship:indexer-task",
+        "relationship:indexer-task-changes"
+      ]
+    },
+    "component:sync-engine": {
+      "inbound": [
+        "relationship:conflict-sync"
+      ],
+      "outbound": [
+        "relationship:change-set-authority",
+        "relationship:sync-apply",
+        "relationship:sync-change-set-once",
+        "relationship:sync-no-loss",
+        "relationship:sync-owns",
+        "relationship:sync-provides",
+        "relationship:sync-task",
+        "relationship:sync-task-authority",
+        "relationship:sync-task-changes"
+      ]
+    },
+    "component:task-service": {
+      "inbound": [],
+      "outbound": [
+        "relationship:task-authority",
+        "relationship:task-changed-after-commit",
+        "relationship:task-changed-authority",
+        "relationship:task-service-next-reminder",
+        "relationship:task-service-owns",
+        "relationship:task-service-provides",
+        "relationship:task-service-recurrence",
+        "relationship:task-service-store"
+      ]
+    },
+    "component:task-store": {
+      "inbound": [
+        "relationship:task-service-store"
+      ],
+      "outbound": []
+    },
+    "contract:change-set": {
+      "inbound": [
+        "relationship:change-set-authority",
+        "relationship:conflict-change-set",
+        "relationship:queue-change-set",
+        "relationship:sync-change-set-once"
+      ],
+      "outbound": []
+    },
+    "contract:reminder-due": {
+      "inbound": [
+        "relationship:notifier-reminders",
+        "relationship:reminder-due-authority"
+      ],
+      "outbound": []
+    },
+    "contract:task": {
+      "inbound": [
+        "relationship:cli-task",
+        "relationship:indexer-task",
+        "relationship:mobile-task",
+        "relationship:recurrence-model-task",
+        "relationship:sync-task",
+        "relationship:task-authority",
+        "relationship:web-task"
+      ],
+      "outbound": []
+    },
+    "contract:task-changed": {
+      "inbound": [
+        "relationship:events-after-commit-event",
+        "relationship:indexer-task-changes",
+        "relationship:notifier-assignments",
+        "relationship:scheduler-task-changes",
+        "relationship:sync-task-changes",
+        "relationship:task-changed-after-commit",
+        "relationship:task-changed-authority"
+      ],
+      "outbound": []
+    },
+    "decision:conflict-resolution": {
+      "inbound": [],
+      "outbound": [
+        "relationship:conflict-change-set",
+        "relationship:conflict-sync"
+      ]
+    },
+    "decision:events-after-commit": {
+      "inbound": [],
+      "outbound": [
+        "relationship:events-after-commit-event"
+      ]
+    },
+    "decision:offline-reminders": {
+      "inbound": [],
+      "outbound": [
+        "relationship:offline-reminders-mobile",
+        "relationship:offline-reminders-scheduler"
+      ]
+    },
+    "decision:recurrence-model": {
+      "inbound": [],
+      "outbound": [
+        "relationship:recurrence-model-rules",
+        "relationship:recurrence-model-task"
+      ]
+    },
+    "surface:cli": {
+      "inbound": [],
+      "outbound": [
+        "relationship:cli-task",
+        "relationship:cli-tasks"
+      ]
+    },
+    "surface:mobile-app": {
+      "inbound": [
+        "relationship:offline-reminders-mobile"
+      ],
+      "outbound": [
+        "relationship:mobile-no-loss",
+        "relationship:mobile-queue",
+        "relationship:mobile-sync",
+        "relationship:mobile-task"
+      ]
+    },
+    "surface:web-app": {
+      "inbound": [],
+      "outbound": [
+        "relationship:web-search",
+        "relationship:web-task",
+        "relationship:web-tasks"
+      ]
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "artifactVersion": "2",
+  "toolVersion": "0.3.1",
+  "declarationDigest": "c4f1044c10089c78c0ce145b8278300defdb9184917cc6b74e5fd91a58d3033c",
+  "graphId": "graph:task-manager",
+  "title": "Task manager architecture",
+  "scope": "Design-stage model of a task list manager with reminders, offline sync, notifications and search. Nothing is implemented; contracts point to draft JSON Schemas and example payloads.",
+  "limitation": "Structural validation only; declarations and file existence do not prove implementation conformance.",
+  "nodes": 27,
+  "relationships": 50,
+  "modules": 6,
+  "statuses": {
+    "proposed": 24,
+    "implemented": 0,
+    "unresolved": 3
+  },
+  "unresolved": [
+    {
+      "id": "decision:conflict-resolution",
+      "description": "Open: the last write wins, or edits are merged field by field. Merging keeps more work but makes the change-set format and the sync engine more complex."
+    },
+    {
+      "id": "decision:offline-reminders",
+      "description": "Open: schedule reminders on the device as well as the server, or accept that an offline phone misses them until it reconnects."
+    },
+    {
+      "id": "decision:recurrence-model",
+      "description": "Open: one record whose due time moves forward on completion, or one record per occurrence. This changes the task shape, history and how reminders are scheduled."
+    },
+    {
+      "id": "relationship:conflict-change-set",
+      "description": "Merging may require per-field base versions in each change."
+    },
+    {
+      "id": "relationship:conflict-sync",
+      "description": "Field-level merging needs per-field versions in the sync engine."
+    },
+    {
+      "id": "relationship:offline-reminders-mobile",
+      "description": "The mobile app may need to schedule local reminders."
+    },
+    {
+      "id": "relationship:offline-reminders-scheduler",
+      "description": "Device-side scheduling would split reminder logic across server and phone."
+    },
+    {
+      "id": "relationship:recurrence-model-rules",
+      "description": "Determines whether rules move a due time forward or create new tasks."
+    },
+    {
+      "id": "relationship:recurrence-model-task",
+      "description": "One record or one per occurrence changes the task shape."
+    }
+  ]
+}

@@ -1,0 +1,136 @@
+{
+  "crossModule": {
+    "relationship:cli-task": {
+      "edgeId": "relationship:cli-task",
+      "fromModule": "module:clients",
+      "targetId": "contract:task",
+      "toModule": "module:tasks"
+    },
+    "relationship:cli-tasks": {
+      "edgeId": "relationship:cli-tasks",
+      "fromModule": "module:clients",
+      "targetId": "capability:manage-tasks",
+      "toModule": "module:tasks"
+    },
+    "relationship:indexer-task": {
+      "edgeId": "relationship:indexer-task",
+      "fromModule": "module:search",
+      "targetId": "contract:task",
+      "toModule": "module:tasks"
+    },
+    "relationship:indexer-task-changes": {
+      "edgeId": "relationship:indexer-task-changes",
+      "fromModule": "module:search",
+      "targetId": "contract:task-changed",
+      "toModule": "module:tasks"
+    },
+    "relationship:mobile-no-loss": {
+      "edgeId": "relationship:mobile-no-loss",
+      "fromModule": "module:clients",
+      "targetId": "boundary:no-silent-loss",
+      "toModule": "module:sync"
+    },
+    "relationship:mobile-queue": {
+      "edgeId": "relationship:mobile-queue",
+      "fromModule": "module:clients",
+      "targetId": "component:offline-queue",
+      "toModule": "module:sync"
+    },
+    "relationship:mobile-sync": {
+      "edgeId": "relationship:mobile-sync",
+      "fromModule": "module:clients",
+      "targetId": "capability:sync-offline-changes",
+      "toModule": "module:sync"
+    },
+    "relationship:mobile-task": {
+      "edgeId": "relationship:mobile-task",
+      "fromModule": "module:clients",
+      "targetId": "contract:task",
+      "toModule": "module:tasks"
+    },
+    "relationship:notifier-assignments": {
+      "edgeId": "relationship:notifier-assignments",
+      "fromModule": "module:notifications",
+      "targetId": "contract:task-changed",
+      "toModule": "module:tasks"
+    },
+    "relationship:notifier-reminders": {
+      "edgeId": "relationship:notifier-reminders",
+      "fromModule": "module:notifications",
+      "targetId": "contract:reminder-due",
+      "toModule": "module:reminders"
+    },
+    "relationship:offline-reminders-mobile": {
+      "edgeId": "relationship:offline-reminders-mobile",
+      "fromModule": "module:reminders",
+      "targetId": "surface:mobile-app",
+      "toModule": "module:clients"
+    },
+    "relationship:scheduler-snooze": {
+      "edgeId": "relationship:scheduler-snooze",
+      "fromModule": "module:reminders",
+      "targetId": "capability:manage-tasks",
+      "toModule": "module:tasks"
+    },
+    "relationship:scheduler-task-authority": {
+      "edgeId": "relationship:scheduler-task-authority",
+      "fromModule": "module:reminders",
+      "targetId": "boundary:task-state-authority",
+      "toModule": "module:tasks"
+    },
+    "relationship:scheduler-task-changes": {
+      "edgeId": "relationship:scheduler-task-changes",
+      "fromModule": "module:reminders",
+      "targetId": "contract:task-changed",
+      "toModule": "module:tasks"
+    },
+    "relationship:sync-apply": {
+      "edgeId": "relationship:sync-apply",
+      "fromModule": "module:sync",
+      "targetId": "capability:manage-tasks",
+      "toModule": "module:tasks"
+    },
+    "relationship:sync-task": {
+      "edgeId": "relationship:sync-task",
+      "fromModule": "module:sync",
+      "targetId": "contract:task",
+      "toModule": "module:tasks"
+    },
+    "relationship:sync-task-authority": {
+      "edgeId": "relationship:sync-task-authority",
+      "fromModule": "module:sync",
+      "targetId": "boundary:task-state-authority",
+      "toModule": "module:tasks"
+    },
+    "relationship:sync-task-changes": {
+      "edgeId": "relationship:sync-task-changes",
+      "fromModule": "module:sync",
+      "targetId": "contract:task-changed",
+      "toModule": "module:tasks"
+    },
+    "relationship:task-service-next-reminder": {
+      "edgeId": "relationship:task-service-next-reminder",
+      "fromModule": "module:tasks",
+      "targetId": "capability:schedule-reminders",
+      "toModule": "module:reminders"
+    },
+    "relationship:web-search": {
+      "edgeId": "relationship:web-search",
+      "fromModule": "module:clients",
+      "targetId": "capability:search-tasks",
+      "toModule": "module:search"
+    },
+    "relationship:web-task": {
+      "edgeId": "relationship:web-task",
+      "fromModule": "module:clients",
+      "targetId": "contract:task",
+      "toModule": "module:tasks"
+    },
+    "relationship:web-tasks": {
+      "edgeId": "relationship:web-tasks",
+      "fromModule": "module:clients",
+      "targetId": "capability:manage-tasks",
+      "toModule": "module:tasks"
+    }
+  }
+}

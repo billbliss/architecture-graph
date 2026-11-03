@@ -604,6 +604,24 @@
       ],
       "status": "implemented"
     },
+    "decision:authored-format-source": {
+      "description": "Open: Zod definitions in src/schema.ts generate the published JSON Schema today. A hand-written JSON Schema as the source would make the language-neutral contract authoritative for other readers such as a browser viewer, at the cost of rewriting working validation. Revisit when a viewer reads the published schema.",
+      "id": "decision:authored-format-source",
+      "kind": "decision",
+      "module": "module:declarations",
+      "name": "Code-first or schema-first authored format?",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/development.md"
+        },
+        {
+          "kind": "design",
+          "path": "docs/compatibility.md"
+        }
+      ],
+      "status": "unresolved"
+    },
     "decision:canonical-fallback": {
       "description": "Chosen and implemented: absent, stale or corrupt indexes cause canonical fallback. Generation rebuilds from declarations even when a loaded cache exists. A maliciously forged cache and metadata are outside the integrity guarantee.",
       "id": "decision:canonical-fallback",
@@ -629,6 +647,20 @@
         }
       ],
       "status": "implemented"
+    },
+    "decision:contract-sidecars": {
+      "description": "Proposed: schema and example reference kinds attach a JSON Schema and example payloads to contract, data_object and artifact nodes. Validation checks the schema and that examples conform, using Ajv; Zod still defines the authored format. AG does not read source code to write or verify sidecars.",
+      "id": "decision:contract-sidecars",
+      "kind": "decision",
+      "module": "module:declarations",
+      "name": "Contracts carry schema and example sidecars",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/specs/contract-sidecars.md"
+        }
+      ],
+      "status": "proposed"
     },
     "decision:human-ownership": {
       "description": "Modeling question: docs identify source responsibilities but do not assign human reviewers for schemas, public API and releases. Keep software ownership here; decide whether named maintainer/team ownership belongs in this graph or separate repository governance.",
@@ -665,6 +697,20 @@
         }
       ],
       "status": "unresolved"
+    },
+    "decision:sidecar-maintenance-workflow": {
+      "description": "Proposed: the bundled skill creates sidecars for data-shaped contracts during bootstrap, updates them in the same change as the code, and backfills from the summary's withoutSchema list. Behavioral contracts get no invented schema.",
+      "id": "decision:sidecar-maintenance-workflow",
+      "kind": "decision",
+      "module": "module:delivery",
+      "name": "Agents maintain contract sidecars",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/specs/sidecar-workflow.md"
+        }
+      ],
+      "status": "proposed"
     },
     "decision:single-canonical-file": {
       "description": "Chosen and implemented: logical modules remain within one authored YAML/JSON file. Generated indexes support focused retrieval while configuration selects the authoritative file.",
@@ -1036,6 +1082,34 @@
       "status": "implemented",
       "to": "component:project-loader"
     },
+    "relationship:format-source-format": {
+      "description": "Determines which artifact is the authoritative definition of the authored format.",
+      "from": "decision:authored-format-source",
+      "id": "relationship:format-source-format",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/development.md"
+        }
+      ],
+      "status": "unresolved",
+      "to": "contract:authored-format"
+    },
+    "relationship:format-source-model": {
+      "description": "Schema-first would replace the Zod definitions with a hand-written schema and validator.",
+      "from": "decision:authored-format-source",
+      "id": "relationship:format-source-model",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/development.md"
+        }
+      ],
+      "status": "unresolved",
+      "to": "component:declaration-model"
+    },
     "relationship:generator-files": {
       "description": "Preflights all owned output paths before writing, including symlink rejection.",
       "from": "component:artifact-generator",
@@ -1401,6 +1475,48 @@
       ],
       "status": "implemented",
       "to": "contract:authored-format"
+    },
+    "relationship:sidecar-workflow-skill": {
+      "description": "The shared instructions gain sidecar creation, update and backfill steps.",
+      "from": "decision:sidecar-maintenance-workflow",
+      "id": "relationship:sidecar-workflow-skill",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/specs/sidecar-workflow.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "artifact:bundled-skill"
+    },
+    "relationship:sidecars-format": {
+      "description": "Adds schema and example reference kinds within format 1.",
+      "from": "decision:contract-sidecars",
+      "id": "relationship:sidecars-format",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/specs/contract-sidecars.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "contract:authored-format"
+    },
+    "relationship:sidecars-validator": {
+      "description": "Validation gains sidecar placement, schema and example-conformance checks.",
+      "from": "decision:contract-sidecars",
+      "id": "relationship:sidecars-validator",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/specs/contract-sidecars.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "component:structural-validator"
     },
     "relationship:single-file-loader": {
       "description": "Loader parses one configured authored file; logical modules do not add load units.",

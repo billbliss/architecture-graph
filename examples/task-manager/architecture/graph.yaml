@@ -1,0 +1,796 @@
+# Design-stage example: every record is proposed or unresolved; there is no implementation.
+schemaVersion: "1"
+id: graph:task-manager
+title: Task manager architecture
+description: Design-stage model of a task list manager with reminders, offline sync, notifications
+  and search. Nothing is implemented; contracts point to draft JSON Schemas and example payloads.
+nodes:
+  - id: surface:web-app
+    kind: surface
+    name: Web app
+    description: Lists, edits and searches tasks in a browser. Always online; talks to the task service
+      directly.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:clients
+  - id: surface:mobile-app
+    kind: surface
+    name: Mobile app
+    description: Shows the same tasks on a phone, works offline, and receives push notifications.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:clients
+  - id: surface:cli
+    kind: surface
+    name: Command-line tool
+    description: Adds, lists and completes tasks from a terminal. Online only.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:clients
+  - id: component:task-service
+    kind: component
+    name: Task service
+    description: The only writer of task state. Validates and saves changes, then announces each saved
+      change as a task-changed event.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:tasks
+  - id: component:task-store
+    kind: component
+    name: Task store
+    description: Durable storage for tasks and lists, with a version number that increments on every
+      saved change.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:tasks
+  - id: component:recurrence-rules
+    kind: component
+    name: Recurrence rules
+    description: Expands repeat rules such as "every Monday" into due times.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:tasks
+  - id: capability:manage-tasks
+    kind: capability
+    name: Manage tasks
+    description: Create, read, update, complete, reopen and delete tasks and lists.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:tasks
+  - id: contract:task
+    kind: contract
+    name: Task
+    description: "The shape of a task returned to every client and consumer: title, notes, due time,
+      list, assignee, completion state, next reminder and version."
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+      - kind: design
+        path: contracts/task.schema.json
+      - kind: design
+        path: contracts/examples/task.json
+    module: module:tasks
+  - id: contract:task-changed
+    kind: contract
+    name: Task changed
+    description: Announced after a change is saved, never before. Carries the task after the change. May
+      be delivered more than once, so consumers ignore events they have already seen.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+      - kind: design
+        path: contracts/task-changed.schema.json
+      - kind: design
+        path: contracts/examples/task-changed.json
+    module: module:tasks
+  - id: boundary:task-state-authority
+    kind: boundary
+    name: Only the task service changes tasks
+    description: Reminders, sync and every client ask the task service to change a task; none of them
+      write task state themselves.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:tasks
+  - id: decision:events-after-commit
+    kind: decision
+    name: Announce changes only after saving
+    description: "Chosen: task-changed events are published after the change is durably saved, so no
+      consumer reacts to a change that was rolled back."
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:tasks
+  - id: decision:recurrence-model
+    kind: decision
+    name: How are repeating tasks stored?
+    description: "Open: one record whose due time moves forward on completion, or one record per
+      occurrence. This changes the task shape, history and how reminders are scheduled."
+    status: unresolved
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:tasks
+  - id: component:reminder-scheduler
+    kind: component
+    name: Reminder scheduler
+    description: Schedules reminders from task changes, fires them on time, and handles snoozing by
+      asking the task service to move the due time.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:reminders
+  - id: capability:schedule-reminders
+    kind: capability
+    name: Schedule reminders
+    description: Schedule, cancel, snooze and look up the next reminder for a task.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:reminders
+  - id: contract:reminder-due
+    kind: contract
+    name: Reminder due
+    description: "Announced when a reminder fires: which task, who to remind, the due time, and snooze options."
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+      - kind: design
+        path: contracts/reminder-due.schema.json
+      - kind: design
+        path: contracts/examples/reminder-due.json
+    module: module:reminders
+  - id: boundary:no-reminders-for-completed
+    kind: boundary
+    name: Completed tasks never fire reminders
+    description: A completed or deleted task must not fire a reminder, even when the completion arrives
+      just before the reminder would fire.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:reminders
+  - id: decision:offline-reminders
+    kind: decision
+    name: Do reminders fire on an offline phone?
+    description: "Open: schedule reminders on the device as well as the server, or accept that an
+      offline phone misses them until it reconnects."
+    status: unresolved
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:reminders
+  - id: component:sync-engine
+    kind: component
+    name: Sync engine
+    description: Applies change sets from reconnecting devices through the task service and pushes other
+      people's changes back to devices.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:sync
+  - id: component:offline-queue
+    kind: component
+    name: Offline queue
+    description: Holds edits made on a device while it is offline and sends them as a change set when it
+      reconnects.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:sync
+  - id: capability:sync-offline-changes
+    kind: capability
+    name: Sync offline changes
+    description: Bring a device that was offline back in step with everyone else without losing its edits.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:sync
+  - id: contract:change-set
+    kind: contract
+    name: Change set
+    description: "Edits made offline: each with a unique change ID and the task version it was made
+      against, so re-sending is safe and conflicts are detectable."
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+      - kind: design
+        path: contracts/change-set.schema.json
+      - kind: design
+        path: contracts/examples/change-set.json
+    module: module:sync
+  - id: boundary:no-silent-loss
+    kind: boundary
+    name: Offline edits are never silently lost
+    description: Every queued edit is either applied or reported back to the person as a conflict; none
+      disappear without notice.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:sync
+  - id: decision:conflict-resolution
+    kind: decision
+    name: How are sync conflicts resolved?
+    description: "Open: the last write wins, or edits are merged field by field. Merging keeps more work
+      but makes the change-set format and the sync engine more complex."
+    status: unresolved
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:sync
+  - id: component:notifier
+    kind: component
+    name: Notifier
+    description: Sends push and email notifications when a reminder fires or someone is assigned a task.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:notifications
+  - id: capability:notify-user
+    kind: capability
+    name: Notify people
+    description: Deliver a notification to a person on their preferred channels.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:notifications
+  - id: component:search-indexer
+    kind: component
+    name: Search indexer
+    description: Keeps a searchable copy of tasks up to date from task-changed events. Results can lag
+      recent edits by a few seconds.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:search
+  - id: capability:search-tasks
+    kind: capability
+    name: Search tasks
+    description: Find tasks by text, list, assignee or due date.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+    module: module:search
+relationships:
+  - id: relationship:task-service-owns
+    kind: owns
+    from: component:task-service
+    to: capability:manage-tasks
+    description: The task service owns task management.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:task-service-provides
+    kind: provides
+    from: component:task-service
+    to: capability:manage-tasks
+    description: Clients and other modules manage tasks through the task service.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:task-service-store
+    kind: depends_on
+    from: component:task-service
+    to: component:task-store
+    description: Reads and writes tasks through the store.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:task-service-recurrence
+    kind: depends_on
+    from: component:task-service
+    to: component:recurrence-rules
+    description: Computes the next due time of a repeating task.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:task-authority
+    kind: authority_for
+    from: component:task-service
+    to: contract:task
+    description: Defines the task shape every client and consumer receives.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:task-changed-authority
+    kind: authority_for
+    from: component:task-service
+    to: contract:task-changed
+    description: Defines the event announced after each saved change.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:task-changed-after-commit
+    kind: preserves
+    from: component:task-service
+    to: contract:task-changed
+    description: Publishes only after saving, with a unique event ID per change.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:task-service-next-reminder
+    kind: consumes
+    from: component:task-service
+    to: capability:schedule-reminders
+    description: Looks up the next reminder time to include in each returned task.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:events-after-commit-event
+    kind: affects
+    from: decision:events-after-commit
+    to: contract:task-changed
+    description: Consumers never see an event for a change that was not saved.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:recurrence-model-task
+    kind: affects
+    from: decision:recurrence-model
+    to: contract:task
+    description: One record or one per occurrence changes the task shape.
+    status: unresolved
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:recurrence-model-rules
+    kind: affects
+    from: decision:recurrence-model
+    to: component:recurrence-rules
+    description: Determines whether rules move a due time forward or create new tasks.
+    status: unresolved
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:scheduler-owns
+    kind: owns
+    from: component:reminder-scheduler
+    to: capability:schedule-reminders
+    description: The scheduler owns reminder scheduling.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:scheduler-provides
+    kind: provides
+    from: component:reminder-scheduler
+    to: capability:schedule-reminders
+    description: Other modules schedule and look up reminders through the scheduler.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:reminder-due-authority
+    kind: authority_for
+    from: component:reminder-scheduler
+    to: contract:reminder-due
+    description: Defines the event announced when a reminder fires.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:scheduler-task-changes
+    kind: consumes
+    from: component:reminder-scheduler
+    to: contract:task-changed
+    description: Schedules, moves or cancels reminders when due times change or tasks are completed.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:scheduler-snooze
+    kind: depends_on
+    from: component:reminder-scheduler
+    to: capability:manage-tasks
+    description: Snoozing asks the task service to move the due time.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:scheduler-task-authority
+    kind: constrained_by
+    from: component:reminder-scheduler
+    to: boundary:task-state-authority
+    description: Never writes task state directly, even when snoozing.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:scheduler-completed
+    kind: constrained_by
+    from: component:reminder-scheduler
+    to: boundary:no-reminders-for-completed
+    description: Rechecks completion just before firing.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:offline-reminders-scheduler
+    kind: affects
+    from: decision:offline-reminders
+    to: component:reminder-scheduler
+    description: Device-side scheduling would split reminder logic across server and phone.
+    status: unresolved
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:offline-reminders-mobile
+    kind: affects
+    from: decision:offline-reminders
+    to: surface:mobile-app
+    description: The mobile app may need to schedule local reminders.
+    status: unresolved
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:sync-owns
+    kind: owns
+    from: component:sync-engine
+    to: capability:sync-offline-changes
+    description: The sync engine owns offline sync.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:sync-provides
+    kind: provides
+    from: component:sync-engine
+    to: capability:sync-offline-changes
+    description: Devices reconcile offline edits through the sync engine.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:change-set-authority
+    kind: authority_for
+    from: component:sync-engine
+    to: contract:change-set
+    description: Defines what a device sends when it reconnects.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:sync-change-set-once
+    kind: preserves
+    from: component:sync-engine
+    to: contract:change-set
+    description: Applies each change at most once, using its change ID.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:sync-apply
+    kind: depends_on
+    from: component:sync-engine
+    to: capability:manage-tasks
+    description: Applies incoming edits through the task service.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:sync-task-changes
+    kind: consumes
+    from: component:sync-engine
+    to: contract:task-changed
+    description: Pushes other people's changes to connected devices.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:sync-task
+    kind: consumes
+    from: component:sync-engine
+    to: contract:task
+    description: Sends current task state to devices after reconnecting.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:sync-task-authority
+    kind: constrained_by
+    from: component:sync-engine
+    to: boundary:task-state-authority
+    description: Never writes task state directly; conflicts are resolved through the task service.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:sync-no-loss
+    kind: constrained_by
+    from: component:sync-engine
+    to: boundary:no-silent-loss
+    description: Reports every change it cannot apply back to the device as a conflict.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:queue-no-loss
+    kind: constrained_by
+    from: component:offline-queue
+    to: boundary:no-silent-loss
+    description: Keeps queued edits until the sync engine confirms them.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:queue-change-set
+    kind: produces
+    from: component:offline-queue
+    to: contract:change-set
+    description: Packages queued edits as a change set on reconnect.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:conflict-sync
+    kind: affects
+    from: decision:conflict-resolution
+    to: component:sync-engine
+    description: Field-level merging needs per-field versions in the sync engine.
+    status: unresolved
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:conflict-change-set
+    kind: affects
+    from: decision:conflict-resolution
+    to: contract:change-set
+    description: Merging may require per-field base versions in each change.
+    status: unresolved
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:notifier-owns
+    kind: owns
+    from: component:notifier
+    to: capability:notify-user
+    description: The notifier owns notification delivery.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:notifier-provides
+    kind: provides
+    from: component:notifier
+    to: capability:notify-user
+    description: Notifications are delivered through the notifier.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:notifier-reminders
+    kind: consumes
+    from: component:notifier
+    to: contract:reminder-due
+    description: Turns each fired reminder into a notification.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:notifier-assignments
+    kind: consumes
+    from: component:notifier
+    to: contract:task-changed
+    description: Notifies a person when a task is assigned to them.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:indexer-owns
+    kind: owns
+    from: component:search-indexer
+    to: capability:search-tasks
+    description: The indexer owns task search.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:indexer-provides
+    kind: provides
+    from: component:search-indexer
+    to: capability:search-tasks
+    description: Clients search through the indexer.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:indexer-task-changes
+    kind: consumes
+    from: component:search-indexer
+    to: contract:task-changed
+    description: Updates the search copy after each change; ignores duplicate events.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:indexer-task
+    kind: consumes
+    from: component:search-indexer
+    to: contract:task
+    description: Indexes the fields of the task shape.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:web-tasks
+    kind: depends_on
+    from: surface:web-app
+    to: capability:manage-tasks
+    description: Edits tasks through the task service.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:web-search
+    kind: depends_on
+    from: surface:web-app
+    to: capability:search-tasks
+    description: Offers search across lists.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:web-task
+    kind: consumes
+    from: surface:web-app
+    to: contract:task
+    description: Renders the task shape.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:mobile-sync
+    kind: depends_on
+    from: surface:mobile-app
+    to: capability:sync-offline-changes
+    description: Catches up after being offline.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:mobile-queue
+    kind: depends_on
+    from: surface:mobile-app
+    to: component:offline-queue
+    description: Queues edits made without a connection.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:mobile-task
+    kind: consumes
+    from: surface:mobile-app
+    to: contract:task
+    description: Renders the task shape.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:mobile-no-loss
+    kind: constrained_by
+    from: surface:mobile-app
+    to: boundary:no-silent-loss
+    description: Shows conflicts to the person instead of discarding edits.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:cli-tasks
+    kind: depends_on
+    from: surface:cli
+    to: capability:manage-tasks
+    description: Adds, lists and completes tasks.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+  - id: relationship:cli-task
+    kind: consumes
+    from: surface:cli
+    to: contract:task
+    description: Prints the task shape.
+    status: proposed
+    references:
+      - kind: design
+        path: requirements.md
+modules:
+  - id: module:clients
+    name: Clients
+    description: The web app, mobile app and command-line tool people use. They show tasks and ask other
+      modules to change them.
+    exports:
+      - surface:mobile-app
+    imports:
+      - boundary:no-silent-loss
+      - capability:manage-tasks
+      - capability:search-tasks
+      - capability:sync-offline-changes
+      - component:offline-queue
+      - contract:task
+  - id: module:tasks
+    name: Tasks
+    description: Owns task state, its shape, recurrence and the task-changed event every other module reacts to.
+    exports:
+      - boundary:task-state-authority
+      - capability:manage-tasks
+      - contract:task
+      - contract:task-changed
+    imports:
+      - capability:schedule-reminders
+  - id: module:reminders
+    name: Reminders
+    description: Schedules and fires reminders and handles snoozing.
+    exports:
+      - capability:schedule-reminders
+      - contract:reminder-due
+    imports:
+      - boundary:task-state-authority
+      - capability:manage-tasks
+      - contract:task-changed
+      - surface:mobile-app
+  - id: module:sync
+    name: Offline sync
+    description: Keeps offline devices in step without losing their edits.
+    exports:
+      - boundary:no-silent-loss
+      - capability:sync-offline-changes
+      - component:offline-queue
+    imports:
+      - boundary:task-state-authority
+      - capability:manage-tasks
+      - contract:task
+      - contract:task-changed
+  - id: module:notifications
+    name: Notifications
+    description: Delivers push and email notifications.
+    exports: []
+    imports:
+      - contract:reminder-due
+      - contract:task-changed
+  - id: module:search
+    name: Search
+    description: Keeps a searchable copy of tasks.
+    exports:
+      - capability:search-tasks
+    imports:
+      - contract:task
+      - contract:task-changed

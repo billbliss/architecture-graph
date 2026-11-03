@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "task.schema.json",
+  "title": "Task",
+  "description": "A task as returned by the task service to every client and consumer.",
+  "type": "object",
+  "required": ["id", "listId", "title", "completed", "version", "updatedAt"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "description": "Stable task identifier." },
+    "listId": { "type": "string", "description": "The list this task belongs to." },
+    "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "notes": { "type": "string", "maxLength": 10000 },
+    "dueAt": { "type": "string", "format": "date-time", "description": "When the task is due, if it has a due time." },
+    "recurrence": { "type": "string", "description": "Repeat rule such as FREQ=WEEKLY;BYDAY=MO. Storage model is undecided." },
+    "assigneeId": { "type": "string", "description": "Person the task is assigned to, if any." },
+    "completed": { "type": "boolean" },
+    "completedAt": { "type": "string", "format": "date-time" },
+    "nextReminderAt": { "type": "string", "format": "date-time", "description": "Next scheduled reminder, read from reminders when the task is returned." },
+    "version": { "type": "integer", "minimum": 1, "description": "Increments on every saved change; used by sync to detect conflicts." },
+    "updatedAt": { "type": "string", "format": "date-time" }
+  }
+}

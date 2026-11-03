@@ -1,0 +1,18 @@
+{
+  "eventId": "evt_7Q2M9",
+  "type": "updated",
+  "taskId": "task_01HZX3",
+  "version": 4,
+  "changedFields": ["dueAt"],
+  "changedBy": "person_sam",
+  "occurredAt": "2026-11-02T21:12:09Z",
+  "task": {
+    "id": "task_01HZX3",
+    "listId": "list_home",
+    "title": "Renew passport",
+    "dueAt": "2026-11-14T17:00:00Z",
+    "completed": false,
+    "version": 4,
+    "updatedAt": "2026-11-02T21:12:09Z"
+  }
+}

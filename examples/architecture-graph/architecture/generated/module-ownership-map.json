@@ -61,9 +61,13 @@
         "component:structural-validator",
         "contract:authored-format",
         "contract:logical-modules",
+        "decision:authored-format-source",
+        "decision:contract-sidecars",
         "decision:single-canonical-file"
       ],
       "relationshipIds": [
+        "relationship:format-source-format",
+        "relationship:format-source-model",
         "relationship:loader-files",
         "relationship:loader-indexes",
         "relationship:loader-owns",
@@ -71,6 +75,8 @@
         "relationship:loader-validates",
         "relationship:module-authority",
         "relationship:schema-authority",
+        "relationship:sidecars-format",
+        "relationship:sidecars-validator",
         "relationship:single-file-loader",
         "relationship:single-file-modules",
         "relationship:validator-format",
@@ -106,6 +112,7 @@
         "decision:agent-maintained-design",
         "decision:human-ownership",
         "decision:marketplace-readiness",
+        "decision:sidecar-maintenance-workflow",
         "decision:typescript-source",
         "decision:windows-support"
       ],
@@ -123,6 +130,7 @@
         "relationship:installer-provides",
         "relationship:installer-source",
         "relationship:marketplace-installer",
+        "relationship:sidecar-workflow-skill",
         "relationship:skill-context",
         "relationship:skill-maintenance",
         "relationship:skill-proof",

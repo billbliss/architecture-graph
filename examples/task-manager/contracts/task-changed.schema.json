@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "task-changed.schema.json",
+  "title": "TaskChanged",
+  "description": "Announced by the task service after a change is saved. May be delivered more than once.",
+  "type": "object",
+  "required": ["eventId", "type", "taskId", "version", "changedBy", "occurredAt", "task"],
+  "additionalProperties": false,
+  "properties": {
+    "eventId": { "type": "string", "description": "Unique per event; consumers use it to ignore duplicates." },
+    "type": { "enum": ["created", "updated", "completed", "reopened", "deleted"] },
+    "taskId": { "type": "string" },
+    "version": { "type": "integer", "minimum": 1, "description": "Task version after this change." },
+    "changedFields": { "type": "array", "items": { "type": "string" }, "description": "Fields that changed, for updates." },
+    "changedBy": { "type": "string", "description": "Person or device that made the change." },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "task": { "$ref": "task.schema.json", "description": "The task after the change. Present for deletes as the last known state." }
+  }
+}

@@ -130,8 +130,18 @@
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "nodes"
     },
+    "decision:authored-format-source": {
+      "objectId": "decision:authored-format-source",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
     "decision:canonical-fallback": {
       "objectId": "decision:canonical-fallback",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "decision:contract-sidecars": {
+      "objectId": "decision:contract-sidecars",
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "nodes"
     },
@@ -142,6 +152,11 @@
     },
     "decision:marketplace-readiness": {
       "objectId": "decision:marketplace-readiness",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "decision:sidecar-maintenance-workflow": {
+      "objectId": "decision:sidecar-maintenance-workflow",
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "nodes"
     },
@@ -275,6 +290,16 @@
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "relationships"
     },
+    "relationship:format-source-format": {
+      "objectId": "relationship:format-source-format",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:format-source-model": {
+      "objectId": "relationship:format-source-model",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
     "relationship:generator-files": {
       "objectId": "relationship:generator-files",
       "path": "examples/architecture-graph/architecture/graph.yaml",
@@ -397,6 +422,21 @@
     },
     "relationship:schema-authority": {
       "objectId": "relationship:schema-authority",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:sidecar-workflow-skill": {
+      "objectId": "relationship:sidecar-workflow-skill",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:sidecars-format": {
+      "objectId": "relationship:sidecars-format",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:sidecars-validator": {
+      "objectId": "relationship:sidecars-validator",
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "relationships"
     },

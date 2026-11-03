@@ -29,6 +29,7 @@
         "boundary:declarations-not-proof",
         "capability:validate-declarations",
         "contract:authored-format",
+        "decision:authored-format-source",
         "decision:canonical-fallback",
         "decision:windows-support"
       ],
@@ -40,10 +41,13 @@
       "nodeIds": [
         "component:build-release",
         "component:declaration-model",
+        "decision:authored-format-source",
         "decision:human-ownership",
         "decision:typescript-source"
       ],
       "relationshipIds": [
+        "relationship:format-source-format",
+        "relationship:format-source-model",
         "relationship:human-api",
         "relationship:human-model"
       ]
@@ -116,6 +120,23 @@
         "decision:marketplace-readiness"
       ],
       "relationshipIds": []
+    },
+    "docs/specs/contract-sidecars.md": {
+      "nodeIds": [
+        "decision:contract-sidecars"
+      ],
+      "relationshipIds": [
+        "relationship:sidecars-format",
+        "relationship:sidecars-validator"
+      ]
+    },
+    "docs/specs/sidecar-workflow.md": {
+      "nodeIds": [
+        "decision:sidecar-maintenance-workflow"
+      ],
+      "relationshipIds": [
+        "relationship:sidecar-workflow-skill"
+      ]
     },
     "package.json": {
       "nodeIds": [

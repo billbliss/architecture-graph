@@ -1,0 +1,9 @@
+{
+  "reminderId": "rem_55K",
+  "taskId": "task_01HZX3",
+  "personId": "person_sam",
+  "taskTitle": "Renew passport",
+  "dueAt": "2026-11-14T17:00:00Z",
+  "firedAt": "2026-11-14T16:00:02Z",
+  "snoozeOptions": ["PT15M", "PT1H", "P1D"]
+}
