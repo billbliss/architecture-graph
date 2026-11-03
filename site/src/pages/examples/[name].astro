@@ -1,0 +1,37 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import { example } from '../../lib/graph';
+import { renderRepoMarkdown } from '../../lib/markdown';
+import { githubUrl } from '../../lib/repo';
+import { EXAMPLES, type ExampleInfo } from '../../lib/site-map';
+
+export const getStaticPaths = (() => EXAMPLES.map(info => ({ params: { name: info.name }, props: { info } }))) satisfies GetStaticPaths;
+
+const { info } = Astro.props as { info: ExampleInfo };
+const loaded = example(info.name);
+const folder = `examples/${info.name}`;
+const readme = await renderRepoMarkdown(`${folder}/README.md`);
+---
+
+<Base title={info.title} section="/examples/" description={info.summary}>
+  <div class="container">
+    <aside class="card summary">
+      <p>{info.summary}</p>
+      <p class="muted">{loaded.graph.nodes.length} nodes · {loaded.graph.relationships.length} relationships{loaded.graph.modules?.length ? ` · ${loaded.graph.modules.length} modules` : ''}</p>
+      <p class="links">
+        <a class="button primary" href={`/view/?example=${info.name}`}>Open in viewer</a>
+        <a class="button" href={githubUrl(folder)}>Browse on GitHub</a>
+      </p>
+    </aside>
+    <article class="prose markdown">
+      <Fragment set:html={readme.html} />
+    </article>
+  </div>
+</Base>
+
+<style>
+  .summary { margin: 2rem 0 0; max-width: var(--prose); }
+  .summary p:first-child { margin-top: 0; }
+  .links { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 0; }
+</style>

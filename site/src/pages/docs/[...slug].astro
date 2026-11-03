@@ -1,0 +1,85 @@
+---
+// Renders every Markdown page under docs/. Pages under docs/history/ and docs/specs/ are published
+// but kept out of the main navigation; every other top-level page must appear in DOCS_NAV.
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import { docsRoute, renderRepoMarkdown } from '../../lib/markdown';
+import { githubUrl } from '../../lib/repo';
+import { DOCS_NAV, docsFiles } from '../../lib/site-map';
+
+export const getStaticPaths = (() => {
+  const files = docsFiles();
+  const inNav = new Set(DOCS_NAV.flatMap(group => group.items));
+  for (const item of inNav) if (!files.includes(item)) throw new Error(`DOCS_NAV lists a missing page: ${item}`);
+  const missing = files.filter(file => !file.includes('/', 'docs/'.length) && !inNav.has(file));
+  if (missing.length) throw new Error(`Add these docs pages to DOCS_NAV in site/src/lib/site-map.ts: ${missing.join(', ')}`);
+  return files.map(source => {
+    const route = docsRoute(source)!;
+    const slug = route.replace(/^\/docs\/?/, '').replace(/\/$/, '');
+    return { params: { slug: slug || undefined }, props: { source } };
+  });
+}) satisfies GetStaticPaths;
+
+const { source } = Astro.props;
+const page = await renderRepoMarkdown(source);
+const nav = await Promise.all(DOCS_NAV.map(async group => ({
+  title: group.title,
+  items: await Promise.all(group.items.map(async item => ({ route: docsRoute(item)!, title: item === 'docs/README.md' ? 'Overview' : (await renderRepoMarkdown(item)).title }))),
+})));
+const current = docsRoute(source);
+const section = source.split('/').length > 2 ? source.split('/')[1] : null;
+const contents = page.headings.filter(heading => heading.depth === 2);
+---
+
+<Base title={page.title} section="/docs/">
+  <div class="container docs">
+    <nav class="sidebar" aria-label="Documentation">
+      {nav.map(group => (
+        <div class="group">
+          <h2>{group.title}</h2>
+          <ul>
+            {group.items.map(item => (
+              <li><a href={item.route} aria-current={item.route === current ? 'page' : undefined}>{item.title}</a></li>
+            ))}
+          </ul>
+        </div>
+      ))}
+      <div class="group">
+        <h2>Background</h2>
+        <ul>
+          <li><a href="/docs/specs/" aria-current={current === '/docs/specs/' ? 'page' : undefined}>Specifications</a></li>
+          <li><a href="/docs/history/" aria-current={current === '/docs/history/' ? 'page' : undefined}>History</a></li>
+        </ul>
+      </div>
+    </nav>
+    <article class="prose markdown">
+      {section && <p class="crumb muted"><a href={`/docs/${section}/`}>{section === 'specs' ? 'Specifications' : 'History'}</a></p>}
+      <Fragment set:html={page.html} />
+      <p class="source muted"><a href={githubUrl(source)}>View this page's source on GitHub</a></p>
+    </article>
+    {contents.length > 2 && (
+      <nav class="toc" aria-label="On this page">
+        <h2>On this page</h2>
+        <ul>{contents.map(heading => <li><a href={`#${heading.id}`}>{heading.text}</a></li>)}</ul>
+      </nav>
+    )}
+  </div>
+</Base>
+
+<style>
+  .docs { display: grid; grid-template-columns: 13rem minmax(0, 1fr) 12rem; gap: 2.5rem; padding-top: 2rem; align-items: start; }
+  .sidebar, .toc { position: sticky; top: 4.5rem; font-size: 0.9rem; max-height: calc(100vh - 5.5rem); overflow-y: auto; }
+  .sidebar h2, .toc h2 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 0 0 0.4rem; }
+  .group { margin-bottom: 1.3rem; }
+  .sidebar ul, .toc ul { list-style: none; padding: 0; margin: 0; }
+  .sidebar li, .toc li { margin: 0.15rem 0; }
+  .sidebar a, .toc a { color: var(--text-muted); text-decoration: none; display: block; padding: 0.15rem 0; }
+  .sidebar a:hover, .toc a:hover { color: var(--text); }
+  .sidebar a[aria-current='page'] { color: var(--text); font-weight: 600; }
+  .crumb { margin: 0; font-size: 0.9rem; }
+  .markdown :global(h1) { margin-top: 0.3rem; }
+  .markdown :global(blockquote) { margin: 1rem 0; padding: 0.2rem 1rem; border-left: 3px solid var(--border-strong); color: var(--text-muted); }
+  .source { margin-top: 3rem; font-size: 0.85rem; }
+  @media (max-width: 70rem) { .docs { grid-template-columns: 12rem minmax(0, 1fr); } .toc { display: none; } }
+  @media (max-width: 48rem) { .docs { grid-template-columns: 1fr; } .sidebar { position: static; max-height: none; } }
+</style>

@@ -1,0 +1,36 @@
+---
+import Base from '../../layouts/Base.astro';
+import { example } from '../../lib/graph';
+import { EXAMPLES } from '../../lib/site-map';
+
+const cards = EXAMPLES.map(info => {
+  const { graph } = example(info.name);
+  return { ...info, nodes: graph.nodes.length, relationships: graph.relationships.length, modules: graph.modules?.length ?? 0 };
+});
+---
+
+<Base title="Examples" section="/examples/" description="Architecture Graph examples: a task manager, AG's own graph and a hello-world application.">
+  <div class="container">
+    <div class="prose">
+      <h1>Examples</h1>
+      <p>Each example is a complete project graph from the <a href="https://github.com/billbliss/architecture-graph/tree/main/examples">repository's examples</a>, validated with AG while this site was built.</p>
+    </div>
+    <ul class="list">
+      {cards.map(card => (
+        <li class="card">
+          <h2><a href={`/examples/${card.name}/`}>{card.title}</a></h2>
+          <p>{card.summary}</p>
+          <p class="stats muted">{card.nodes} nodes · {card.relationships} relationships{card.modules ? ` · ${card.modules} modules` : ''}</p>
+          <p class="links"><a href={`/examples/${card.name}/`}>Read the README</a> <a href={`/view/?example=${card.name}`}>Open in viewer</a></p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</Base>
+
+<style>
+  .list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 1rem; }
+  .list h2 { margin-top: 0; font-size: 1.25rem; }
+  .stats { font-size: 0.9rem; }
+  .links { display: flex; gap: 1.2rem; }
+</style>

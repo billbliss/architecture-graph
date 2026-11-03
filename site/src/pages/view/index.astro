@@ -1,0 +1,29 @@
+---
+// Placeholder until the standalone viewer bundle (delivery stage 3) is served at /view. Links such as
+// /view/?example=task-manager already point here so they keep working when the viewer arrives.
+import Base from '../../layouts/Base.astro';
+import { EXAMPLES } from '../../lib/site-map';
+---
+
+<Base title="Viewer" section="/view/" description="The Architecture Graph viewer opens any AG graph in the browser with nothing to install.">
+  <div class="container prose">
+    <h1>The viewer is on its way</h1>
+    <p>The viewer will open any Architecture Graph in your browser with nothing to install: a module map, each module's contracts and their consumers, contract structure and examples, and the same validation as <code>ag validate</code>. Graphs are read inside the browser tab and never uploaded.</p>
+    <p id="requested" hidden>Until it is ready, you can read the <a href="#">example you asked for</a> and its graph.</p>
+    <h2>Examples</h2>
+    <ul>
+      {EXAMPLES.map(example => <li><a href={`/examples/${example.name}/`} data-example={example.name}>{example.title}</a>: {example.summary}</li>)}
+    </ul>
+  </div>
+</Base>
+
+<script>
+  const name = new URLSearchParams(location.search).get('example');
+  const link = name ? document.querySelector<HTMLAnchorElement>(`a[data-example="${CSS.escape(name)}"]`) : null;
+  const requested = document.getElementById('requested');
+  if (link && requested) {
+    requested.querySelector('a')!.href = link.href;
+    requested.querySelector('a')!.textContent = `${link.textContent} example`;
+    requested.hidden = false;
+  }
+</script>

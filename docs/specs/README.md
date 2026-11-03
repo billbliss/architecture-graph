@@ -6,6 +6,6 @@ Specifications describe a change before it is implemented. Each one states its s
 | --- | --- | --- |
 | [Contract sidecars](contract-sidecars.md) | Implemented, unreleased | `schema` and `example` references that attach a JSON Schema and example payloads to a contract, and the checks AG runs on them |
 | [Maintaining contract sidecars](sidecar-workflow.md) | Implemented, unreleased | How the bundled skill creates, backfills and updates sidecars during discovery and everyday changes |
-| [Website and viewer](website-and-viewer.md) | Proposed | architecturegraph.dev: home page, rendered docs, examples, and a browser viewer that runs AG's own validation |
+| [Website and viewer](website-and-viewer.md) | In progress: site skeleton and browser-safe core implemented | architecturegraph.dev: home page, rendered docs, examples, and a browser viewer that runs AG's own validation |
 
 The architecture records for these changes are in [AG's own graph](../../examples/architecture-graph/architecture/graph.yaml) as `decision:contract-sidecars`, `decision:sidecar-maintenance-workflow`, `decision:website-and-viewer` and `decision:browser-safe-core`.

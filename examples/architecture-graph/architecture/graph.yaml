@@ -556,14 +556,25 @@ nodes:
   - id: decision:website-and-viewer
     kind: decision
     name: architecturegraph.dev site and browser viewer
-    description: "Proposed: a static site in site/ (Astro, Cloudflare Pages) renders docs/ and examples/
-      and hosts a client-side viewer for any AG graph. Graph content never leaves the browser. The site
-      is not part of the npm package."
+    description: "Proposed, partly built: a static site in site/ (Astro, Cloudflare Pages) renders docs/
+      and examples/ and will host a client-side viewer for any AG graph. Graph content never leaves the
+      browser. The site is not part of the npm package. The site skeleton exists and validates the
+      bundled examples with loadProject during its build; the viewer at /view is a placeholder, so the
+      decision stays proposed until the viewer is delivered."
     status: proposed
     module: module:delivery
     references:
       - kind: design
         path: docs/specs/website-and-viewer.md
+      - kind: implementation
+        path: site/README.md
+        description: Build gates, commands and Cloudflare Pages settings
+      - kind: implementation
+        path: site/src/lib/graph.ts
+        description: Loads bundled examples through the toolkit's public API
+      - kind: implementation
+        path: site/src/lib/markdown.ts
+        description: Renders docs/ and rewrites repository links
   - id: decision:agent-maintained-design
     kind: decision
     name: Agent-maintained, human-directed design
