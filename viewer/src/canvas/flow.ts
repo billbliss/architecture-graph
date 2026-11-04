@@ -175,9 +175,9 @@ export function buildFlow(model: Model, view: ViewGraph, layout: Layout, route: 
       edges.push({
         id: edge.id, type: 'route', source: edge.source, target: edge.target, ...handles(edge.source, edge.target),
         hidden: state === 'hidden',
-        className: state === 'dim' ? 'edge-dim' : undefined,
+        className: [state === 'dim' ? 'edge-dim' : '', edge.type === 'contract' ? 'contract-edge' : ''].filter(Boolean).join(' ') || undefined,
         markerEnd: edge.type === 'relation' ? arrow(state === 'hi' ? 'var(--link)' : 'var(--text-muted)') : undefined,
-        data: { points: route?.points, classes: classes.filter(Boolean).join(' ') },
+        data: { points: route?.points, classes: classes.filter(Boolean).join(' '), contract: edge.contract },
       });
     }
   }

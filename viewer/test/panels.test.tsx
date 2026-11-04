@@ -7,6 +7,7 @@ import { layoutView } from '../src/layout/layout';
 import { moduleView, pillId } from '../src/layout/views';
 import { loadFromSource } from '../src/load/project';
 import { Model, type Project } from '../src/model/model';
+import { payloadsOf } from '../src/model/payloads';
 import { schemaTree } from '../src/model/schema-tree';
 import { ContractPanel, Structure } from '../src/panels/ContractPanel';
 import { Panel } from '../src/panels/Panels';
@@ -148,4 +149,29 @@ test('search finds nodes, relationships and modules by name or ID', async () => 
   expect(search(model, 'module:sync')[0]).toMatchObject({ type: 'module', id: 'module:sync' });
   expect(search(model, 'consumes').some(hit => hit.type === 'relationship')).toBe(true);
   expect(search(model, '   ')).toEqual([]);
+});
+
+test('a component panel lists the payloads it sends and receives, with their examples', async () => {
+  const model = await example('task-manager');
+  const { sends, receives } = payloadsOf(model, 'component:task-service');
+  expect(sends.map(flow => flow.record.id).sort()).toEqual(['contract:task', 'contract:task-changed']);
+  const engine = payloadsOf(model, 'component:sync-engine');
+  expect(engine.receives.map(flow => flow.record.id)).toContain('contract:task-changed');
+  expect(receives.every(flow => flow.examples.length > 0)).toBe(true);
+  const html = render(model, { view: 'map', node: 'component:sync-engine' }, <Panel view={buildView(model, 'map')} />);
+  expect(html).toContain('Receives');
+  expect(html).toContain('&quot;eventId&quot;');
+  // Plain component dependencies carry no payload: hello-world declares none.
+  const hello = await example('hello-world');
+  expect(payloadsOf(hello, 'component:greeter')).toEqual({ sends: [], receives: [] });
+});
+
+test('contract edges carry their contract, so hovering or selecting one shows its payload', async () => {
+  const model = await example('task-manager');
+  const view = moduleView(model, 'module:tasks');
+  const flow = buildFlow(model, view, await layoutView(view, elk), { view: 'module', module: 'module:tasks' });
+  const contractEdges = flow.edges.filter(edge => edge.className?.includes('contract-edge'));
+  expect(contractEdges.length).toBeGreaterThan(0);
+  expect(new Set(contractEdges.map(edge => edge.data?.contract))).toEqual(new Set(['contract:task', 'contract:task-changed']));
+  expect(flow.edges.filter(edge => !edge.data?.contract).every(edge => !edge.className?.includes('contract-edge'))).toBe(true);
 });

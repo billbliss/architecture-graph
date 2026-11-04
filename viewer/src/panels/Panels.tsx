@@ -3,6 +3,7 @@ import type { ViewGraph } from '../layout/views';
 import { KINDS } from '../model/kinds';
 import { CONFORMANCE_NOTE, KindBadge, ModuleLink, NodeLink, References, RelLink, StatusBadge } from '../ui/common';
 import { useViewer } from '../ui/context';
+import { PayloadSection } from '../ui/Payload';
 import { ContractPanel, hasSidecars } from './ContractPanel';
 
 export function Panel({ view }: { view: ViewGraph }) {
@@ -177,6 +178,7 @@ function NodePanel({ id, view }: { id: string; view: ViewGraph }) {
     <div>
       <NodeHeader id={id} />
       <p>{node.description}</p>
+      <PayloadSection id={id} />
       <RelationshipList id={id} />
       <div className="section">References</div>
       <References references={node.references} />

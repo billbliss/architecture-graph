@@ -10,6 +10,8 @@ export interface RouteEdgeData extends Record<string, unknown> {
   /** Map count label: top-left corner, text and the pair it selects. */
   label?: { x: number; y: number; text: string; pair: string; back: boolean; selected: boolean; name: string };
   title?: string;
+  /** Contract an edge carries, for its payload card and selection. */
+  contract?: string;
 }
 
 /** A polyline through the points with rounded corners. */

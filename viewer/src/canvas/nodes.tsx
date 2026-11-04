@@ -5,6 +5,14 @@ import { KINDS, KIND_ORDER } from '../model/kinds';
 import type { Role } from '../layout/views';
 import { Glyph } from '../ui/common';
 import { useViewer } from '../ui/context';
+import { useHoverHandlers } from './hover';
+
+const carriesPayload = (references: { kind: string }[]): boolean => references.some(ref => ref.kind === 'example');
+
+/** Marks a box or pill whose record has an example payload. */
+function PayloadMark() {
+  return <span className="payload-mark" aria-hidden="true" title="Has an example payload">{'{ }'}</span>;
+}
 
 const SIDES = [['t', Position.Top], ['r', Position.Right], ['b', Position.Bottom], ['l', Position.Left]] as const;
 
@@ -61,7 +69,9 @@ export function BoxNode({ data }: NodeProps<Node<BoxNodeData>>) {
   const sub = data.role === 'atlas' ? undefined
     : ghost && moduleName ? moduleName
     : `${KINDS[node.kind].label}${node.status === 'unresolved' ? ' · open' : ''}`;
-  const label = `${node.name}, ${KINDS[node.kind].label}, ${node.status}${moduleName ? `, in ${moduleName}` : ''}`;
+  const payload = carriesPayload(node.references);
+  const hover = useHoverHandlers(node.id, payload);
+  const label = `${node.name}, ${KINDS[node.kind].label}, ${node.status}${moduleName ? `, in ${moduleName}` : ''}${payload ? ', has an example payload' : ''}`;
   const classes = ['box', data.role === 'atlas' ? 'atlas' : '', ghost ? 'ghost' : '', node.status, data.selected ? 'selected' : '', data.dim ? 'dim' : ''];
   return (
     <>
@@ -73,8 +83,9 @@ export function BoxNode({ data }: NodeProps<Node<BoxNodeData>>) {
         aria-label={label}
         aria-pressed={!!data.selected}
         title={node.name}
+        {...hover}
       >
-        <span className="name"><Glyph kind={node.kind} /><span>{node.name}</span></span>
+        <span className="name"><Glyph kind={node.kind} /><span>{node.name}</span>{payload && <PayloadMark />}</span>
         {sub && <span className="sub">{sub}</span>}
       </button>
     </>
@@ -86,7 +97,9 @@ export function PillNode({ data }: NodeProps<Node<PillNodeData>>) {
   const contract = model.node(data.contract);
   if (!contract) return null;
   const ends = model.contractEnds(contract.id);
-  const label = `Contract ${contract.name}, from ${ends.providers.map(node => node.name).join(', ')} to ${ends.consumers.length} consumers`;
+  const payload = carriesPayload(contract.references);
+  const hover = useHoverHandlers(contract.id, payload);
+  const label = `Contract ${contract.name}, from ${ends.providers.map(node => node.name).join(', ')} to ${ends.consumers.length} consumers${payload ? ', has an example payload' : ''}`;
   return (
     <>
       <Anchors />
@@ -97,8 +110,9 @@ export function PillNode({ data }: NodeProps<Node<PillNodeData>>) {
         aria-label={label}
         aria-pressed={!!data.selected}
         title={contract.name}
+        {...hover}
       >
-        <Glyph kind={contract.kind} /><span>{contract.name}</span>
+        <Glyph kind={contract.kind} /><span>{contract.name}</span>{payload && <PayloadMark />}
       </button>
     </>
   );

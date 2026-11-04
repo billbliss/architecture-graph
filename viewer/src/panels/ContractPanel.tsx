@@ -2,6 +2,7 @@
 // sidecar), example payloads, guarantees and sources. Data objects and artifacts with sidecars use it too.
 import type { GraphNode, Relationship } from '@billbliss/architecture-graph/core';
 import { useId } from 'react';
+import { pretty } from '../model/payloads';
 import { schemaTree, type SchemaField } from '../model/schema-tree';
 import type { Tab } from '../state/route';
 import { NodeLink, References } from '../ui/common';
@@ -140,11 +141,6 @@ export function Structure({ node }: { node: GraphNode }) {
       })}
     </>
   );
-}
-
-function pretty(path: string, text: string): string {
-  if (!path.endsWith('.json')) return text;
-  try { return JSON.stringify(JSON.parse(text), null, 2); } catch { return text; }
 }
 
 function Examples({ node }: { node: GraphNode }) {
