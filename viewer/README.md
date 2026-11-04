@@ -1,6 +1,6 @@
 # Architecture Graph viewer
 
-A standalone static React application that opens an Architecture Graph in the browser: the module map, each module's contracts and their consumers, contract structure and examples, the Atlas of every node, search, and linkable views. It is specified in [the website and viewer specification](../docs/specs/website-and-viewer.md). architecturegraph.dev serves it at `/view/`; nothing in it assumes that host, and its asset paths are relative, so the same build can be served from any folder. It is not part of the npm package.
+A standalone static React application that opens an Architecture Graph in the browser: the module map, each module's contracts and their consumers, contract structure and examples, the Atlas of every node, search, and linkable views. It is specified in [the website and viewer specification](../docs/specs/website-and-viewer.md). architecturegraph.dev serves it at `/view/`; nothing in it assumes that host, and its asset paths are relative, so the same build can be served from any folder. The logo leads to the viewer's own start page unless the build sets `VITE_HOME_URL`; the site's `npm run viewer` sets it to `/`, so on architecturegraph.dev the logo returns to the site's home page. It is not part of the npm package.
 
 This version opens the bundled examples listed in [`examples/catalog.json`](../examples/catalog.json). Opening a graph from a URL or a project folder is delivery stage 4.
 
