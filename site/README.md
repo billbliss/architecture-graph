@@ -14,7 +14,7 @@ The build fails when:
 - a top-level `docs/` page is missing from the docs navigation in `src/lib/site-map.ts`;
 - the node-kind grouping on the concepts page differs from the kinds in `schema/graph.schema.json`.
 
-Links between `docs/` pages become site links; links to any other repository file become GitHub links at the commit being built (`WORKERS_CI_COMMIT_SHA` on Cloudflare, otherwise `git rev-parse HEAD`).
+Links between `docs/` pages become site links; links to any other repository file become GitHub links at the commit being built (`CF_PAGES_COMMIT_SHA` on Cloudflare Pages, otherwise `git rev-parse HEAD`).
 
 ## Develop
 
@@ -31,18 +31,21 @@ npm run check     # Astro and TypeScript diagnostics
 
 ## Cloudflare
 
-The site deploys to Cloudflare Workers as static assets: `wrangler.jsonc` points Wrangler at `dist/` and there is no Worker script. Create the Worker in the dashboard (Workers & Pages, Create, Import a repository) with these settings:
+The site deploys to Cloudflare Workers as static assets: `wrangler.jsonc` names the Worker, points it at `dist/` and declares the `architecturegraph.dev` custom domain. There is no Worker script.
 
-| Setting | Value |
+Builds are connected in the dashboard under the Worker's Settings, Build, Connect to a repository. Every command starts with `cd site`, so no root-directory setting is needed:
+
+| Field | Value |
 | --- | --- |
-| Project name | `architecture-graph` (must match `name` in `wrangler.jsonc`) |
-| Build command | `npm run cf:build` |
-| Deploy command | `npx wrangler deploy` |
-| Non-production branch deploy command | `npx wrangler versions upload` |
-| Path (root directory, under advanced settings) | `site` |
+| Git account / Repository | `billbliss` / `architecture-graph` |
 | Production branch | `main` |
-| Environment variable (build) | `NODE_VERSION` = `24` |
+| Build command | `cd site && npm run cf:build` |
+| Deploy command (production branch) | `cd site && npx wrangler deploy` |
+| Preview command (other branches) | `cd site && npx wrangler preview` |
+| Build variable | `NODE_VERSION` = `24` |
 
-`cf:build` installs and builds the toolkit in the repository root, installs the site's dependencies and builds the site. Builds on other branches upload a preview version with its own URL instead of deploying. The custom domain `architecturegraph.dev` is declared in `wrangler.jsonc`; `wrangler deploy` creates its DNS record and certificate. A manual deploy from a checkout is `npm run build && npm run deploy` in `site/` after `npx wrangler login`. To check the configuration locally, run `npx wrangler deploy --dry-run` after a build.
+`cf:build` installs and builds the toolkit in the repository root, installs the site's dependencies and builds the site. A push to `main` deploys to production. Other branches, including pull requests, get a named preview with its own URL through `wrangler preview` (open beta in Wrangler 4.157). `wrangler deploy` creates the custom domain's DNS record and certificate when needed.
+
+To deploy by hand from a checkout: `npx wrangler login`, then `npm run build && npm run deploy` in `site/`. `npx wrangler deploy --dry-run` checks the configuration without publishing.
 
 The viewer at `/view` is a placeholder until delivery stage 3.
