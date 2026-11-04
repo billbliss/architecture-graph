@@ -1,12 +1,12 @@
 # Filmcraft: an early intended adoption
 
-Filmcraft motivated an important requirement for AG: a project should be able to preserve useful architectural thinking before application code exists. Its starting material was described as requirements and high-level design documents.
+Filmcraft, another private project, motivated an important requirement for AG: a project should be able to preserve useful architectural thinking before application code exists. Its starting material was described as requirements and high-level design documents.
 
-This was an adoption plan, not an implemented Filmcraft graph. Those documents were not supplied during the toolkit's initial development, so no Filmcraft architecture was inferred or asserted. Other projects do not need this plan to use AG; follow [getting started](../getting-started.md) instead.
+This was an adoption plan, not an implemented graph. Those documents were not supplied during the toolkit's initial development, so no architecture was inferred or asserted. Other projects do not need this plan to use AG; follow [getting started](../getting-started.md) instead.
 
 ## What a first adoption should accomplish
 
-A Filmcraft maintainer should be able to ask about one planned workflow and recover its responsibilities, shared rules, and unanswered questions without rereading every document.
+A code maintainer should be able to ask about one planned workflow and recover its responsibilities, shared rules, and unanswered questions without rereading every document.
 
 Start by installing the toolkit and optional skill in Filmcraft's repository. Read the actual documents and record the few ideas that matter most. Keep the difference between an agreed design and an inference visible. Where documents disagree, record the choice still to be made instead of inventing a resolution or source file.
 

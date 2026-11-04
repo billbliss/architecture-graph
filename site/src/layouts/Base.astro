@@ -1,0 +1,93 @@
+---
+import '../styles/global.css';
+import { GITHUB_REPO } from '../lib/repo';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Path of the current section, for marking the active navigation item. */
+  section?: string;
+}
+
+const { title, description = 'Architecture Graph: the living blueprint for your codebase.', section } = Astro.props;
+const fullTitle = title === 'Architecture Graph' ? title : `${title} · Architecture Graph`;
+const nav = [
+  { href: '/concepts/', label: 'Concepts' },
+  { href: '/docs/', label: 'Docs' },
+  { href: '/examples/', label: 'Examples' },
+  { href: '/format/', label: 'Format' },
+  { href: '/view/', label: 'Viewer' },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script is:inline>
+      // Apply a saved theme before first paint; otherwise the system setting decides.
+      try {
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') document.documentElement.dataset.theme = saved;
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <a class="skip visually-hidden" href="#content">Skip to content</a>
+    <header class="site-header">
+      <div class="container bar">
+        <a class="brand" href="/">
+          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24"><circle cx="5" cy="6" r="3" fill="var(--kind-behavior)" /><circle cx="19" cy="6" r="3" fill="var(--kind-responsibility)" /><rect x="9" y="15" width="6" height="6" rx="1.5" fill="var(--kind-crossing)" /><path d="M7 8l4 7M17 8l-4 7" stroke="currentColor" stroke-width="1.5" fill="none" /></svg>
+          Architecture Graph
+        </a>
+        <nav aria-label="Main">
+          <ul>
+            {nav.map(item => (
+              <li><a href={item.href} aria-current={section === item.href ? 'page' : undefined}>{item.label}</a></li>
+            ))}
+            <li><a href={GITHUB_REPO}>GitHub</a></li>
+          </ul>
+        </nav>
+        <button class="theme-toggle" type="button" aria-label="Switch theme" title="Switch theme">
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36A5.5 5.5 0 0 1 13.36 3.1 9.2 9.2 0 0 0 12 3Z" /></svg>
+        </button>
+      </div>
+    </header>
+    <main id="content">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        <p class="muted">Architecture Graph is open source under the MIT license. <a href={GITHUB_REPO}>Source on GitHub</a>.</p>
+      </div>
+    </footer>
+    <script is:inline>
+      document.querySelector('.theme-toggle')?.addEventListener('click', () => {
+        const root = document.documentElement;
+        const current = root.dataset.theme ?? (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        const next = current === 'light' ? 'dark' : 'light';
+        root.dataset.theme = next;
+        try { localStorage.setItem('theme', next); } catch {}
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  .skip:focus { position: fixed; top: 0.5rem; left: 0.5rem; width: auto; height: auto; clip-path: none; padding: 0.5rem 0.8rem; background: var(--bg-raised); z-index: 10; }
+  .site-header { border-bottom: 1px solid var(--border); background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 5; }
+  .bar { display: flex; align-items: center; gap: 1.5rem; min-height: 3.5rem; flex-wrap: wrap; }
+  .brand { display: inline-flex; align-items: center; gap: 0.55rem; font-weight: 700; color: var(--text); text-decoration: none; }
+  nav { margin-left: auto; }
+  nav ul { display: flex; flex-wrap: wrap; gap: 0.2rem 1.1rem; list-style: none; margin: 0; padding: 0; }
+  nav a { color: var(--text-muted); text-decoration: none; font-size: 0.95rem; }
+  nav a:hover, nav a[aria-current='page'] { color: var(--text); }
+  .theme-toggle { background: none; border: 1px solid var(--border); color: var(--text-muted); border-radius: 8px; padding: 0.3rem 0.45rem; cursor: pointer; display: inline-flex; }
+  .theme-toggle:hover { color: var(--text); border-color: var(--border-strong); }
+  .site-footer { border-top: 1px solid var(--border); margin-top: 4rem; padding: 1.5rem 0; font-size: 0.9rem; }
+</style>

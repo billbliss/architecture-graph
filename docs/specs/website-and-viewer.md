@@ -1,6 +1,6 @@
 # Website and viewer
 
-**Status:** Proposed. Domain: architecturegraph.dev.
+**Status:** In progress: stage 1 (site skeleton) and stage 2 (browser-safe core) are implemented; the viewer is not. Domain: architecturegraph.dev.
 
 ## Goals
 

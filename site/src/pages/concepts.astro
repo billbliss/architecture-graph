@@ -1,0 +1,115 @@
+---
+// Every graph excerpt here is taken from a bundled example graph, which loadProject validates during
+// the build. The node-kind grouping must cover exactly the kinds in the published graph schema.
+import Base from '../layouts/Base.astro';
+import { excerpt } from '../lib/graph';
+import { highlight } from '../lib/highlight';
+import { readRepoJson } from '../lib/repo';
+
+const groups: { role: string; kinds: string[]; text: string }[] = [
+  { role: 'Who takes part', kinds: ['actor'], text: 'People, teams or outside systems that use or act on the software.' },
+  { role: 'Where behavior lives', kinds: ['component', 'surface', 'adapter', 'transform'], text: 'Parts of the software that run: services and modules, the surfaces people use, adapters to other systems, and steps that turn one thing into another.' },
+  { role: 'What the system does', kinds: ['capability', 'workflow'], text: 'Responsibilities and the sequences of work that deliver them.' },
+  { role: 'What crosses boundaries', kinds: ['contract', 'artifact', 'data_object'], text: 'Obligations between parts, such as an event or API response, and the files and data shapes they exchange.' },
+  { role: 'The rules', kinds: ['boundary', 'policy', 'constraint'], text: 'What must stay true: who may change what, and the limits every change has to respect.' },
+  { role: 'The record of design thinking', kinds: ['decision', 'evidence_surface'], text: 'Choices made and questions still open, and where evidence about the design is recorded. An evidence surface names a concept; it does not run or certify anything.' },
+];
+
+const grouped = groups.flatMap(group => group.kinds).sort();
+const graphSchema = readRepoJson<{ properties: { nodes: { items: { properties: { kind: { enum: string[] } } } } } }>('schema/graph.schema.json');
+const accepted = [...graphSchema.properties.nodes.items.properties.kind.enum].sort();
+if (JSON.stringify(grouped) !== JSON.stringify(accepted)) {
+  throw new Error(`Concepts page node kinds ${grouped.join(', ')} differ from the toolkit's ${accepted.join(', ')}`);
+}
+
+const relationships = [
+  { kind: 'owns', text: 'An actor, component or capability is responsible for an idea. Each idea has at most one declared owner, and ownership has no cycles.' },
+  { kind: 'authority_for', text: 'Decides what a capability, contract or artifact means. Others preserve that meaning instead of keeping their own copy. At most one authority per idea.' },
+  { kind: 'provides', text: 'A component, surface or transform supplies a capability to the rest of the system.' },
+  { kind: 'consumes', text: 'An idea relies on another, typically a contract. The description says what it does with it.' },
+  { kind: 'preserves', text: 'An idea keeps a contract or artifact intact: the guarantee a change must not break.' },
+  { kind: 'constrained_by', text: 'An idea must respect a boundary, contract or policy.' },
+];
+
+const [structure, relations, status, modules] = await Promise.all([
+  highlight(excerpt('task-manager', {
+    nodes: ['component:task-service', 'capability:manage-tasks'],
+    relationships: ['relationship:task-service-owns'],
+  }), 'yaml'),
+  highlight(excerpt('task-manager', {
+    relationships: ['relationship:task-changed-authority', 'relationship:task-changed-after-commit', 'relationship:scheduler-task-changes', 'relationship:scheduler-task-authority'],
+  }), 'yaml'),
+  highlight(excerpt('task-manager', { nodes: ['decision:events-after-commit', 'decision:recurrence-model'] }), 'yaml'),
+  highlight(excerpt('task-manager', { nodes: ['contract:task-changed'], modules: ['module:notifications'] }), 'yaml'),
+]);
+---
+
+<Base title="Concepts" section="/concepts/" description="What an Architecture Graph models: responsibilities, authority, contracts, rules and open decisions, and why that helps coding agents.">
+  <div class="container prose">
+    <h1>What the graph models</h1>
+    <p class="lede">A traditional architecture model says what contains what. An Architecture Graph says what the parts mean to each other: who owns a responsibility, which part is authoritative for a shared meaning, which contracts hold at a boundary, and what must not be silently changed.</p>
+    <p>The examples on this page are taken from the <a href="/examples/task-manager/">task-manager example</a> and use the real authored format, so you can copy them into a graph that <code>ag validate</code> accepts.</p>
+
+    <h2 id="meaning">Meaning, not structure</h2>
+    <p>Folder layouts, package diagrams and call graphs already describe structure, and a coding agent can read them from the code. What the code does not say is intent: that the task service is the only part allowed to change a task, that reminders depend on an event announced only after a change is saved, or that how repeating tasks are stored is still undecided. Those are the facts that keep a change from quietly breaking something elsewhere, and they are what the graph records.</p>
+
+    <h2 id="node-kinds">The node kinds</h2>
+    <p>Each node has a kind, a name, a description, a status and references to the files that support it. The kinds fall into six roles.</p>
+    <dl class="kinds">
+      {groups.map(group => (
+        <div class="kind-group">
+          <dt>{group.role}</dt>
+          <dd>
+            <span class="kind-list">{group.kinds.map(kind => <code class={`kind kind-${kind} kind-label`}>{kind}</code>)}</span>
+            <span>{group.text}</span>
+          </dd>
+        </div>
+      ))}
+    </dl>
+
+    <h3>Component and capability</h3>
+    <p>A <strong>component</strong> is structure: where behavior lives. A <strong>capability</strong> is a responsibility: what the system does. Keeping them apart lets the graph say which component owns a responsibility, and lets that answer change when code moves without rewriting what the system does.</p>
+    <Fragment set:html={structure} />
+
+    <h2 id="relationships">Relationships that carry meaning</h2>
+    <p>Every relationship has a kind and a description that says why the connection matters. These carry the most meaning:</p>
+    <dl class="relations">
+      {relationships.map(item => (
+        <div><dt><code>{item.kind}</code></dt><dd>{item.text}</dd></div>
+      ))}
+    </dl>
+    <p>Ownership and authority are checked for conflicts because they answer the question a change most needs answered: which part decides. Two declared owners, or two authorities for the same contract, means nobody can tell which one a change should follow. Competing proposals can still be recorded as <code>unresolved</code> alternatives until one is chosen.</p>
+    <Fragment set:html={relations} />
+    <p>Other kinds such as <code>depends_on</code>, <code>produces</code>, <code>governed_by</code> and <code>affects</code> are described in the <a href="/docs/reference/">reference</a>.</p>
+
+    <h2 id="status">Status as honesty</h2>
+    <p>Every node and relationship says how sure it is:</p>
+    <ul>
+      <li><code>proposed</code>: intended design; nothing is claimed about the code.</li>
+      <li><code>implemented</code>: the author says it is built, and references a real implementation file.</li>
+      <li><code>unresolved</code>: a question or alternative is still open.</li>
+    </ul>
+    <p>An open question stays visible instead of being guessed. When an agent reaches an unresolved decision, the right move is to leave it alone or ask, not to settle it as a side effect of another change.</p>
+    <Fragment set:html={status} />
+
+    <h2 id="modules-and-contracts">Modules and contracts</h2>
+    <p><strong>Modules</strong> are logical boundaries inside one graph. Each lists the nodes it exports to other modules and the nodes it imports from them; a relationship that crosses modules must match those lists, so every dependency between modules is visible and reviewable. Modules do not have to match packages or folders.</p>
+    <p><strong>Contract sidecars</strong> show the data crossing a boundary: a contract can reference a JSON Schema and example payloads, and validation checks that the examples match the schema. That shows the files agree with each other, not that the code sends that data. Sidecars arrive in the next release.</p>
+    <Fragment set:html={modules} />
+
+    <h2 id="agents">Why this helps agents</h2>
+    <p>A coding agent starts each session without the history behind the code. Without a blueprint, it re-derives intent from whatever files it happens to read, and an assumption that looks reasonable locally can break a guarantee another part relies on. The graph gives it a compact, authoritative starting point: <code>ag context</code> returns the owners, consumers, rules and open questions around the code it is about to change, within a fixed size limit. After the change, the agent updates the graph, so the next session starts from the current design instead of rediscovering it.</p>
+    <p><a class="button primary" href="/docs/getting-started/">Get started</a></p>
+  </div>
+</Base>
+
+<style>
+  .lede { font-size: 1.12rem; color: var(--text-muted); }
+  .kinds, .relations { margin: 1rem 0; }
+  .kind-group, .relations > div { display: grid; grid-template-columns: 12rem 1fr; gap: 0.3rem 1rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
+  dt { font-weight: 600; }
+  dd { margin: 0; display: flex; flex-direction: column; gap: 0.2rem; }
+  .kind-list { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .kind-list code { font-size: 0.8rem; }
+  @media (max-width: 40rem) { .kind-group, .relations > div { grid-template-columns: 1fr; } }
+</style>

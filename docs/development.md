@@ -45,4 +45,6 @@ Run `npm run package` and `npm run test:package` to test the exact distributable
 
 Write Markdown prose with one paragraph per source line and use editor soft wrapping. Preserve structural line breaks in lists, tables, headings, code blocks, frontmatter and intentional Markdown hard breaks; do not manually wrap prose to a fixed column width.
 
+The website for architecturegraph.dev lives in `site/` and is not part of the npm package. Its build renders `docs/` and the example READMEs, validates the bundled examples with the toolkit itself and fails on broken links, so a docs change can break the site build. See [the site README](../site/README.md) for commands and deployment settings.
+
 For releases, follow [publishing](publishing.md): version tags select tested archives, an environment approval authorizes publication, and registry installation is checked afterward.

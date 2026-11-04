@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import { validatedSnippet } from '../lib/graph';
+import { highlight } from '../lib/highlight';
+import { githubUrl, readRepo } from '../lib/repo';
+
+// A complete graph, validated with the toolkit during the build so it can be copied as is.
+const smallest = validatedSnippet(`schemaVersion: "1"
+id: graph:greeter
+title: Greeter architecture
+description: A command-line greeter. Covers who decides the greeting wording.
+nodes:
+  - id: component:formatter
+    kind: component
+    name: Formatter
+    description: Builds the greeting text from a name and a tone.
+    status: proposed
+    references: []
+  - id: capability:greet
+    kind: capability
+    name: Greet a person
+    description: Produce a greeting for a named person.
+    status: proposed
+    references: []
+relationships:
+  - id: relationship:formatter-owns-greet
+    kind: owns
+    from: component:formatter
+    to: capability:greet
+    description: Wording changes belong in the formatter, not in the interface that prints it.
+    status: proposed
+    references: []
+`, 'examples/hello-world');
+
+const config = readRepo('examples/task-manager/ag.config.json');
+const [graphHtml, configHtml] = await Promise.all([highlight(smallest, 'yaml'), highlight(config, 'json')]);
+---
+
+<Base title="Format" section="/format/" description="The Architecture Graph file format, its configuration and contract sidecars, with links to the JSON Schemas.">
+  <div class="container prose">
+    <h1>The graph format</h1>
+    <p>A project's architecture lives in one authored file, usually <code>architecture/graph.yaml</code>, and an <code>ag.config.json</code>, usually at the repository root, says where it is. Everything AG generates (guidance, indexes, summaries) is derived from that one file.</p>
+
+    <h2>The smallest complete graph</h2>
+    <p>A graph has a schema version, an ID, a title, a description, nodes and relationships. Every record has a status and a list of references; proposed records may have none. This example passes <code>ag validate</code>; the site build checks it.</p>
+    <Fragment set:html={graphHtml} />
+
+    <h2>Configuration</h2>
+    <p>The configuration names the graph and the folder for generated output. References in the graph are paths relative to the folder that holds the configuration.</p>
+    <Fragment set:html={configHtml} />
+
+    <h2>Contract sidecars</h2>
+    <p>A <code>contract</code>, <code>data_object</code> or <code>artifact</code> node can reference a JSON Schema for its data and example payloads that must match it. Sidecars arrive in the next release. See <a href="/docs/reference/#contract-schemas-and-examples">contract schemas and examples</a> and the <a href="/docs/specs/contract-sidecars/">specification</a>.</p>
+
+    <h2>Reference and schemas</h2>
+    <ul>
+      <li><a href="/concepts/">Concepts</a>: what the node and relationship kinds mean.</li>
+      <li><a href="/docs/reference/">Commands and files</a>: every command, file rule and diagnostic.</li>
+      <li><a href={githubUrl('schema/graph.schema.json')}>Graph JSON Schema</a> and <a href={githubUrl('schema/config.schema.json')}>configuration JSON Schema</a>, generated from the toolkit's own definitions.</li>
+    </ul>
+  </div>
+</Base>

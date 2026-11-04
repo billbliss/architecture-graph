@@ -1,0 +1,129 @@
+/* architecturegraph.dev. Dark first; light follows the system setting unless the visitor chooses.
+   The node-kind colors are the site's accent palette and will be shared with the viewer. */
+
+:root {
+  color-scheme: dark;
+  --bg: #0d1117;
+  --bg-raised: #151b24;
+  --bg-sunken: #0a0e13;
+  --border: #2a3340;
+  --border-strong: #3b4656;
+  --text: #e6edf3;
+  --text-muted: #9ba7b4;
+  --link: #79b8ff;
+  --focus: #79b8ff;
+
+  /* Node kinds, grouped by role (see /concepts). */
+  --kind-actor: #b4bccb;          /* who takes part */
+  --kind-behavior: #6aa5ff;       /* component, surface, adapter, transform */
+  --kind-responsibility: #4fc79a; /* capability, workflow */
+  --kind-crossing: #e5b250;       /* contract, artifact, data_object */
+  --kind-rule: #c792ea;           /* boundary, policy, constraint */
+  --kind-design: #f28fb3;         /* decision, evidence_surface */
+  --status-unresolved: #ff8a4c;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+  --radius: 10px;
+  --content: 72rem;
+  --prose: 46rem;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #ffffff;
+  --bg-raised: #f5f7fa;
+  --bg-sunken: #eef1f5;
+  --border: #d5dbe3;
+  --border-strong: #b8c1cc;
+  --text: #1a2129;
+  --text-muted: #56606c;
+  --link: #0b5fcc;
+  --focus: #0b5fcc;
+  --kind-actor: #5b6474;
+  --kind-behavior: #1f63d6;
+  --kind-responsibility: #127a55;
+  --kind-crossing: #8f6100;
+  --kind-rule: #7d3fb0;
+  --kind-design: #b0336a;
+  --status-unresolved: #b34700;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    color-scheme: light;
+    --bg: #ffffff;
+    --bg-raised: #f5f7fa;
+    --bg-sunken: #eef1f5;
+    --border: #d5dbe3;
+    --border-strong: #b8c1cc;
+    --text: #1a2129;
+    --text-muted: #56606c;
+    --link: #0b5fcc;
+    --focus: #0b5fcc;
+    --kind-actor: #5b6474;
+    --kind-behavior: #1f63d6;
+    --kind-responsibility: #127a55;
+    --kind-crossing: #8f6100;
+    --kind-rule: #7d3fb0;
+    --kind-design: #b0336a;
+    --status-unresolved: #b34700;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { background: var(--bg); color: var(--text); font-family: var(--font-sans); line-height: 1.6; -webkit-text-size-adjust: 100%; }
+body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+main { flex: 1; }
+
+a { color: var(--link); text-underline-offset: 0.15em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 3px; }
+
+code, pre, kbd { font-family: var(--font-mono); font-size: 0.9em; }
+:not(pre) > code { background: var(--bg-raised); border: 1px solid var(--border); border-radius: 5px; padding: 0.05em 0.35em; }
+pre { background: var(--bg-sunken); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.1rem; overflow-x: auto; line-height: 1.5; }
+
+h1, h2, h3, h4 { line-height: 1.25; text-wrap: balance; }
+h1 { font-size: clamp(2rem, 4vw, 2.6rem); letter-spacing: -0.02em; }
+h2 { font-size: 1.6rem; letter-spacing: -0.01em; margin-top: 2.5rem; }
+h3 { font-size: 1.2rem; margin-top: 2rem; }
+p, li { text-wrap: pretty; }
+
+table { border-collapse: collapse; width: 100%; display: block; overflow-x: auto; }
+th, td { border: 1px solid var(--border); padding: 0.45rem 0.7rem; text-align: left; vertical-align: top; }
+th { background: var(--bg-raised); }
+
+.container { width: min(100% - 2.5rem, var(--content)); margin-inline: auto; }
+.prose { max-width: var(--prose); }
+.muted { color: var(--text-muted); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+.button { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.6rem 1.1rem; border-radius: 8px; font-weight: 600; text-decoration: none; border: 1px solid var(--border-strong); color: var(--text); background: var(--bg-raised); }
+.button:hover { border-color: var(--link); }
+.button.primary { background: var(--link); border-color: var(--link); color: var(--bg); }
+
+.card { background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem 1.3rem; }
+
+/* Shiki dual themes: tokens carry both colors as variables. */
+.shiki, .shiki span { color: var(--shiki-dark); }
+.shiki { background: var(--bg-sunken) !important; }
+:root[data-theme='light'] .shiki, :root[data-theme='light'] .shiki span { color: var(--shiki-light); }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) .shiki, :root:not([data-theme='dark']) .shiki span { color: var(--shiki-light); }
+}
+
+/* Node-kind marks. */
+.kind { --kind: var(--kind-behavior); }
+.kind-actor { --kind: var(--kind-actor); }
+.kind-component, .kind-surface, .kind-adapter, .kind-transform { --kind: var(--kind-behavior); }
+.kind-capability, .kind-workflow { --kind: var(--kind-responsibility); }
+.kind-contract, .kind-artifact, .kind-data_object { --kind: var(--kind-crossing); }
+.kind-boundary, .kind-policy, .kind-constraint { --kind: var(--kind-rule); }
+.kind-decision, .kind-evidence_surface { --kind: var(--kind-design); }
+.kind-label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--kind); text-transform: lowercase; letter-spacing: 0.02em; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

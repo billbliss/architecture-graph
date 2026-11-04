@@ -24,22 +24,3 @@ The useful ideas were straightforward: distinguish what a part of the system is 
 The result is one Node package, one graph per configuration, a companion skill, and a small example installed like an outside project. No implementation code was copied verbatim. Compatibility with the application’s stored graph format was not promised.
 
 JSON was chosen to avoid a parser dependency. A single graph and a small set of relationships kept the first release focused on a real adoption rather than a general graph platform. Planned work can exist without code; implemented records need real file references. Neither condition proves that the code follows the design.
-
-## Source record
-
-The private application was inspected without modifying it on 2026-09-09 at revision `7fcbe6b64ec6cd5bd436107a15d29818949ed4d6`. [The source record](extraction-source.json) contains file fingerprints and notes about uncommitted changes. An uncommitted roadmap update helped identify work outside this toolkit’s scope; it did not supply toolkit behavior.
-
-## Why that branch?
-
-Several worktrees contained AG. Comparing the parts relevant to this toolkit avoided assuming that the newest assurance branch was also the best extraction source.
-
-| Worktree branch | Revision inspected |
-| --- | --- |
-| AG-V | `899f40bac8cd4e8be2d0bb2be74a1e5b15b59a16` |
-| AG-Y, in the main checkout directory | `7fcbe6b64ec6cd5bd436107a15d29818949ed4d6` |
-| AG-AA, in the directory named ag-z | `1a17900bdfec82f4d54b3ed4fb360a8ec9ed3146` |
-| AG-AB | `5a968c87f78c2cf80dbf13a696e19ad5f85f0183` |
-
-The schema, context loader, and compiled artifacts were identical across these four. Y, AA, and AB also shared the same loader; V lacked their later explicit project-root loading and path checks. Y, AA, and AB shared the updated architecture documentation, while their roadmaps reflected different assurance progress.
-
-AG-Y therefore remained the recorded reference, checked against AA and AB. The `main` branch differed and had less of the relevant declaration work. Additional detached worktrees were inventoried but not used. [Full comparison records](worktree-comparison.json) preserve the details. This was a comparison of the reusable core, not a claim that the entire branches were equivalent.

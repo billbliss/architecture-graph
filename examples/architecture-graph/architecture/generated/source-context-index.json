@@ -249,6 +249,24 @@
       ],
       "relationshipIds": []
     },
+    "site/README.md": {
+      "nodeIds": [
+        "decision:website-and-viewer"
+      ],
+      "relationshipIds": []
+    },
+    "site/src/lib/graph.ts": {
+      "nodeIds": [
+        "decision:website-and-viewer"
+      ],
+      "relationshipIds": []
+    },
+    "site/src/lib/markdown.ts": {
+      "nodeIds": [
+        "decision:website-and-viewer"
+      ],
+      "relationshipIds": []
+    },
     "skills/architecture-graph/SKILL.md": {
       "nodeIds": [
         "artifact:bundled-skill",

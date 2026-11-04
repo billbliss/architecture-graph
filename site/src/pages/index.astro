@@ -1,0 +1,137 @@
+---
+import Base from '../layouts/Base.astro';
+import ContractGraphic from '../components/ContractGraphic.astro';
+import { highlight } from '../lib/highlight';
+import { readRepoJson } from '../lib/repo';
+import { EXAMPLES } from '../lib/site-map';
+
+const { name, version } = readRepoJson<{ name: string; version: string }>('package.json');
+const install = await highlight(
+  [
+    `npm install --save-dev ${name}@${version}`,
+    './node_modules/.bin/ag skill install --agent claude   # or codex, or claude,codex',
+  ].join('\n'),
+  'sh',
+);
+---
+
+<Base title="Architecture Graph" description="The living blueprint for your codebase: responsibilities, contracts and the rules that must stay true, compact enough for a coding agent to read before every change.">
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="pitch">
+        <h1>The living blueprint for your codebase.</h1>
+        <p class="lede">Code shows an agent what the system does. Architecture Graph shows what it's meant to be: who owns what, which contracts hold, what must stay true. Compact enough to read before every change, and updated with every change.</p>
+        <p class="ctas">
+          <a class="button primary" href="/docs/getting-started/">Get started</a>
+          <a class="button" href="/view/?example=task-manager">Explore an example</a>
+        </p>
+      </div>
+      <ContractGraphic />
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="container"><div class="prose">
+      <h2>Architecture, not archaeology</h2>
+      <p>Without a blueprint, every session digs intent back out of the code. A coding agent can read what a function does, but not why it lives where it does or what the rest of the system relies on it to keep doing. The questions that get lost are the ones that matter most before a change:</p>
+      <ul class="questions">
+        <li><strong>Who owns this responsibility?</strong> So the change lands in the part that is meant to make it.</li>
+        <li><strong>Which part decides what this value means?</strong> So a shared meaning has one authority instead of several quiet copies.</li>
+        <li><strong>What must stay true when this interface changes?</strong> So every consumer of a contract is considered, not only the one in front of you.</li>
+      </ul>
+      <p>Code remains the source of truth for what the system does. The graph is the source of truth for what it is meant to be, and it works the same way in any language.</p>
+    </div></div>
+  </section>
+
+  <section class="band">
+    <div class="container">
+      <h2>How it works</h2>
+      <ol class="steps">
+        <li class="card">
+          <h3>Record</h3>
+          <p>Your coding agent, guided by the bundled skill, writes a small graph from your requirements and code: components, the responsibilities they own, the contracts between them, the rules that hold, and the questions still open.</p>
+        </li>
+        <li class="card">
+          <h3>Retrieve before a change</h3>
+          <p>Before editing, the agent runs <code>ag context</code> for the file, module or contract it is about to touch, and gets the owners, consumers, guarantees and open decisions around it in a bounded answer.</p>
+        </li>
+        <li class="card">
+          <h3>Keep it current</h3>
+          <p>After the change, the agent updates the graph alongside the code. <code>ag validate</code> checks the records and <code>ag check</code> confirms the generated guidance is up to date.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="container"><div class="prose">
+      <h2>Honest about what it checks</h2>
+      <p>The graph records intent. AG's checks make sure the records are well formed and agree with each other; they do not read your code or prove that it follows the design. When code and graph disagree, that is drift for people and tests to resolve.</p>
+      <div class="checks">
+        <div class="card">
+          <h3>What <code>validate</code> and <code>check</code> establish</h3>
+          <ul>
+            <li>Every record has the required fields, a known kind and a status.</li>
+            <li>Relationships point at records that exist, and each idea has at most one declared owner and one authority.</li>
+            <li>Referenced files exist, and implemented records reference real implementation files.</li>
+            <li>Relationships that cross modules are declared as imports and exports.</li>
+            <li>Contract schemas are valid JSON Schema and every example matches its schema (in the next release).</li>
+            <li>Generated guidance and indexes match the graph.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>What they do not</h3>
+          <ul>
+            <li>That the code does what the graph says, or that a record marked implemented is implemented correctly.</li>
+            <li>That the graph covers everything important.</li>
+            <li>That a contract example matching its schema means the code sends that data. A project test can check that with <code>sidecarValidator</code>.</li>
+            <li>That the design is good.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="muted">See <a href="/docs/compatibility/">limits and upgrades</a> for the full statement.</p>
+    </div></div>
+  </section>
+
+  <section class="band">
+    <div class="container">
+      <h2>Explore a real graph, then start your own</h2>
+      <ul class="examples">
+        {EXAMPLES.map(example => (
+          <li class="card">
+            <h3><a href={`/examples/${example.name}/`}>{example.title}</a></h3>
+            <p>{example.summary}</p>
+            <a href={`/view/?example=${example.name}`}>Open in viewer</a>
+          </li>
+        ))}
+      </ul>
+      <div class="start prose">
+        <p>Add AG to a project with Node.js 22 or later, whatever language the project is written in, then install the skill for your coding agent:</p>
+        <Fragment set:html={install} />
+        <p><a href="/docs/getting-started/">Read the full guide</a> for bootstrapping the first graph with your agent.</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { padding: 3.5rem 0 2.5rem; border-bottom: 1px solid var(--border); }
+  .hero-grid { display: grid; gap: 2.5rem; }
+  .pitch { max-width: 44rem; }
+  .hero h1 { font-size: clamp(2.3rem, 5vw, 3.4rem); margin: 0 0 1rem; }
+  .lede { font-size: 1.15rem; color: var(--text-muted); }
+  .ctas { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 1.5rem; }
+  .band { padding: 1rem 0 1.5rem; }
+  .questions li { margin-bottom: 0.4rem; }
+  .steps { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; counter-reset: step; }
+  .steps li { counter-increment: step; }
+  .steps h3 { margin-top: 0; }
+  .steps h3::before { content: counter(step) '. '; color: var(--text-muted); }
+  .checks { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 1rem; }
+  .checks h3 { margin-top: 0; font-size: 1.05rem; }
+  .checks ul { padding-left: 1.1rem; margin: 0; }
+  .examples { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; }
+  .examples h3 { margin-top: 0; }
+  .start { margin-top: 2rem; }
+  @media (min-width: 72rem) { .checks { max-width: none; } }
+</style>
