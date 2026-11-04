@@ -46,6 +46,8 @@ Builds are connected in the dashboard under the Worker's Settings, Build, Connec
 
 `cf:build` installs and builds the toolkit in the repository root, installs the site's dependencies and builds the site. A push to `main` deploys to production. Other branches, including pull requests, get a named preview with its own URL through `wrangler preview` (open beta in Wrangler 4.157). `wrangler deploy` creates the custom domain's DNS record and certificate when needed.
 
+`www.architecturegraph.dev` is a second custom domain so that it has a DNS record and certificate, but visitors are redirected to the apex by a zone Redirect Rule created in the dashboard (Rules, Redirect Rules, the "Redirect from WWW to root" template): requests to `www.architecturegraph.dev/*` get a 301 to `https://architecturegraph.dev/${1}`, preserving the query string. The rule runs before the Worker. Wrangler does not manage it, so it is recorded here.
+
 To deploy by hand from a checkout: `npx wrangler login`, then `npm run build && npm run deploy` in `site/`. `npx wrangler deploy --dry-run` checks the configuration without publishing.
 
 The viewer at `/view` is a placeholder until delivery stage 3.
