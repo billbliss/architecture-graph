@@ -155,6 +155,12 @@
       ],
       "relationshipIds": []
     },
+    "examples/architecture-graph/contracts/compiled-indexes.schema.json": {
+      "nodeIds": [
+        "artifact:derived-indexes"
+      ],
+      "relationshipIds": []
+    },
     "examples/architecture-graph/contracts/examples/bounded-context.json": {
       "nodeIds": [
         "contract:bounded-context"
@@ -173,9 +179,69 @@
       ],
       "relationshipIds": []
     },
+    "examples/architecture-graph/contracts/summary.schema.json": {
+      "nodeIds": [
+        "artifact:guidance-summary"
+      ],
+      "relationshipIds": []
+    },
     "examples/catalog.json": {
       "nodeIds": [
         "decision:website-and-viewer"
+      ],
+      "relationshipIds": []
+    },
+    "examples/hello-world/architecture/generated/compilation-metadata.json": {
+      "nodeIds": [
+        "artifact:derived-indexes"
+      ],
+      "relationshipIds": []
+    },
+    "examples/hello-world/architecture/generated/cross-module-dependency-index.json": {
+      "nodeIds": [
+        "artifact:derived-indexes"
+      ],
+      "relationshipIds": []
+    },
+    "examples/hello-world/architecture/generated/graph-index.json": {
+      "nodeIds": [
+        "artifact:derived-indexes"
+      ],
+      "relationshipIds": []
+    },
+    "examples/hello-world/architecture/generated/graph-source-map.json": {
+      "nodeIds": [
+        "artifact:derived-indexes"
+      ],
+      "relationshipIds": []
+    },
+    "examples/hello-world/architecture/generated/guardrail-index.json": {
+      "nodeIds": [
+        "artifact:derived-indexes"
+      ],
+      "relationshipIds": []
+    },
+    "examples/hello-world/architecture/generated/module-ownership-map.json": {
+      "nodeIds": [
+        "artifact:derived-indexes"
+      ],
+      "relationshipIds": []
+    },
+    "examples/hello-world/architecture/generated/neighborhood-index.json": {
+      "nodeIds": [
+        "artifact:derived-indexes"
+      ],
+      "relationshipIds": []
+    },
+    "examples/hello-world/architecture/generated/source-context-index.json": {
+      "nodeIds": [
+        "artifact:derived-indexes"
+      ],
+      "relationshipIds": []
+    },
+    "examples/hello-world/architecture/generated/summary.json": {
+      "nodeIds": [
+        "artifact:guidance-summary"
       ],
       "relationshipIds": []
     },

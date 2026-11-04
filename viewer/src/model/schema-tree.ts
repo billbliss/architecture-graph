@@ -96,8 +96,16 @@ function describe(read: ReadFile, schema: Json, base: string, seen: string[], de
   for (const key of ['oneOf', 'anyOf'] as const) {
     const options = schema[key];
     if (Array.isArray(options)) {
-      const labels = options.filter(isObject).map(option => describe(read, option, base, seen, depth + 1).type);
-      return { type: labels.join(' | ') || key, description };
+      const described = options.filter(isObject).map((option, index) => ({ option, index, ...describe(read, option, base, seen, depth + 1) }));
+      // Simple alternatives read as a union; alternatives with fields are listed as named shapes.
+      if (!described.some(item => item.children?.length)) return { type: described.map(item => item.type).join(' | ') || key, description };
+      const children = described.map(({ option, index, ...item }) => ({
+        ...item,
+        name: item.ref?.title ?? (typeof option.title === 'string' ? option.title : `option ${index + 1}`),
+        required: true,
+        type: item.ref ? '' : item.type,
+      }));
+      return { type: key === 'oneOf' ? 'one of' : 'any of', description, children };
     }
   }
   if (schema.type === 'array' || (Array.isArray(schema.type) && schema.type.includes('array'))) {

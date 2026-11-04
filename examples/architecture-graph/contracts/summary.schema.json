@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Summary",
+  "description": "summary.json, written by ag generate alongside guidance.md and printed by ag summary. Counts, every unresolved record, and sidecar coverage; derived, never design authority. Written from summarize in src/artifacts.ts. guidance.md, the other half of the briefing, is Markdown and has no schema.",
+  "type": "object",
+  "required": ["artifactVersion", "toolVersion", "declarationDigest", "graphId", "title", "scope", "limitation", "nodes", "relationships", "modules", "statuses", "unresolved", "sidecars"],
+  "additionalProperties": false,
+  "properties": {
+    "artifactVersion": { "const": "2" },
+    "toolVersion": { "type": "string", "description": "Toolkit version that wrote the file." },
+    "declarationDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$", "description": "SHA-256 of the canonical declarations and configuration, as in compilation-metadata.json." },
+    "graphId": { "type": "string" },
+    "title": { "type": "string" },
+    "scope": { "type": "string", "description": "The graph's description." },
+    "limitation": { "type": "string", "description": "Always states that declarations do not prove implementation conformance." },
+    "nodes": { "type": "integer", "minimum": 0 },
+    "relationships": { "type": "integer", "minimum": 0 },
+    "modules": { "type": "integer", "minimum": 0 },
+    "statuses": {
+      "type": "object",
+      "description": "Node counts by status.",
+      "required": ["proposed", "implemented", "unresolved"],
+      "additionalProperties": false,
+      "properties": {
+        "proposed": { "type": "integer", "minimum": 0 },
+        "implemented": { "type": "integer", "minimum": 0 },
+        "unresolved": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "unresolved": {
+      "type": "array",
+      "description": "Every unresolved node and relationship, sorted by ID.",
+      "items": {
+        "type": "object",
+        "required": ["id", "description"],
+        "additionalProperties": false,
+        "properties": { "id": { "type": "string" }, "description": { "type": "string" } }
+      }
+    },
+    "sidecars": {
+      "type": "object",
+      "description": "Schema and example coverage of contracts, data objects and artifacts.",
+      "required": ["eligible", "withSchema", "withExamples", "withoutSchema"],
+      "additionalProperties": false,
+      "properties": {
+        "eligible": { "type": "integer", "minimum": 0 },
+        "withSchema": { "type": "integer", "minimum": 0 },
+        "withExamples": { "type": "integer", "minimum": 0 },
+        "withoutSchema": { "type": "array", "items": { "type": "string" }, "description": "IDs without a schema. Behavioral contracts are expected here." }
+      }
+    }
+  }
+}

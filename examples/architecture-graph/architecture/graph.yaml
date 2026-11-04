@@ -251,6 +251,26 @@ nodes:
     status: implemented
     module: module:context
     references:
+      - kind: schema
+        path: examples/architecture-graph/contracts/compiled-indexes.schema.json
+        description: One shape per index file
+      - kind: example
+        path: examples/hello-world/architecture/generated/compilation-metadata.json
+        description: Real output ag generate writes for the hello-world example
+      - kind: example
+        path: examples/hello-world/architecture/generated/graph-index.json
+      - kind: example
+        path: examples/hello-world/architecture/generated/source-context-index.json
+      - kind: example
+        path: examples/hello-world/architecture/generated/neighborhood-index.json
+      - kind: example
+        path: examples/hello-world/architecture/generated/module-ownership-map.json
+      - kind: example
+        path: examples/hello-world/architecture/generated/cross-module-dependency-index.json
+      - kind: example
+        path: examples/hello-world/architecture/generated/guardrail-index.json
+      - kind: example
+        path: examples/hello-world/architecture/generated/graph-source-map.json
       - kind: implementation
         path: src/compiled.ts
       - kind: implementation
@@ -377,6 +397,12 @@ nodes:
     status: implemented
     module: module:interfaces
     references:
+      - kind: schema
+        path: examples/architecture-graph/contracts/summary.schema.json
+        description: Covers summary.json; guidance.md is Markdown
+      - kind: example
+        path: examples/hello-world/architecture/generated/summary.json
+        description: Real output ag generate writes for the hello-world example
       - kind: implementation
         path: src/artifacts.ts
       - kind: design

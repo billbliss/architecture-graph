@@ -207,3 +207,20 @@ test('the Contracts view round-trips in the URL hash', () => {
   expect(formatHash(route)).toBe('#view=contracts&node=contract:task');
   expect(parseHash('#view=contracts&node=contract:task')).toMatchObject(route);
 });
+
+test('a schema with alternatives lists each named shape with its fields', async () => {
+  const model = await example('architecture-graph');
+  const tree = schemaTree(path => model.project.file(path), 'examples/architecture-graph/contracts/compiled-indexes.schema.json');
+  expect(tree.type).toBe('one of');
+  expect(tree.fields.map(field => field.name)).toContain('graph-index.json');
+  const map = tree.fields.find(field => field.name === 'graph-source-map.json')!;
+  expect(map.children?.map(field => field.name)).toEqual(['locators']);
+});
+
+test('a contract without sidecars gets a quiet note, not a warning', async () => {
+  const model = await example('hello-world');
+  const node = model.node('contract:greeting')!;
+  const html = render(model, { view: 'contracts', node: node.id }, <ContractsView />);
+  expect(html).toContain('No data format is described');
+  expect(html).not.toContain('class="gap"');
+});

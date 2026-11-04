@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CompiledIndexFile",
+  "description": "One file of the compiled indexes ag generate writes, artifact format 2. Each file is one of these shapes, told apart by its top-level keys. Written from buildIndex in src/indexes.ts and compiledArtifacts in src/compiled.ts. Map keys are record IDs or reference paths.",
+  "oneOf": [
+    { "$ref": "#/$defs/compilationMetadata" },
+    { "$ref": "#/$defs/graphIndex" },
+    { "$ref": "#/$defs/sourceContextIndex" },
+    { "$ref": "#/$defs/neighborhoodIndex" },
+    { "$ref": "#/$defs/moduleOwnershipMap" },
+    { "$ref": "#/$defs/crossModuleDependencyIndex" },
+    { "$ref": "#/$defs/guardrailIndex" },
+    { "$ref": "#/$defs/graphSourceMap" }
+  ],
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9_-]*:[a-z0-9][a-z0-9._-]*$" },
+    "ids": { "type": "array", "items": { "$ref": "#/$defs/id" } },
+    "compilationMetadata": {
+      "title": "compilation-metadata.json",
+      "description": "Binds the indexes to a graph, its declarations and a toolkit version. Readers fall back to the canonical graph when any of these differ or a checksum does not match. Not a signature.",
+      "type": "object",
+      "required": ["artifactVersion", "toolVersion", "graphId", "declarationDigest", "checksums"],
+      "additionalProperties": false,
+      "properties": {
+        "artifactVersion": { "const": "2" },
+        "toolVersion": { "type": "string", "description": "Toolkit version that wrote the files." },
+        "graphId": { "$ref": "#/$defs/id" },
+        "declarationDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$", "description": "SHA-256 of the canonical declarations and configuration." },
+        "checksums": {
+          "type": "object",
+          "description": "SHA-256 of each other index file, by file name.",
+          "additionalProperties": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        }
+      }
+    },
+    "graphIndex": {
+      "title": "graph-index.json",
+      "description": "Every node and relationship by ID, as declared.",
+      "type": "object",
+      "required": ["nodes", "relationships"],
+      "additionalProperties": false,
+      "properties": {
+        "nodes": { "type": "object", "additionalProperties": { "$ref": "../../../schema/graph.schema.json#/properties/nodes/items" } },
+        "relationships": { "type": "object", "additionalProperties": { "$ref": "../../../schema/graph.schema.json#/properties/relationships/items" } }
+      }
+    },
+    "sourceContextIndex": {
+      "title": "source-context-index.json",
+      "description": "For each referenced path, the records that reference it. ag context --file reads it.",
+      "type": "object",
+      "required": ["sources"],
+      "additionalProperties": false,
+      "properties": {
+        "sources": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["nodeIds", "relationshipIds"],
+            "additionalProperties": false,
+            "properties": { "nodeIds": { "$ref": "#/$defs/ids" }, "relationshipIds": { "$ref": "#/$defs/ids" } }
+          }
+        }
+      }
+    },
+    "neighborhoodIndex": {
+      "title": "neighborhood-index.json",
+      "description": "For each node, the relationships into and out of it.",
+      "type": "object",
+      "required": ["neighborhoods"],
+      "additionalProperties": false,
+      "properties": {
+        "neighborhoods": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["inbound", "outbound"],
+            "additionalProperties": false,
+            "properties": { "inbound": { "$ref": "#/$defs/ids" }, "outbound": { "$ref": "#/$defs/ids" } }
+          }
+        }
+      }
+    },
+    "moduleOwnershipMap": {
+      "title": "module-ownership-map.json",
+      "description": "Each declared module with the nodes it owns and the relationships that start in it.",
+      "type": "object",
+      "required": ["modules"],
+      "additionalProperties": false,
+      "properties": {
+        "modules": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["id", "name", "description", "exports", "imports", "nodeIds", "relationshipIds"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "$ref": "#/$defs/id" },
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "exports": { "$ref": "#/$defs/ids" },
+              "imports": { "$ref": "#/$defs/ids" },
+              "nodeIds": { "$ref": "#/$defs/ids" },
+              "relationshipIds": { "$ref": "#/$defs/ids", "description": "Relationships whose source node is in this module." }
+            }
+          }
+        }
+      }
+    },
+    "crossModuleDependencyIndex": {
+      "title": "cross-module-dependency-index.json",
+      "description": "Each relationship whose ends are in different modules.",
+      "type": "object",
+      "required": ["crossModule"],
+      "additionalProperties": false,
+      "properties": {
+        "crossModule": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["edgeId", "fromModule", "toModule", "targetId"],
+            "additionalProperties": false,
+            "properties": {
+              "edgeId": { "$ref": "#/$defs/id" },
+              "fromModule": { "$ref": "#/$defs/id" },
+              "toModule": { "$ref": "#/$defs/id" },
+              "targetId": { "$ref": "#/$defs/id" }
+            }
+          }
+        }
+      }
+    },
+    "guardrailIndex": {
+      "title": "guardrail-index.json",
+      "description": "Each policy, constraint, boundary or guardrail-classified node, with the nodes it guards through guarded_by, governed_by or constrained_by relationships.",
+      "type": "object",
+      "required": ["guardrails"],
+      "additionalProperties": false,
+      "properties": {
+        "guardrails": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["nodeId", "guardedNodeIds", "relationshipIds"],
+            "additionalProperties": false,
+            "properties": {
+              "nodeId": { "$ref": "#/$defs/id" },
+              "guardedNodeIds": { "$ref": "#/$defs/ids" },
+              "relationshipIds": { "$ref": "#/$defs/ids" }
+            }
+          }
+        }
+      }
+    },
+    "graphSourceMap": {
+      "title": "graph-source-map.json",
+      "description": "Where each node, relationship and module is declared.",
+      "type": "object",
+      "required": ["locators"],
+      "additionalProperties": false,
+      "properties": {
+        "locators": { "type": "object", "additionalProperties": { "$ref": "stable-locators.schema.json" } }
+      }
+    }
+  }
+}
