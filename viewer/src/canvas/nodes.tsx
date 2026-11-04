@@ -1,6 +1,7 @@
 // Canvas boxes. Each is a button, so every node is reachable by keyboard and has an accessible name;
 // React Flow's own node focus is off. Handles are invisible anchors for edges drawn between sides.
 import { Handle, Position, type Node, type NodeProps } from '@xyflow/react';
+import { isContractRecord } from '../model/contracts';
 import { KINDS, KIND_ORDER } from '../model/kinds';
 import type { Role } from '../layout/views';
 import { Glyph } from '../ui/common';
@@ -43,7 +44,8 @@ export function ModuleNode({ data }: NodeProps<Node<ModuleNodeData>>) {
   if (!module) return null;
   const stats = model.moduleStats(module.id);
   const kinds = KIND_ORDER.filter(kind => stats.kinds.get(kind));
-  const label = `Module ${module.name}: ${stats.nodes} nodes, exports ${module.exports.length}, imports ${module.imports.length}${stats.open ? `, ${stats.open} open` : ''}. Open module.`;
+  const contracts = model.nodesIn(module.id).filter(isContractRecord);
+  const label = `Module ${module.name}: ${stats.nodes} nodes, exports ${module.exports.length}, imports ${module.imports.length}${contracts.length ? `, contracts ${contracts.map(node => node.name).join(', ')}` : ''}${stats.open ? `, ${stats.open} open` : ''}. Open module.`;
   return (
     <>
       <Anchors />
@@ -54,6 +56,7 @@ export function ModuleNode({ data }: NodeProps<Node<ModuleNodeData>>) {
           {kinds.map(kind => <span key={kind} title={`${stats.kinds.get(kind)} ${KINDS[kind].label}`}><Glyph kind={kind} /> {stats.kinds.get(kind)}</span>)}
         </div>
         <div className="io" aria-hidden="true">exports {module.exports.length} · imports {module.imports.length}</div>
+        {contracts.length > 0 && <div className="contract-names" aria-hidden="true"><Glyph kind="contract" /> {contracts.map(node => node.name).join(' · ')}</div>}
         {stats.open > 0 && <span className="badge warn open" aria-hidden="true">{stats.open} open</span>}
       </button>
     </>

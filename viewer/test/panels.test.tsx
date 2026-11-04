@@ -7,7 +7,9 @@ import { layoutView } from '../src/layout/layout';
 import { moduleView, pillId } from '../src/layout/views';
 import { loadFromSource } from '../src/load/project';
 import { Model, type Project } from '../src/model/model';
+import { contractGroups, contractRecords } from '../src/model/contracts';
 import { payloadsOf } from '../src/model/payloads';
+import { ContractsView } from '../src/panels/ContractsView';
 import { schemaTree } from '../src/model/schema-tree';
 import { ContractPanel, Structure } from '../src/panels/ContractPanel';
 import { Panel } from '../src/panels/Panels';
@@ -20,7 +22,7 @@ import { elk, example, exampleNames } from './helpers';
 const noop = (): void => {};
 const actions: Actions = {
   selectNode: noop, selectRel: noop, selectPair: noop, openModule: noop, openNeighborhood: noop,
-  showMap: noop, showAtlas: noop, setTab: noop, clearSelection: noop,
+  showMap: noop, showAtlas: noop, showContract: noop, showInGraph: noop, setTab: noop, clearSelection: noop,
 };
 
 function render(model: Model, route: Route, element: React.ReactElement): string {
@@ -174,4 +176,34 @@ test('contract edges carry their contract, so hovering or selecting one shows it
   expect(contractEdges.length).toBeGreaterThan(0);
   expect(new Set(contractEdges.map(edge => edge.data?.contract))).toEqual(new Set(['contract:task', 'contract:task-changed']));
   expect(flow.edges.filter(edge => !edge.data?.contract).every(edge => !edge.className?.includes('contract-edge'))).toBe(true);
+});
+
+describe.each(exampleNames)('%s Contracts view', name => {
+  test('lists every contract once, grouped by module, and opens the first by default', async () => {
+    const model = await example(name);
+    const records = contractRecords(model);
+    const contracts = model.graph.nodes.filter(node => node.kind === 'contract');
+    for (const node of contracts) expect(records).toContain(node);
+    expect(new Set(records.map(node => node.id)).size).toBe(records.length);
+    for (const group of contractGroups(model)) expect(group.records.every(node => (node.module ?? '') === group.id)).toBe(true);
+    const html = render(model, { view: 'contracts' }, <ContractsView />);
+    for (const node of records) expect(html).toContain(node.name.replace(/'/g, '&#x27;'));
+    if (records[0]) expect(html).toContain(`aria-label="${records[0].name.replace(/'/g, '&#x27;')} contract"`);
+  });
+});
+
+test('the Contracts view shows structure and example payload together for the selected contract', async () => {
+  const model = await example('task-manager');
+  const html = render(model, { view: 'contracts', node: 'contract:task-changed' }, <ContractsView />);
+  expect(html).toContain('aria-label="Task changed contract"');
+  expect(html).toContain('data-testid="structure"');
+  expect(html).toContain('&quot;eventId&quot;');
+  expect(html).toContain('aria-current="true"');
+  expect(html).toContain('Show in the graph');
+});
+
+test('the Contracts view round-trips in the URL hash', () => {
+  const route: Route = { view: 'contracts', node: 'contract:task' };
+  expect(formatHash(route)).toBe('#view=contracts&node=contract:task');
+  expect(parseHash('#view=contracts&node=contract:task')).toMatchObject(route);
 });

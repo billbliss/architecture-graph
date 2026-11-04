@@ -11,6 +11,10 @@ export interface Actions {
   openNeighborhood(id: string): void;
   showMap(): void;
   showAtlas(): void;
+  /** Open the Contracts view, on one contract when given. */
+  showContract(id?: string): void;
+  /** Show a node in the graph views (its module, or its neighborhood). */
+  showInGraph(id: string): void;
   setTab(tab: Tab): void;
   clearSelection(): void;
 }

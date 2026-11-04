@@ -1,8 +1,9 @@
 // The current view and selection live in the URL hash, so any view can be linked and back/forward
-// move between views: #module=module:tasks&node=contract:task-changed&tab=example
+// move between views: #module=module:tasks&node=contract:task-changed&tab=example, or
+// #view=contracts&node=contract:task-changed for the Contracts view.
 import { useCallback, useEffect, useState } from 'react';
 
-export type ViewName = 'map' | 'module' | 'node' | 'atlas';
+export type ViewName = 'map' | 'module' | 'node' | 'atlas' | 'contracts';
 export type Tab = 'structure' | 'example' | 'guarantees' | 'sources';
 const TABS: Tab[] = ['structure', 'example', 'guarantees', 'sources'];
 
@@ -24,7 +25,8 @@ export function parseHash(hash: string): Route {
   const get = (key: string): string | undefined => params.get(key) || undefined;
   const module = get('module');
   const focus = get('focus');
-  const view: ViewName = get('view') === 'atlas' ? 'atlas' : module ? 'module' : focus ? 'node' : 'map';
+  const named = get('view');
+  const view: ViewName = named === 'atlas' || named === 'contracts' ? named : module ? 'module' : focus ? 'node' : 'map';
   const tab = get('tab') as Tab | undefined;
   const pair = get('pair')?.split(',');
   return {
@@ -41,7 +43,7 @@ export function parseHash(hash: string): Route {
 /** Readable hash: IDs keep their colons. */
 export function formatHash(route: Route): string {
   const parts: [string, string | undefined][] = [
-    ['view', route.view === 'atlas' ? 'atlas' : undefined],
+    ['view', route.view === 'atlas' || route.view === 'contracts' ? route.view : undefined],
     ['module', route.view === 'module' ? route.module : undefined],
     ['focus', route.view === 'node' ? route.focus : undefined],
     ['node', route.node],

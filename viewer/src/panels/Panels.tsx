@@ -1,8 +1,9 @@
 import type { Relationship } from '@billbliss/architecture-graph/core';
 import type { ViewGraph } from '../layout/views';
 import { KINDS } from '../model/kinds';
-import { CONFORMANCE_NOTE, KindBadge, ModuleLink, NodeLink, References, RelLink, StatusBadge } from '../ui/common';
+import { CONFORMANCE_NOTE, Glyph, KindBadge, ModuleLink, NodeLink, References, RelLink, StatusBadge } from '../ui/common';
 import { useViewer } from '../ui/context';
+import { contractRecords } from '../model/contracts';
 import { PayloadSection } from '../ui/Payload';
 import { ContractPanel, hasSidecars } from './ContractPanel';
 
@@ -48,6 +49,7 @@ function GraphPanel({ view }: { view: ViewGraph }) {
       </div>
       <div className="section">Open questions ({open.length})</div>
       {open.length ? <ul className="list">{open.map(node => <li key={node.id} className="wide"><NodeLink id={node.id} /></li>)}</ul> : <p className="muted">None recorded.</p>}
+      <ContractList />
       {READING[view.kind] && (
         <>
           <div className="section">Reading this view</div>
@@ -58,6 +60,36 @@ function GraphPanel({ view }: { view: ViewGraph }) {
       <p>{errors ? `${errors} problems found by the same validation as ag validate.` : 'Passes the same validation as ag validate.'}</p>
       <p className="note-box">{CONFORMANCE_NOTE}</p>
     </div>
+  );
+}
+
+const CONTRACT_PREVIEW = 8;
+
+/** The graph's contracts, each opening in the Contracts view. */
+function ContractList() {
+  const { actions, model } = useViewer();
+  const records = contractRecords(model);
+  if (!records.length) return null;
+  const shown = records.slice(0, CONTRACT_PREVIEW);
+  return (
+    <>
+      <div className="section">Contracts ({records.length})</div>
+      <ul className="list">
+        {shown.map(node => (
+          <li key={node.id} className="wide">
+            <span>
+              <button type="button" className="link" onClick={() => actions.showContract(node.id)}>
+                <Glyph kind={node.kind} />{node.name}
+              </button>
+              {node.references.some(ref => ref.kind === 'example') && <span className="payload-mark inline" title="Has an example payload">{'{ }'}</span>}
+            </span>
+          </li>
+        ))}
+      </ul>
+      <button type="button" className="action" onClick={() => actions.showContract()}>
+        {records.length > shown.length ? `See all ${records.length} contracts` : 'Open the Contracts view'}
+      </button>
+    </>
   );
 }
 

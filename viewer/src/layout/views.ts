@@ -49,7 +49,7 @@ export interface ViewGraph {
 }
 
 export const SIZES = {
-  module: { width: 248, height: 124 },
+  module: { width: 248, height: 140 },
   node: { width: 200, height: 46 },
   contract: { width: 172, height: 30 },
   atlas: { width: 208, height: 30 },

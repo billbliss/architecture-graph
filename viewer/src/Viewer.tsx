@@ -4,6 +4,8 @@ import { useLayout } from './layout/engine';
 import { atlasView, mapView, moduleView, neighborhoodView, pillId, type ViewGraph } from './layout/views';
 import type { ExampleInfo } from './load/examples';
 import type { Model } from './model/model';
+import { isContractRecord } from './model/contracts';
+import { ContractsView } from './panels/ContractsView';
 import { Panel } from './panels/Panels';
 import { useRoute, type Route } from './state/route';
 import { Legend, TopBar } from './ui/Chrome';
@@ -52,15 +54,19 @@ export function Viewer({ model, examples, example }: { model: Model; examples: E
       if (node?.module && model.modules.has(node.module)) return { view: 'module', module: node.module };
       return { view: 'node', focus: id };
     };
+    const inContracts = route.view === 'contracts';
     return {
       selectNode: id => {
-        if (kind === 'atlas' || (kind !== 'map' && shows(id))) navigate({ ...here, node: id });
+        const node = model.node(id);
+        if (inContracts) navigate(node && isContractRecord(node) ? { view: 'contracts', node: id } : { ...homeOf(id), node: id });
+        else if (kind === 'atlas' || (kind !== 'map' && shows(id))) navigate({ ...here, node: id });
         else navigate({ ...homeOf(id), node: id });
       },
       selectRel: id => {
         const rel = model.relationships.get(id);
         if (!rel) return;
-        if (kind === 'atlas' || (kind !== 'map' && shows(rel.from) && shows(rel.to))) navigate({ ...here, rel: id });
+        if (inContracts) navigate({ ...homeOf(rel.from), rel: id });
+        else if (kind === 'atlas' || (kind !== 'map' && shows(rel.from) && shows(rel.to))) navigate({ ...here, rel: id });
         else navigate({ ...homeOf(rel.from), rel: id });
       },
       selectPair: key => navigate({ view: 'map', pair: key }),
@@ -68,6 +74,8 @@ export function Viewer({ model, examples, example }: { model: Model; examples: E
       openNeighborhood: id => navigate({ view: 'node', focus: id, node: id }),
       showMap: () => navigate({ view: 'map' }),
       showAtlas: () => navigate({ view: 'atlas', node: route.node, rel: route.rel }),
+      showContract: id => navigate({ view: 'contracts', node: id }),
+      showInGraph: id => navigate({ ...homeOf(id), node: id }),
       setTab: tab => navigate({ ...route, tab }, { replace: true }),
       clearSelection: () => navigate(here),
     };
@@ -77,7 +85,7 @@ export function Viewer({ model, examples, example }: { model: Model; examples: E
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
       event.preventDefault();
       setSearching(true);
-    } else if (event.key === 'Escape' && !searching && (route.node || route.rel || route.pair)) {
+    } else if (event.key === 'Escape' && !searching && route.view !== 'contracts' && (route.node || route.rel || route.pair)) {
       actions.clearSelection();
     }
   }, [actions, route, searching]);
@@ -87,8 +95,8 @@ export function Viewer({ model, examples, example }: { model: Model; examples: E
   }, [onKey]);
 
   useEffect(() => {
-    document.title = `${model.graph.title} · Architecture Graph viewer`;
-  }, [model]);
+    document.title = `${route.view === 'contracts' ? 'Contracts · ' : ''}${model.graph.title} · Architecture Graph viewer`;
+  }, [model, route.view]);
 
   const context = useMemo(() => ({ model, route, actions }), [model, route, actions]);
   const ready = layout && layout.view === view ? layout : undefined;
@@ -97,14 +105,14 @@ export function Viewer({ model, examples, example }: { model: Model; examples: E
     <ViewerContext.Provider value={context}>
       <div className="app">
         <TopBar view={view} examples={examples} example={example} onSearch={() => setSearching(true)} />
-        <main className="body">
+        {route.view === 'contracts' ? <main className="body contracts-body"><ContractsView /></main> : <main className="body">
           {ready && 'layout' in ready
             ? <Canvas view={view} layout={ready.layout} label={label} />
             : <section className="canvas" aria-label={label}><div className="status-line" role="status">{ready && 'error' in ready ? `Layout failed: ${ready.error}` : 'Laying out…'}</div></section>}
           <aside className="panel" aria-label="Details">
             <Panel view={view} />
           </aside>
-        </main>
+        </main>}
         <Legend />
       </div>
       <Search open={searching} onClose={() => setSearching(false)} />

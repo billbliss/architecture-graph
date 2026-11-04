@@ -2,6 +2,7 @@
 import { KINDS, KIND_ORDER } from '../model/kinds';
 import type { ViewGraph } from '../layout/views';
 import type { ExampleInfo } from '../load/examples';
+import { CONTRACTS_INTRO } from '../panels/ContractsView';
 import { Glyph } from './common';
 import { useViewer } from './context';
 
@@ -36,6 +37,7 @@ export function ThemeToggle() {
 
 export function TopBar({ view, examples, example, onSearch }: { view: ViewGraph; examples: ExampleInfo[]; example: string; onSearch: () => void }) {
   const { model, route, actions } = useViewer();
+  const contracts = route.view === 'contracts';
   const selected = route.node ? model.node(route.node) : undefined;
   const mac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform);
   return (
@@ -51,11 +53,12 @@ export function TopBar({ view, examples, example, onSearch }: { view: ViewGraph;
       </select>
       <nav className="crumbs" aria-label="Breadcrumbs">
         <button type="button" onClick={() => (model.hasModules ? actions.showMap() : actions.showAtlas())}>{model.graph.title}</button>
-        {view.kind === 'atlas' && <><span className="sep" aria-hidden="true">›</span><span className="here">Atlas</span></>}
-        {view.kind === 'module' && view.subject && (
+        {contracts && <><span className="sep" aria-hidden="true">›</span><span className="here">Contracts</span></>}
+        {!contracts && view.kind === 'atlas' && <><span className="sep" aria-hidden="true">›</span><span className="here">Atlas</span></>}
+        {!contracts && view.kind === 'module' && view.subject && (
           <><span className="sep" aria-hidden="true">›</span><button type="button" onClick={() => actions.openModule(view.subject!)}>{model.modules.get(view.subject)?.name}</button></>
         )}
-        {view.kind === 'neighborhood' && view.subject && (
+        {!contracts && view.kind === 'neighborhood' && view.subject && (
           <><span className="sep" aria-hidden="true">›</span><span className="here">Around {model.node(view.subject)?.name}</span></>
         )}
         {selected && (view.kind !== 'neighborhood' || selected.id !== view.subject) && (
@@ -63,8 +66,9 @@ export function TopBar({ view, examples, example, onSearch }: { view: ViewGraph;
         )}
       </nav>
       <div className="seg" role="group" aria-label="View">
-        {model.hasModules && <button type="button" aria-pressed={view.kind !== 'atlas'} onClick={actions.showMap}>Map</button>}
-        <button type="button" aria-pressed={view.kind === 'atlas'} onClick={actions.showAtlas}>Atlas</button>
+        {model.hasModules && <button type="button" aria-pressed={!contracts && view.kind !== 'atlas'} onClick={actions.showMap}>Map</button>}
+        <button type="button" aria-pressed={contracts} onClick={() => actions.showContract()} title={CONTRACTS_INTRO}>Contracts</button>
+        <button type="button" aria-pressed={!contracts && view.kind === 'atlas'} onClick={actions.showAtlas}>Atlas</button>
       </div>
       <button type="button" className="search-button" onClick={onSearch} aria-keyshortcuts={mac ? 'Meta+K' : 'Control+K'}>
         <span aria-hidden="true">⌕</span> Jump to… <kbd>{mac ? '⌘K' : 'Ctrl K'}</kbd>

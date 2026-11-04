@@ -2,6 +2,7 @@
 // sidecar), example payloads, guarantees and sources. Data objects and artifacts with sidecars use it too.
 import type { GraphNode, Relationship } from '@billbliss/architecture-graph/core';
 import { useId } from 'react';
+import { openDecisionCount } from '../model/contracts';
 import { pretty } from '../model/payloads';
 import { schemaTree, type SchemaField } from '../model/schema-tree';
 import type { Tab } from '../state/route';
@@ -18,17 +19,14 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'sources', label: 'Sources' },
 ];
 
-export function ContractPanel({ node }: { node: GraphNode }) {
-  const { model, route, actions } = useViewer();
-  const tab = route.tab ?? 'structure';
-  const base = useId();
+/** Open decisions, provider and consumers, and whether consumers are declared or derived. */
+export function ContractSummary({ node }: { node: GraphNode }) {
+  const { model } = useViewer();
   const ends = model.contractEnds(node.id);
-  const affects = (model.incoming.get(node.id) ?? []).filter(rel => rel.kind === 'affects');
-  const openDecisions = affects.filter(rel => rel.status === 'unresolved' || model.node(rel.from)?.status === 'unresolved').length;
+  const openDecisions = openDecisionCount(model, node.id);
   const vias = [...new Map(ends.consumers.filter(item => item.via).map(item => [item.via!.id, item.via!])).values()];
   return (
-    <div>
-      <NodeHeader id={node.id} />
+    <>
       {openDecisions > 0 && <div className="kicker"><span className="badge warn">{openDecisions} open decision{openDecisions > 1 ? 's' : ''} affect{openDecisions > 1 ? '' : 's'} it</span></div>}
       <div className="ends">
         <div className="side">
@@ -44,6 +42,19 @@ export function ContractPanel({ node }: { node: GraphNode }) {
       {ends.consumers.length > 0 && (ends.derived
         ? <p className="kicker"><span className="badge derived">derived</span><span className="muted">Consumers come from dependencies on {vias.map((via, index) => <span key={via.id}>{index > 0 && ', '}<NodeLink id={via.id} /></span>)}, not from a declared use of this contract.</span></p>
         : <p className="kicker"><span className="badge ok">declared</span><span className="muted">Each consumer has a <code>consumes</code> or <code>depends_on</code> relationship to this contract.</span></p>)}
+    </>
+  );
+}
+
+export function ContractPanel({ node }: { node: GraphNode }) {
+  const { model, route, actions } = useViewer();
+  const tab = route.tab ?? 'structure';
+  const base = useId();
+  const affects = (model.incoming.get(node.id) ?? []).filter(rel => rel.kind === 'affects');
+  return (
+    <div>
+      <NodeHeader id={node.id} />
+      <ContractSummary node={node} />
       <p>{node.description}</p>
       <div className="tabs" role="tablist" aria-label="Contract details">
         {TABS.map(item => (
@@ -143,7 +154,7 @@ export function Structure({ node }: { node: GraphNode }) {
   );
 }
 
-function Examples({ node }: { node: GraphNode }) {
+export function Examples({ node }: { node: GraphNode }) {
   const { model } = useViewer();
   const examples = node.references.filter(ref => ref.kind === 'example');
   if (!examples.length) return <div className="gap">No example payload is declared for this {node.kind.replace('_', ' ')}.</div>;
@@ -164,7 +175,7 @@ function Examples({ node }: { node: GraphNode }) {
   );
 }
 
-function Guarantees({ node, affects }: { node: GraphNode; affects: Relationship[] }) {
+export function Guarantees({ node, affects, describe = true }: { node: GraphNode; affects: Relationship[]; describe?: boolean }) {
   const { model } = useViewer();
   const preserved = (model.incoming.get(node.id) ?? []).filter(rel => rel.kind === 'preserves');
   const rules = (model.outgoing.get(node.id) ?? []).filter(rel => rel.kind === 'constrained_by' || rel.kind === 'governed_by' || rel.kind === 'guarded_by');
@@ -182,7 +193,7 @@ function Guarantees({ node, affects }: { node: GraphNode; affects: Relationship[
   );
   return (
     <>
-      <p>{node.description}</p>
+      {describe && <p>{node.description}</p>}
       {group('Preserved by', preserved, 'from')}
       {group('Decisions and records that affect it', affects, 'from')}
       {group('Rules it follows', rules, 'to')}
