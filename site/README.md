@@ -29,19 +29,23 @@ npm run build     # static output in site/dist, then the link check
 npm run check     # Astro and TypeScript diagnostics
 ```
 
-## Cloudflare Pages
+## Cloudflare
 
-Connect the GitHub repository in the Cloudflare dashboard (Workers & Pages, Create, Pages, Connect to Git) with these settings:
+The site deploys to Cloudflare Workers as static assets: `wrangler.jsonc` names the Worker, points it at `dist/` and declares the `architecturegraph.dev` custom domain. There is no Worker script.
 
-| Setting | Value |
+Builds are connected in the dashboard under the Worker's Settings, Build, Connect to a repository. Every command starts with `cd site`, so no root-directory setting is needed:
+
+| Field | Value |
 | --- | --- |
+| Git account / Repository | `billbliss` / `architecture-graph` |
 | Production branch | `main` |
-| Framework preset | Astro |
-| Root directory | `site` |
-| Build command | `npm run pages:build` |
-| Build output directory | `dist` |
-| Environment variable | `NODE_VERSION` = `24` |
+| Build command | `cd site && npm run cf:build` |
+| Deploy command (production branch) | `cd site && npx wrangler deploy` |
+| Preview command (other branches) | `cd site && npx wrangler preview` |
+| Build variable | `NODE_VERSION` = `24` |
 
-Pages installs the site's dependencies, then `pages:build` installs and builds the toolkit in the repository root and builds the site. Pull requests get preview deployments; `main` deploys to production. Add `architecturegraph.dev` under the project's Custom domains once the first production build succeeds.
+`cf:build` installs and builds the toolkit in the repository root, installs the site's dependencies and builds the site. A push to `main` deploys to production. Other branches, including pull requests, get a named preview with its own URL through `wrangler preview` (open beta in Wrangler 4.157). `wrangler deploy` creates the custom domain's DNS record and certificate when needed.
+
+To deploy by hand from a checkout: `npx wrangler login`, then `npm run build && npm run deploy` in `site/`. `npx wrangler deploy --dry-run` checks the configuration without publishing.
 
 The viewer at `/view` is a placeholder until delivery stage 3.
