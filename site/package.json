@@ -12,7 +12,9 @@
     "build": "astro build && node scripts/check-links.mjs",
     "preview": "astro preview",
     "check": "astro check",
-    "pages:build": "npm run toolkit && npm run build"
+    "cf:build": "npm run toolkit && npm ci && npm run build",
+    "deploy": "wrangler deploy",
+    "preview:upload": "wrangler versions upload"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.12",
@@ -35,6 +37,10 @@
   },
   "allowScripts": {
     "esbuild": false,
-    "fsevents": false
+    "fsevents": false,
+    "workerd": false
+  },
+  "devDependencies": {
+    "wrangler": "^4.157.0"
   }
 }

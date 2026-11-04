@@ -63,7 +63,7 @@ The site lives in this repository under `site/`. Its build reads `docs/`, `examp
 - **The viewer is a standalone bundle.** It is built as its own static React application with no dependency on Astro or the rest of the site, and the site serves it at `/view`. The same bundle can later be shipped and served by the toolkit (see `ag view` under open questions), so nothing in the viewer may assume it is running on architecturegraph.dev.
 - **Viewer libraries.** [React Flow](https://reactflow.dev/) for the interactive canvas and [elkjs](https://github.com/kieler/elkjs) for layered layout, run in a web worker so large graphs do not block the page.
 - **Docs rendering.** Links between `docs/` pages become site links. Links to other repository files (source, examples, schema) become GitHub links at the commit the site was built from. Pages under `docs/history/` and `docs/specs/` are published but kept out of the main navigation.
-- **Hosting.** Cloudflare Pages builds `site/` on every push. Pull requests get preview deployments; `main` deploys to architecturegraph.dev.
+- **Hosting.** Cloudflare Workers, serving the built site as static assets with no Worker script, builds `site/` on every push through Workers Builds. Other branches upload preview versions with their own URLs; `main` deploys to architecturegraph.dev. (The spec originally named Cloudflare Pages; new projects in the dashboard are created as Workers.)
 - **Appearance.** Dark first, with a light theme that follows the visitor's system setting and can be switched. The node-kind colors from the viewer form the site's accent palette.
 
 ## Viewer
@@ -145,7 +145,7 @@ Status is visible everywhere: proposed nodes are outlined dashed, unresolved one
 
 ## Delivery in stages
 
-1. **Site skeleton.** `site/` with Astro, home page with the contract graphic, concepts page, rendered docs, examples page, Cloudflare Pages deployment with previews.
+1. **Site skeleton.** `site/` with Astro, home page with the contract graphic, concepts page, rendered docs, examples page, Cloudflare deployment with previews.
 2. **Browser-safe core.** The AG change above, released with tests that run validation in a browser-like environment.
 3. **Viewer, bundled examples.** Module map, module view, contract and node panels, Atlas, search, URL state, using the bundled examples only.
 4. **Viewer, any graph.** Graph and configuration URLs with configuration discovery, the local launch page and folder loading, single-file loading, diagnostics panel, GitHub source links.

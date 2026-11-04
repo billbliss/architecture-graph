@@ -1,0 +1,18 @@
+// Cloudflare Workers static-assets deployment for architecturegraph.dev. The site is static: there is
+// no Worker script, only the files Astro builds into dist/. The name must match the Worker created in
+// the Cloudflare dashboard.
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "architecture-graph",
+  "compatibility_date": "2026-11-03",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  },
+  "routes": [
+    { "pattern": "architecturegraph.dev", "custom_domain": true }
+  ],
+  "workers_dev": true,
+  "preview_urls": true
+}
