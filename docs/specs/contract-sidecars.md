@@ -1,6 +1,6 @@
 # Contract sidecars
 
-**Status:** Implemented, not yet released. Target release: 0.4.0. Graph and configuration format: **1** (additive vocabulary).
+**Status:** Released in 0.4.0. Graph and configuration format: **1** (additive vocabulary).
 
 ## Problem
 

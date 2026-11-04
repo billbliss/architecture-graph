@@ -193,6 +193,7 @@
     "component:structural-validator": {
       "inbound": [
         "relationship:browser-core-validator",
+        "relationship:original-compatibility-validator",
         "relationship:sidecars-validator"
       ],
       "outbound": [
@@ -208,6 +209,7 @@
       "inbound": [
         "relationship:format-source-format",
         "relationship:human-model",
+        "relationship:original-compatibility-format",
         "relationship:schema-authority",
         "relationship:sidecars-format",
         "relationship:validator-format"
@@ -287,6 +289,13 @@
       "inbound": [],
       "outbound": [
         "relationship:marketplace-installer"
+      ]
+    },
+    "decision:original-graph-compatibility": {
+      "inbound": [],
+      "outbound": [
+        "relationship:original-compatibility-format",
+        "relationship:original-compatibility-validator"
       ]
     },
     "decision:sidecar-maintenance-workflow": {

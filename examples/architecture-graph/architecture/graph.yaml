@@ -1,7 +1,7 @@
 schemaVersion: "1"
 id: graph:architecture-graph
 title: Architecture Graph architecture
-description: "AG 0.3.1: declarations, context, interfaces and delivery. Software ownership is
+description: "AG 0.4.0: declarations, context, interfaces and delivery. Software ownership is
   modeled; human assignments remain open. Excludes predecessor internals, explorer UI and
   implementation assurance."
 nodes:
@@ -135,7 +135,7 @@ nodes:
         path: src/model.ts
       - kind: implementation
         path: src/validation.ts
-      - kind: implementation
+      - kind: test
         path: test/consumer.mjs
       - kind: design
         path: docs/compatibility.md
@@ -172,6 +172,25 @@ nodes:
         path: src/schema.ts
       - kind: implementation
         path: src/artifacts.ts
+  - id: decision:original-graph-compatibility
+    kind: decision
+    name: Original AG graphs keep their IDs and test links
+    description: "Chosen and implemented: a test reference kind records tests that exercise a record
+      without satisfying implemented status, and policy, constraint and boundary nodes may use the
+      original guardrail: ID prefix. Both stay within format 1, so a graph from the original AG can
+      move to the standalone toolkit without renaming IDs or relabeling tests as implementation.
+      Relationship-kind rules are not relaxed; such graphs fix invalid edges instead."
+    status: implemented
+    module: module:declarations
+    references:
+      - kind: design
+        path: docs/compatibility.md
+      - kind: implementation
+        path: src/schema.ts
+      - kind: implementation
+        path: src/validation.ts
+      - kind: test
+        path: test/foundation.test.js
   - id: decision:authored-format-source
     kind: decision
     name: Code-first or schema-first authored format?
@@ -211,7 +230,7 @@ nodes:
         path: src/validation.ts
       - kind: implementation
         path: src/sidecars.ts
-      - kind: implementation
+      - kind: test
         path: test/core.test.js
   - id: decision:single-canonical-file
     kind: decision
@@ -290,7 +309,7 @@ nodes:
         path: src/indexes.ts
       - kind: implementation
         path: src/model.ts
-      - kind: implementation
+      - kind: test
         path: test/foundation.test.js
       - kind: design
         path: docs/foundation.md
@@ -463,7 +482,7 @@ nodes:
     references:
       - kind: implementation
         path: src/skills.ts
-      - kind: implementation
+      - kind: test
         path: test/toolkit.test.js
       - kind: design
         path: docs/skill-installation.md
@@ -539,7 +558,7 @@ nodes:
     references:
       - kind: implementation
         path: package.json
-      - kind: implementation
+      - kind: test
         path: test/consumer.mjs
       - kind: implementation
         path: scripts/test-package.mjs
@@ -1026,7 +1045,7 @@ relationships:
     references:
       - kind: implementation
         path: src/artifacts.ts
-      - kind: implementation
+      - kind: test
         path: test/toolkit.test.js
   - id: relationship:generator-proof
     kind: constrained_by
@@ -1037,7 +1056,7 @@ relationships:
     references:
       - kind: implementation
         path: src/artifacts.ts
-      - kind: implementation
+      - kind: test
         path: test/consumer.mjs
   - id: relationship:entrypoints-project
     kind: depends_on
@@ -1147,7 +1166,7 @@ relationships:
     references:
       - kind: implementation
         path: package.json
-      - kind: implementation
+      - kind: test
         path: test/consumer.mjs
   - id: relationship:build-skill
     kind: consumes
@@ -1254,6 +1273,26 @@ relationships:
         path: docs/specs/contract-sidecars.md
       - kind: implementation
         path: src/sidecars.ts
+  - id: relationship:original-compatibility-format
+    kind: affects
+    from: decision:original-graph-compatibility
+    to: contract:authored-format
+    description: Adds the test reference kind and the guardrail ID prefix within format 1.
+    status: implemented
+    references:
+      - kind: design
+        path: docs/compatibility.md
+      - kind: implementation
+        path: src/schema.ts
+  - id: relationship:original-compatibility-validator
+    kind: affects
+    from: decision:original-graph-compatibility
+    to: component:structural-validator
+    description: Identifier checks accept the guardrail prefix for rule kinds only; implemented status still requires an implementation reference.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/validation.ts
   - id: relationship:format-source-format
     kind: affects
     from: decision:authored-format-source

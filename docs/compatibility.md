@@ -4,9 +4,11 @@ AG helps you keep a design record understandable and internally consistent. It c
 
 For example, a formatter can be recorded as the authority for greeting text while another component secretly builds its own greeting. AG checks the declaration, not the runtime behavior. Application tests and review still matter. The hello-world tests deliberately demonstrate that difference.
 
-## The 0.3.1 toolkit
+## The 0.4.0 toolkit
 
-The toolkit and skill are **0.3.1**. Graph and configuration format **1** remain readable; generated artifacts use format **2**. New projects start with one YAML file. The toolkit also reads existing standalone JSON graphs, so changing formats is optional. Older toolkit versions may reject the added fields and vocabulary; compatibility is from 0.1 data to the 0.3 reader.
+The toolkit and skill are **0.4.0**. Graph and configuration format **1** remain readable; generated artifacts use format **2**. New projects start with one YAML file. The toolkit also reads existing standalone JSON graphs, so changing formats is optional. Older toolkit versions may reject the added fields and vocabulary; compatibility is from 0.1 data to the 0.4 reader.
+
+0.4.0 adds contract sidecars, the browser-safe validation core, a `test` reference kind and the original `guardrail:` ID prefix, described below. Generated `summary.json` and `guidance.md` change shape, so regenerate after upgrading.
 
 0.3.1 adds the toolkit’s own architecture example, clarifies the coding-agent workflow, and prepares approval-based npm releases. Graph, configuration and generated formats are unchanged.
 
@@ -16,23 +18,29 @@ TypeScript is now the editable implementation source. npm consumers run the comp
 
 There is one authored graph per configuration. Logical modules, when useful, are groups inside that file. The graph can grow while node, relationship, file, guardrail and module indexes provide focused access. Context output has explicit limits and reports truncation. Loading still parses and validates the entire authored file; free-text queries scan records. These are local file tools, not an incremental graph database.
 
-## Unreleased
+## Added in 0.4.0
 
 ### Contract sidecars
 
-The next release adds `schema` and `example` reference kinds so that contract, data_object and artifact nodes can carry a JSON Schema and example payloads, which validation checks against each other. See [the specification](specs/contract-sidecars.md) and [commands and files](reference.md#contract-schemas-and-examples). The graph format stays **1**: graphs that use the new reference kinds need this toolkit version, and older versions reject them, as with earlier vocabulary additions.
+0.4.0 adds `schema` and `example` reference kinds so that contract, data_object and artifact nodes can carry a JSON Schema and example payloads, which validation checks against each other. See [the specification](specs/contract-sidecars.md) and [commands and files](reference.md#contract-schemas-and-examples). The graph format stays **1**: graphs that use the new reference kinds need 0.4.0 or later, and older versions reject them, as with earlier vocabulary additions.
 
 `summary.json` gains a `sidecars` section and `guidance.md` gains one sentence about sidecar coverage, so existing generated output is stale after upgrading. Run `ag generate` once and commit the result. Ajv and ajv-formats become runtime dependencies for checking sidecars; Zod still defines and validates the graph format itself.
 
+### Test references and original guardrail IDs
+
+References gain a `test` kind for tests that exercise a record. Tests are indexed for `ag context --file` like any reference, but only an `implementation` reference satisfies `implemented` status.
+
+`policy`, `constraint` and `boundary` nodes may use the original AG `guardrail:` ID prefix instead of their kind. Other kinds still need a prefix that matches the kind. Both changes let an original AG graph keep its IDs and its test links when it moves to the standalone toolkit; the format stays **1**, and older toolkit versions reject graphs that use them.
+
 ### Browser-safe validation core
 
-The next release adds `@billbliss/architecture-graph/core`, an entry point that runs the same validation as `ag validate`, including sidecar checks, without Node: rules read files through a file source, so a browser can supply files from a folder, `fetch` or memory. See [the library reference](reference.md#validating-without-node-the-browser-safe-core). The core offers an asynchronous `validateGraph(graph, source)` and `sidecarValidator(source, path)` alongside synchronous `validateGraphSync` and `sidecarValidatorSync`. The main entry point keeps its synchronous `validateGraph(graph, root)` and `sidecarValidator(root, path)` and adds `nodeFileSource`.
+0.4.0 adds `@billbliss/architecture-graph/core`, an entry point that runs the same validation as `ag validate`, including sidecar checks, without Node: rules read files through a file source, so a browser can supply files from a folder, `fetch` or memory. See [the library reference](reference.md#validating-without-node-the-browser-safe-core). The core offers an asynchronous `validateGraph(graph, source)` and `sidecarValidator(source, path)` alongside synchronous `validateGraphSync` and `sidecarValidatorSync`. The main entry point keeps its synchronous `validateGraph(graph, root)` and `sidecarValidator(root, path)` and adds `nodeFileSource`.
 
 Two diagnostic messages change so that they are the same in every environment and no longer include absolute local paths. A reference to a missing file now reads `<path>: file not found` instead of Node's `ENOENT: no such file or directory, stat '<absolute path>'`. A schema sidecar path that names a directory now reads `<path>: not a file` instead of Node's `EISDIR` text. Codes and locations are unchanged, as is every other message. Graph, configuration and generated formats are unchanged.
 
 ## Upgrade an existing standalone project
 
-1. Install the 0.3.1 package and refresh the installed skill after reviewing local changes: `ag skill install --agent claude --force`, or `--agent codex`.
+1. Install the 0.4.0 package and refresh the installed skill after reviewing local changes: `ag skill install --agent claude --force`, or `--agent codex`.
 2. Keep the existing JSON graph and configuration if desired; they remain supported. `ag init` is for new projects and will not overwrite your files.
 3. Run `ag validate`, then `ag generate` to rebuild the new indexes and briefing. Review the changes and run `ag check`.
 4. If you prefer YAML, convert the same graph data to one `.yaml` file and update `config.graph`. Compare the loaded data before removing the JSON file. Do not maintain two independent authored copies.
@@ -43,7 +51,7 @@ Zod supplies runtime validation and TypeScript types from the same schemas. Expo
 
 ## Compatibility with the original AG
 
-The original AG kinds (`workflow`, `adapter`, `data_object`, `constraint`, `evidence_surface`) and relationships (`adapts`, `validates`, `supersedes`, `emits_evidence`, `guarded_by`) are accepted alongside the standalone vocabulary. The original classification labels can be recorded, but do not certify behavior. Both underscore and hyphen ID prefixes for original underscore kinds are accepted without renaming IDs.
+The original AG kinds (`workflow`, `adapter`, `data_object`, `constraint`, `evidence_surface`) and relationships (`adapts`, `validates`, `supersedes`, `emits_evidence`, `guarded_by`) are accepted alongside the standalone vocabulary. The original classification labels can be recorded, but do not certify behavior. Both underscore and hyphen ID prefixes for original underscore kinds are accepted without renaming IDs, as is the original `guardrail:` prefix for `policy`, `constraint` and `boundary` nodes.
 
 This is vocabulary continuity, not a promise to load the predecessor application’s YAML unchanged. The standalone graph still uses its own lifecycle, reference and top-level fields. There is no automatic migration from that private application. The exact preservation/exclusion decisions are in [the foundation inventory](foundation.md).
 

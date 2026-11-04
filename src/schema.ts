@@ -8,13 +8,15 @@ export const NodeKindSchema = z.enum([
   // Original AG vocabulary remains explicit; no silent renaming of existing IDs.
   'data_object', 'evidence_surface', 'adapter', 'workflow', 'constraint',
 ]);
+/** Rule-like kinds: indexed as guardrails, and may use the original `guardrail:` ID prefix. */
+export const GUARDRAIL_KINDS: readonly NodeKind[] = ['policy', 'constraint', 'boundary'];
 export const RelationshipKindSchema = z.enum([
   'owns', 'provides', 'depends_on', 'consumes', 'produces', 'preserves',
   'governed_by', 'authority_for', 'constrained_by', 'affects',
   'adapts', 'validates', 'supersedes', 'emits_evidence', 'guarded_by',
 ]);
 export const ReferenceSchema = z.strictObject({
-  kind: z.enum(['design', 'implementation', 'schema', 'example']), path: text, description: text.optional(),
+  kind: z.enum(['design', 'implementation', 'test', 'schema', 'example']), path: text, description: text.optional(),
 });
 const status = z.enum(['proposed', 'implemented', 'unresolved']);
 export const NodeSchema = z.strictObject({
