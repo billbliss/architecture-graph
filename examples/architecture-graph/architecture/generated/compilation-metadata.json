@@ -2,10 +2,10 @@
   "artifactVersion": "2",
   "toolVersion": "0.3.1",
   "graphId": "graph:architecture-graph",
-  "declarationDigest": "b679cbd0056ac1c8132eec20d54a79d3e45a4ef7c985ce850992383ec43eee72",
+  "declarationDigest": "a31f4294dc4a836d33bc70f6e9c832e1347fab4308a0d885fccfe78cc901b367",
   "checksums": {
-    "graph-index.json": "f78aced805378500a38caacdd11c1c7b495591acad76ee7ef607b4a2a4776bd1",
-    "source-context-index.json": "203ccaf5364c27118a0a54340ecde9ea75e12ff527ba9f60d3e215450eb1c2dd",
+    "graph-index.json": "a28591457fbd41015530a6f1b2a32e2357e4f7ed45af955ba0fc0a531e9f8e27",
+    "source-context-index.json": "1b50ba99993247eb9e62382982e54213b065a3c495dd00e504a1c7a21b1d31ca",
     "neighborhood-index.json": "98d2f5836899886a00e4ab864b4e8ad44adcc6e5edaee118dbc7bc89b42e7dcd",
     "module-ownership-map.json": "1d4db828046b730021476b784de3438678a7566477fd0a17d94f22500b41b500",
     "cross-module-dependency-index.json": "ed1ad9705db8e73ccd1dec47d3ac446f930e3c9d44952255a2c487b1de492a58",

@@ -1,7 +1,7 @@
 {
   "artifactVersion": "2",
   "toolVersion": "0.3.1",
-  "declarationDigest": "b679cbd0056ac1c8132eec20d54a79d3e45a4ef7c985ce850992383ec43eee72",
+  "declarationDigest": "a31f4294dc4a836d33bc70f6e9c832e1347fab4308a0d885fccfe78cc901b367",
   "graphId": "graph:architecture-graph",
   "title": "Architecture Graph architecture",
   "scope": "AG 0.3.1: declarations, context, interfaces and delivery. Software ownership is modeled; human assignments remain open. Excludes predecessor internals, explorer UI and implementation assurance.",

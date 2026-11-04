@@ -1,6 +1,6 @@
 # Website and viewer
 
-**Status:** In progress: stage 1 (site skeleton) and stage 2 (browser-safe core) are implemented; the viewer is not. Domain: architecturegraph.dev.
+**Status:** In progress: stage 1 (site skeleton), stage 2 (browser-safe core) and stage 3 (the viewer, bundled examples only) are implemented. Loading any graph, the diagnostics panel and the polish stage are not. Domain: architecturegraph.dev.
 
 ## Goals
 
@@ -148,6 +148,7 @@ Status is visible everywhere: proposed nodes are outlined dashed, unresolved one
 1. **Site skeleton.** `site/` with Astro, home page with the contract graphic, concepts page, rendered docs, examples page, Cloudflare deployment with previews.
 2. **Browser-safe core.** The AG change above, released with tests that run validation in a browser-like environment.
 3. **Viewer, bundled examples.** Module map, module view, contract and node panels, Atlas, search, URL state, using the bundled examples only.
+   *Status: implemented.* The viewer is its own package in [`viewer/`](../../viewer/README.md), a Vite and React application with no dependency on Astro; the site copies its build into `/view/`. Every graph opens through one load path: a file source supplies the configuration, the graph and the files validation reads, and the toolkit's core validates. For the bundled examples the source is a recording made at build time by running that load path against the real files, so stage 4 adds folder and `fetch` sources without changing anything after loading. `examples/catalog.json` lists the bundled examples for both the site and the viewer, and the palette lives in the viewer and is imported by the site. The map orients each pair of modules by which one uses the other more, ignoring `affects`, which records influence rather than use; pairs joined only by `affects` are drawn but do not decide layering. Nodes selected from a panel or search open the view that shows them: their module, or their neighborhood when they have none. The viewer reports whether the graph passes validation; listing diagnostics is the stage 4 diagnostics panel. Every node is a button and every map count a button; plain relationships are reached through the panels' lists, which are the canvas's text alternative together with a live summary of the selection.
 4. **Viewer, any graph.** Graph and configuration URLs with configuration discovery, the local launch page and folder loading, single-file loading, diagnostics panel, GitHub source links.
 5. **Polish.** The workflow animation, light theme review, accessibility review, performance check against a 1,000-node generated graph.
 

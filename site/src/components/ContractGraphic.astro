@@ -3,6 +3,7 @@
 // graph and contract sidecars at build time. Nothing here is hand-copied.
 import { contractView } from '../lib/graph';
 import { highlight } from '../lib/highlight';
+import { SIDECARS_RELEASED } from '../lib/release';
 import { githubUrl } from '../lib/repo';
 
 const view = contractView('task-manager', 'contract:task-changed');
@@ -63,7 +64,7 @@ const uid = 'contract-graphic';
     </ul>
   </div>
   <figcaption id={`${uid}-caption`} class="muted">
-    One contract, {view.consumers.length} consumers, from the <a href="/examples/task-manager/">task-manager example</a>. The structure and example come from the contract's schema and example files, which <code>ag validate</code> checks against each other starting with the next release. Hover or focus a consumer to see why it depends on the contract.
+    One contract, {view.consumers.length} consumers, from the <a href="/examples/task-manager/">task-manager example</a>. The structure and example come from the contract's schema and example files, which <code>ag validate</code> checks against each other{SIDECARS_RELEASED ? '' : ' starting with the next release'}. Hover or focus a consumer to see why it depends on the contract.
   </figcaption>
 </figure>
 

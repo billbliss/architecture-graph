@@ -4,6 +4,7 @@
 import Base from '../layouts/Base.astro';
 import { excerpt } from '../lib/graph';
 import { highlight } from '../lib/highlight';
+import { SIDECARS_RELEASED } from '../lib/release';
 import { readRepoJson } from '../lib/repo';
 
 const groups: { role: string; kinds: string[]; text: string }[] = [
@@ -94,7 +95,7 @@ const [structure, relations, status, modules] = await Promise.all([
 
     <h2 id="modules-and-contracts">Modules and contracts</h2>
     <p><strong>Modules</strong> are logical boundaries inside one graph. Each lists the nodes it exports to other modules and the nodes it imports from them; a relationship that crosses modules must match those lists, so every dependency between modules is visible and reviewable. Modules do not have to match packages or folders.</p>
-    <p><strong>Contract sidecars</strong> show the data crossing a boundary: a contract can reference a JSON Schema and example payloads, and validation checks that the examples match the schema. That shows the files agree with each other, not that the code sends that data. Sidecars arrive in the next release.</p>
+    <p><strong>Contract sidecars</strong> show the data crossing a boundary: a contract can reference a JSON Schema and example payloads, and validation checks that the examples match the schema. That shows the files agree with each other, not that the code sends that data.{!SIDECARS_RELEASED && ' Sidecars arrive in the next release.'}</p>
     <Fragment set:html={modules} />
 
     <h2 id="agents">Why this helps agents</h2>

@@ -675,7 +675,7 @@
       "status": "unresolved"
     },
     "decision:browser-safe-core": {
-      "description": "Chosen and implemented: validation rules read files through a file source (kind and read) and are written once as generators, run by a sync driver for the Node API and an async driver for browsers. The browser-safe part, including sidecar checks, is exported as @billbliss/architecture-graph/core and imports nothing from Node; a test bundles it for the browser platform. The viewer will supply folder and fetch sources and run the same validation as ag validate instead of a second implementation. This does not settle decision:authored-format-source.",
+      "description": "Chosen and implemented: validation rules read files through a file source (kind and read) and are written once as generators, run by a sync driver for the Node API and an async driver for browsers. The browser-safe part, including sidecar checks, is exported as @billbliss/architecture-graph/core and imports nothing from Node; a test bundles it for the browser platform. The viewer runs the same validation as ag validate instead of a second implementation: bundled examples through a recorded file source today, folder and fetch sources later. This does not settle decision:authored-format-source.",
       "id": "decision:browser-safe-core",
       "kind": "decision",
       "module": "module:declarations",
@@ -875,7 +875,7 @@
       "status": "implemented"
     },
     "decision:website-and-viewer": {
-      "description": "Proposed, partly built: a static site in site/ (Astro, Cloudflare Workers static assets) renders docs/ and examples/ and will host a client-side viewer for any AG graph. Graph content never leaves the browser. The site is not part of the npm package. The site skeleton exists and validates the bundled examples with loadProject during its build; the viewer at /view is a placeholder, so the decision stays proposed until the viewer is delivered.",
+      "description": "Proposed, partly built: a static site in site/ (Astro, Cloudflare Workers static assets) renders docs/ and examples/ and hosts a client-side viewer, a standalone React bundle in viewer/ served at /view/. Graph content never leaves the browser. Neither site/ nor viewer/ is part of the npm package. The site validates the bundled examples with loadProject during its build; the viewer opens them through a file source and the toolkit's browser-safe core. It opens only the bundled examples so far, so the decision stays proposed until it can open any graph by URL or folder.",
       "id": "decision:website-and-viewer",
       "kind": "decision",
       "module": "module:delivery",
@@ -904,6 +904,31 @@
           "description": "Cloudflare Workers static-assets deployment",
           "kind": "implementation",
           "path": "site/wrangler.jsonc"
+        },
+        {
+          "description": "Viewer structure, build and tests",
+          "kind": "implementation",
+          "path": "viewer/README.md"
+        },
+        {
+          "description": "One load path for every input; validates with the toolkit's core",
+          "kind": "implementation",
+          "path": "viewer/src/load/project.ts"
+        },
+        {
+          "description": "Records the files the load path reads for each bundled example",
+          "kind": "implementation",
+          "path": "viewer/scripts/bundle-examples.mjs"
+        },
+        {
+          "description": "Deterministic layered layout with elkjs, run in a web worker in the browser",
+          "kind": "implementation",
+          "path": "viewer/src/layout/layout.ts"
+        },
+        {
+          "description": "The bundled examples, listed once for the site and the viewer",
+          "kind": "implementation",
+          "path": "examples/catalog.json"
         }
       ],
       "status": "proposed"
@@ -1881,7 +1906,7 @@
       "to": "capability:validate-declarations"
     },
     "relationship:website-delivery": {
-      "description": "The site deploys separately; site/ stays out of the packaged toolkit.",
+      "description": "The site and viewer deploy separately; site/ and viewer/ stay out of the packaged toolkit.",
       "from": "decision:website-and-viewer",
       "id": "relationship:website-delivery",
       "kind": "affects",
