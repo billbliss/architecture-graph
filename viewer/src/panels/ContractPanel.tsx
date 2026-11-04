@@ -132,7 +132,11 @@ export function Structure({ node }: { node: GraphNode }) {
   const { model } = useViewer();
   const schemas = node.references.filter(ref => ref.kind === 'schema');
   if (!schemas.length) {
-    return <div className="gap">No schema sidecar is declared for this {node.kind.replace('_', ' ')}. A <code>schema</code> reference to a JSON Schema file would show its structure here.</div>;
+    return (
+      <p className="quiet-note">
+        No data format is described for this {node.kind.replace('_', ' ')}. That's normal when it's a rule, such as who may change something or what an exit code means, rather than data that is sent or stored.
+      </p>
+    );
   }
   return (
     <>
@@ -157,7 +161,7 @@ export function Structure({ node }: { node: GraphNode }) {
 export function Examples({ node }: { node: GraphNode }) {
   const { model } = useViewer();
   const examples = node.references.filter(ref => ref.kind === 'example');
-  if (!examples.length) return <div className="gap">No example payload is declared for this {node.kind.replace('_', ' ')}.</div>;
+  if (!examples.length) return <p className="quiet-note">No example is described for this {node.kind.replace('_', ' ')}.</p>;
   return (
     <>
       {examples.map(ref => {
