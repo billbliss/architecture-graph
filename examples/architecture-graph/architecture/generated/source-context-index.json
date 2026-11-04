@@ -267,6 +267,12 @@
       ],
       "relationshipIds": []
     },
+    "site/wrangler.jsonc": {
+      "nodeIds": [
+        "decision:website-and-viewer"
+      ],
+      "relationshipIds": []
+    },
     "skills/architecture-graph/SKILL.md": {
       "nodeIds": [
         "artifact:bundled-skill",

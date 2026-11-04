@@ -875,7 +875,7 @@
       "status": "implemented"
     },
     "decision:website-and-viewer": {
-      "description": "Proposed, partly built: a static site in site/ (Astro, Cloudflare Pages) renders docs/ and examples/ and will host a client-side viewer for any AG graph. Graph content never leaves the browser. The site is not part of the npm package. The site skeleton exists and validates the bundled examples with loadProject during its build; the viewer at /view is a placeholder, so the decision stays proposed until the viewer is delivered.",
+      "description": "Proposed, partly built: a static site in site/ (Astro, Cloudflare Workers static assets) renders docs/ and examples/ and will host a client-side viewer for any AG graph. Graph content never leaves the browser. The site is not part of the npm package. The site skeleton exists and validates the bundled examples with loadProject during its build; the viewer at /view is a placeholder, so the decision stays proposed until the viewer is delivered.",
       "id": "decision:website-and-viewer",
       "kind": "decision",
       "module": "module:delivery",
@@ -886,7 +886,7 @@
           "path": "docs/specs/website-and-viewer.md"
         },
         {
-          "description": "Build gates, commands and Cloudflare Pages settings",
+          "description": "Build gates, commands and Cloudflare deployment settings",
           "kind": "implementation",
           "path": "site/README.md"
         },
@@ -899,6 +899,11 @@
           "description": "Renders docs/ and rewrites repository links",
           "kind": "implementation",
           "path": "site/src/lib/markdown.ts"
+        },
+        {
+          "description": "Cloudflare Workers static-assets deployment",
+          "kind": "implementation",
+          "path": "site/wrangler.jsonc"
         }
       ],
       "status": "proposed"

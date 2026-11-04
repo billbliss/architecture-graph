@@ -9,8 +9,9 @@ export const REPO_ROOT = resolve(process.cwd(), '..');
 export const GITHUB_REPO = 'https://github.com/billbliss/architecture-graph';
 
 function currentCommit(): string {
-  const fromPages = process.env.CF_PAGES_COMMIT_SHA;
-  if (fromPages) return fromPages;
+  // Cloudflare Workers Builds and Pages both build from a git clone, but expose the commit too.
+  const fromCloudflare = process.env.WORKERS_CI_COMMIT_SHA ?? process.env.CF_PAGES_COMMIT_SHA;
+  if (fromCloudflare) return fromCloudflare;
   try {
     return execFileSync('git', ['rev-parse', 'HEAD'], { cwd: REPO_ROOT, encoding: 'utf8' }).trim();
   } catch {

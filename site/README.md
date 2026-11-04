@@ -14,7 +14,7 @@ The build fails when:
 - a top-level `docs/` page is missing from the docs navigation in `src/lib/site-map.ts`;
 - the node-kind grouping on the concepts page differs from the kinds in `schema/graph.schema.json`.
 
-Links between `docs/` pages become site links; links to any other repository file become GitHub links at the commit being built (`CF_PAGES_COMMIT_SHA` on Cloudflare Pages, otherwise `git rev-parse HEAD`).
+Links between `docs/` pages become site links; links to any other repository file become GitHub links at the commit being built (`WORKERS_CI_COMMIT_SHA` on Cloudflare, otherwise `git rev-parse HEAD`).
 
 ## Develop
 
@@ -29,19 +29,20 @@ npm run build     # static output in site/dist, then the link check
 npm run check     # Astro and TypeScript diagnostics
 ```
 
-## Cloudflare Pages
+## Cloudflare
 
-Connect the GitHub repository in the Cloudflare dashboard (Workers & Pages, Create, Pages, Connect to Git) with these settings:
+The site deploys to Cloudflare Workers as static assets: `wrangler.jsonc` points Wrangler at `dist/` and there is no Worker script. Create the Worker in the dashboard (Workers & Pages, Create, Import a repository) with these settings:
 
 | Setting | Value |
 | --- | --- |
+| Project name | `architecture-graph` (must match `name` in `wrangler.jsonc`) |
+| Build command | `npm run cf:build` |
+| Deploy command | `npx wrangler deploy` |
+| Non-production branch deploy command | `npx wrangler versions upload` |
+| Path (root directory, under advanced settings) | `site` |
 | Production branch | `main` |
-| Framework preset | Astro |
-| Root directory | `site` |
-| Build command | `npm run pages:build` |
-| Build output directory | `dist` |
-| Environment variable | `NODE_VERSION` = `24` |
+| Environment variable (build) | `NODE_VERSION` = `24` |
 
-Pages installs the site's dependencies, then `pages:build` installs and builds the toolkit in the repository root and builds the site. Pull requests get preview deployments; `main` deploys to production. Add `architecturegraph.dev` under the project's Custom domains once the first production build succeeds.
+`cf:build` installs and builds the toolkit in the repository root, installs the site's dependencies and builds the site. Builds on other branches upload a preview version with its own URL instead of deploying. Add `architecturegraph.dev` under the Worker's Settings, Domains & Routes once the first production deploy succeeds. To check the configuration locally, run `npx wrangler deploy --dry-run` after a build.
 
 The viewer at `/view` is a placeholder until delivery stage 3.
