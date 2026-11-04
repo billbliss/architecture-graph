@@ -4,6 +4,7 @@ Start with the problem you want AG to help solve: making important design decisi
 
 | If you want to… | Read… |
 | --- | --- |
+| Understand the drift AG is designed to expose, with real examples | [How working software drifts from its architecture](drift-patterns.md) |
 | Assess language support and the extra toolchain | [Languages and toolchain](languages-and-toolchain.md) |
 | Add AG to a project and understand what gets installed | [Getting started](getting-started.md) |
 | Have Claude Code or Codex help create and maintain the graph | [Using AG with a coding agent](skill-installation.md) |

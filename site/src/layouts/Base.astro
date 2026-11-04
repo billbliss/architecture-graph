@@ -12,6 +12,7 @@ interface Props {
 const { title, description = 'Architecture Graph: the living blueprint for your codebase.', section } = Astro.props;
 const fullTitle = title === 'Architecture Graph' ? title : `${title} · Architecture Graph`;
 const nav = [
+  { href: '/why/', label: 'Why' },
   { href: '/concepts/', label: 'Concepts' },
   { href: '/docs/', label: 'Docs' },
   { href: '/examples/', label: 'Examples' },

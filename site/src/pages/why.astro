@@ -1,0 +1,84 @@
+---
+// The problems AG exists to address, drawn from docs/drift-patterns.md. Keep the two in step:
+// the document holds the full account; this page is the short version.
+import Base from '../layouts/Base.astro';
+
+const patterns: { name: string; what: string; seen: string }[] = [
+  {
+    name: 'Blended result',
+    what: 'One output assembled from several independent computations of the same thing, with none of them responsible for the answer.',
+    seen: 'A report that looked like one result drew its figures from four separate passes over the same data. Each pass was tested. When they disagreed, nothing noticed.',
+  },
+  {
+    name: 'Shadow authority',
+    what: 'A secondary path that keeps a private copy of rules the system is meant to define once.',
+    seen: 'A finer-grained variant of the central calculation lived in an experimentation harness with its own setup, selection rules and timing loop, and production had come to depend on it.',
+  },
+  {
+    name: 'Specifics in the platform',
+    what: 'Feature-specific logic pushed into a generic layer so that two paths can be made to look unified.',
+    seen: 'The first attempt to merge those two variants put feature-specific logic into the generic reporting layer. It passed its tests and was rolled back in review.',
+  },
+  {
+    name: 'Copy-forward',
+    what: 'Supporting code duplicated into a new path instead of shared.',
+    seen: 'The same attempt copied data-acquisition and chart code. Every copy worked, and every future fix would now be needed twice.',
+  },
+  {
+    name: 'Open registry',
+    what: 'A registry whose members are whatever code registers itself at runtime.',
+    seen: 'Any module could add an execution capability through a public function, so a second implementation could appear without anyone editing the first.',
+  },
+  {
+    name: 'Permanent bridge',
+    what: 'A migration that adds wrappers so the new path works while the old one stays reachable.',
+    seen: 'Switching to a new execution path directly would have needed new bridges, leaving both routes live with no point at which the old one was removed.',
+  },
+];
+---
+
+<Base title="Why" section="/why/" description="The architectural drift Architecture Graph is designed to expose, with examples observed in a real project built largely by coding agents.">
+  <div class="container prose">
+    <h1>Working software can still break its architecture</h1>
+    <p class="lede">A change can compile, pass every test and follow the design for the part it touches, while the system as a whole stops having one answer to a question it should answer once. We call this drift, and it is the problem AG exists to solve.</p>
+
+    <h2 id="observed">Observed, not imagined</h2>
+    <p>The patterns below come from a large private application developed over many months, mostly by AI coding agents working from written specifications. It had an architecture graph declaring owners, authorities and rules, and thousands of passing tests. Its architecture drifted anyway. Nothing failed: the drift surfaced only when a feature needed two parts of the system to agree, and they turned out to be separate implementations of the same responsibility.</p>
+
+    <h2 id="locally-compliant">Locally compliant, globally inconsistent</h2>
+    <p>A test shows that a correct path exists. A declaration says which path is intended. Neither shows that the intended path is the only one, or that every entry point reaches it. Coding agents make the gap wider: an agent works toward a visible finish line, the feature works and the tests pass, and the shortest route there is often a wrapper, a copied piece of orchestration or a new registry. The agent can truthfully say its path works. Nothing asks whether it just created a second one.</p>
+
+    <h2 id="patterns">Six patterns we saw</h2>
+    <dl class="patterns">
+      {patterns.map(pattern => (
+        <div>
+          <dt>{pattern.name}</dt>
+          <dd>
+            <span>{pattern.what}</span>
+            <span class="seen"><strong>Seen:</strong> {pattern.seen}</span>
+          </dd>
+        </div>
+      ))}
+    </dl>
+
+    <h2 id="proving-everything">What did not work: proving everything</h2>
+    <p>The project's first response was to prove every architectural claim: exhaustive enumeration of the code in scope, results bound to content hashes, adversarial tests, and gates that stopped all work until every claim passed. It worked for what it checked, and it consumed months with no features delivered. Existing drift had to be fixed before anything else could proceed, the proof machinery had to prove itself, and full validation took hours. The lesson was that most of these patterns can be caught by cheap structural checks, and that a check nobody can adopt prevents nothing.</p>
+
+    <h2 id="response">How AG responds</h2>
+    <p><strong>Today</strong>, the graph records who owns each responsibility, which part is the authority for a shared meaning, and which rules must hold, and <code>ag context</code> puts those in front of an agent before it changes the code.</p>
+    <p><strong>Planned</strong>, Architecture Audit will check the code against the graph's declarations: imports that cross a declared boundary in the wrong direction, modules reachable from an entry point that must not be, and a second implementation of a role that should have one. Existing violations go in a baseline that can only shrink, so new drift fails the pull request while old drift is tracked and paid down instead of blocking all other work.</p>
+    <p>Some problems no check replaces. Missing design work, behavioral bugs and values that look like verification but decide nothing still need tests and review. AG's claim is deliberately narrow: new structural drift gets caught, and existing drift stays visible.</p>
+    <p><a href="/docs/drift-patterns/">Read the full account</a>, including how each pattern was missed and which check addresses it.</p>
+    <p><a class="button primary" href="/docs/getting-started/">Get started</a></p>
+  </div>
+</Base>
+
+<style>
+  .lede { font-size: 1.12rem; color: var(--text-muted); }
+  .patterns { margin: 1rem 0; }
+  .patterns > div { display: grid; grid-template-columns: 12rem 1fr; gap: 0.3rem 1rem; padding: 0.7rem 0; border-bottom: 1px solid var(--border); }
+  dt { font-weight: 600; }
+  dd { margin: 0; display: flex; flex-direction: column; gap: 0.35rem; }
+  .seen { color: var(--text-muted); }
+  @media (max-width: 40rem) { .patterns > div { grid-template-columns: 1fr; } }
+</style>

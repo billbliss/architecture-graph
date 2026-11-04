@@ -18,7 +18,7 @@ export const EXAMPLE_NAMES = EXAMPLES.map(example => example.name);
 
 /** Main docs navigation, in reading order. Pages not listed here are published but not in the menu. */
 export const DOCS_NAV: { title: string; items: string[] }[] = [
-  { title: 'Start', items: ['docs/README.md', 'docs/getting-started.md', 'docs/skill-installation.md', 'docs/languages-and-toolchain.md'] },
+  { title: 'Start', items: ['docs/README.md', 'docs/drift-patterns.md', 'docs/getting-started.md', 'docs/skill-installation.md', 'docs/languages-and-toolchain.md'] },
   { title: 'Use', items: ['docs/reference.md', 'docs/manual-operation.md', 'docs/indexing-and-ci.md', 'docs/compatibility.md'] },
   { title: 'Develop and release', items: ['docs/development.md', 'docs/foundation.md', 'docs/publishing.md', 'docs/github-packaging.md'] },
 ];
