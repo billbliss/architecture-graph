@@ -1,7 +1,7 @@
 // What the site publishes: the bundled examples and the docs navigation.
 import { readdirSync } from 'node:fs';
 import { posix } from 'node:path';
-import { repoFile } from './repo';
+import { readRepoJson, repoFile } from './repo';
 
 export interface ExampleInfo {
   name: string;
@@ -11,26 +11,8 @@ export interface ExampleInfo {
   config: string;
 }
 
-export const EXAMPLES: ExampleInfo[] = [
-  {
-    name: 'task-manager',
-    title: 'Task manager',
-    summary: 'A familiar design at the design stage: tasks, reminders, offline sync, notifications and search, with contract schemas, examples and open questions.',
-    config: 'examples/task-manager/ag.config.json',
-  },
-  {
-    name: 'architecture-graph',
-    title: 'AG models itself',
-    summary: "The toolkit's own responsibilities, contracts, boundaries and decisions: the graph used when developing AG.",
-    config: 'ag.config.json',
-  },
-  {
-    name: 'hello-world',
-    title: 'Hello-world',
-    summary: 'A tiny runnable application that shows a design decision recorded, retrieved before a change, and kept current afterward.',
-    config: 'examples/hello-world/ag.config.json',
-  },
-];
+/** The bundled examples, shared with the viewer: examples/catalog.json is the one list. */
+export const EXAMPLES: ExampleInfo[] = readRepoJson<ExampleInfo[]>('examples/catalog.json');
 
 export const EXAMPLE_NAMES = EXAMPLES.map(example => example.name);
 

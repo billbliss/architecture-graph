@@ -173,6 +173,12 @@
       ],
       "relationshipIds": []
     },
+    "examples/catalog.json": {
+      "nodeIds": [
+        "decision:website-and-viewer"
+      ],
+      "relationshipIds": []
+    },
     "examples/hello-world/architecture/graph.yaml": {
       "nodeIds": [
         "contract:authored-format"
@@ -541,6 +547,30 @@
       "relationshipIds": [
         "relationship:typescript-build"
       ]
+    },
+    "viewer/README.md": {
+      "nodeIds": [
+        "decision:website-and-viewer"
+      ],
+      "relationshipIds": []
+    },
+    "viewer/scripts/bundle-examples.mjs": {
+      "nodeIds": [
+        "decision:website-and-viewer"
+      ],
+      "relationshipIds": []
+    },
+    "viewer/src/layout/layout.ts": {
+      "nodeIds": [
+        "decision:website-and-viewer"
+      ],
+      "relationshipIds": []
+    },
+    "viewer/src/load/project.ts": {
+      "nodeIds": [
+        "decision:website-and-viewer"
+      ],
+      "relationshipIds": []
     }
   }
 }

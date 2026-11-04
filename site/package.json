@@ -8,11 +8,12 @@
   },
   "scripts": {
     "toolkit": "npm --prefix .. ci && npm --prefix .. run build",
+    "viewer": "npm --prefix ../viewer ci && npm --prefix ../viewer run build",
     "dev": "astro dev",
     "build": "astro build && node scripts/check-links.mjs",
     "preview": "astro preview",
     "check": "astro check",
-    "cf:build": "npm run toolkit && npm ci && npm run build",
+    "cf:build": "npm run toolkit && npm run viewer && npm ci && npm run build",
     "deploy": "wrangler deploy",
     "preview:upload": "wrangler versions upload"
   },

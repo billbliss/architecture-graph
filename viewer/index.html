@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Viewer · Architecture Graph</title>
+    <meta name="description" content="Open an Architecture Graph in the browser: module map, contracts and their consumers, and every node and relationship. Graphs are read in this tab and never uploaded." />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <script>
+      // Apply a saved theme before first paint; otherwise the system setting decides.
+      try {
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') document.documentElement.dataset.theme = saved;
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>The Architecture Graph viewer needs JavaScript. Graphs are read inside this browser tab and never uploaded.</noscript>
+    <script type="module" src="./src/main.tsx"></script>
+  </body>
+</html>

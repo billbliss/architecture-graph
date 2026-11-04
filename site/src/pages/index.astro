@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import ContractGraphic from '../components/ContractGraphic.astro';
 import { highlight } from '../lib/highlight';
+import { SIDECARS_RELEASED } from '../lib/release';
 import { readRepoJson } from '../lib/repo';
 import { EXAMPLES } from '../lib/site-map';
 
@@ -75,7 +76,7 @@ const install = await highlight(
             <li>Relationships point at records that exist, and each idea has at most one declared owner and one authority.</li>
             <li>Referenced files exist, and implemented records reference real implementation files.</li>
             <li>Relationships that cross modules are declared as imports and exports.</li>
-            <li>Contract schemas are valid JSON Schema and every example matches its schema (in the next release).</li>
+            <li>Contract schemas are valid JSON Schema and every example matches its schema{!SIDECARS_RELEASED && ' (in the next release)'}.</li>
             <li>Generated guidance and indexes match the graph.</li>
           </ul>
         </div>

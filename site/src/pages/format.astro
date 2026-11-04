@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { validatedSnippet } from '../lib/graph';
 import { highlight } from '../lib/highlight';
+import { SIDECARS_RELEASED } from '../lib/release';
 import { githubUrl, readRepo } from '../lib/repo';
 
 // A complete graph, validated with the toolkit during the build so it can be copied as is.
@@ -50,7 +51,7 @@ const [graphHtml, configHtml] = await Promise.all([highlight(smallest, 'yaml'), 
     <Fragment set:html={configHtml} />
 
     <h2>Contract sidecars</h2>
-    <p>A <code>contract</code>, <code>data_object</code> or <code>artifact</code> node can reference a JSON Schema for its data and example payloads that must match it. Sidecars arrive in the next release. See <a href="/docs/reference/#contract-schemas-and-examples">contract schemas and examples</a> and the <a href="/docs/specs/contract-sidecars/">specification</a>.</p>
+    <p>A <code>contract</code>, <code>data_object</code> or <code>artifact</code> node can reference a JSON Schema for its data and example payloads that must match it.{!SIDECARS_RELEASED && ' Sidecars arrive in the next release.'} See <a href="/docs/reference/#contract-schemas-and-examples">contract schemas and examples</a> and the <a href="/docs/specs/contract-sidecars/">specification</a>.</p>
 
     <h2>Reference and schemas</h2>
     <ul>

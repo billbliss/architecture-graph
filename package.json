@@ -63,6 +63,9 @@
     "esbuild": "0.28.2",
     "typescript": "5.9.3"
   },
+  "allowScripts": {
+    "esbuild": false
+  },
   "types": "./lib/index.d.ts",
   "publishConfig": {
     "access": "public",

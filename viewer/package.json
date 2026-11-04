@@ -1,0 +1,35 @@
+{
+  "name": "architecture-graph-viewer",
+  "private": true,
+  "type": "module",
+  "description": "The Architecture Graph viewer: a standalone static React application that opens AG graphs in the browser",
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "toolkit": "npm --prefix .. ci && npm --prefix .. run build",
+    "examples": "node scripts/bundle-examples.mjs",
+    "dev": "npm run examples && vite",
+    "build": "npm run examples && tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "npm run examples && vitest run"
+  },
+  "dependencies": {
+    "@billbliss/architecture-graph": "file:..",
+    "@xyflow/react": "12.12.1",
+    "elkjs": "0.12.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.2.1",
+    "typescript": "6.0.3",
+    "vite": "8.3.5",
+    "vitest": "5.1.0"
+  },
+  "allowScripts": {
+    "fsevents": false
+  }
+}

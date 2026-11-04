@@ -193,9 +193,9 @@ nodes:
       read) and are written once as generators, run by a sync driver for the Node API and an async
       driver for browsers. The browser-safe part, including sidecar checks, is exported as
       @billbliss/architecture-graph/core and imports nothing from Node; a test bundles it for the
-      browser platform. The viewer will supply folder and fetch sources and run the same validation
-      as ag validate instead of a second implementation. This does not settle
-      decision:authored-format-source."
+      browser platform. The viewer runs the same validation as ag validate instead of a second
+      implementation: bundled examples through a recorded file source today, folder and fetch
+      sources later. This does not settle decision:authored-format-source."
     status: implemented
     module: module:declarations
     references:
@@ -557,10 +557,11 @@ nodes:
     kind: decision
     name: architecturegraph.dev site and browser viewer
     description: "Proposed, partly built: a static site in site/ (Astro, Cloudflare Workers static assets) renders docs/
-      and examples/ and will host a client-side viewer for any AG graph. Graph content never leaves the
-      browser. The site is not part of the npm package. The site skeleton exists and validates the
-      bundled examples with loadProject during its build; the viewer at /view is a placeholder, so the
-      decision stays proposed until the viewer is delivered."
+      and examples/ and hosts a client-side viewer, a standalone React bundle in viewer/ served at
+      /view/. Graph content never leaves the browser. Neither site/ nor viewer/ is part of the npm
+      package. The site validates the bundled examples with loadProject during its build; the viewer
+      opens them through a file source and the toolkit's browser-safe core. It opens only the bundled
+      examples so far, so the decision stays proposed until it can open any graph by URL or folder."
     status: proposed
     module: module:delivery
     references:
@@ -578,6 +579,21 @@ nodes:
       - kind: implementation
         path: site/wrangler.jsonc
         description: Cloudflare Workers static-assets deployment
+      - kind: implementation
+        path: viewer/README.md
+        description: Viewer structure, build and tests
+      - kind: implementation
+        path: viewer/src/load/project.ts
+        description: One load path for every input; validates with the toolkit's core
+      - kind: implementation
+        path: viewer/scripts/bundle-examples.mjs
+        description: Records the files the load path reads for each bundled example
+      - kind: implementation
+        path: viewer/src/layout/layout.ts
+        description: Deterministic layered layout with elkjs, run in a web worker in the browser
+      - kind: implementation
+        path: examples/catalog.json
+        description: The bundled examples, listed once for the site and the viewer
   - id: decision:agent-maintained-design
     kind: decision
     name: Agent-maintained, human-directed design
@@ -1260,7 +1276,7 @@ relationships:
     kind: affects
     from: decision:website-and-viewer
     to: capability:ship-toolkit
-    description: The site deploys separately; site/ stays out of the packaged toolkit.
+    description: The site and viewer deploy separately; site/ and viewer/ stay out of the packaged toolkit.
     status: proposed
     references:
       - kind: design
