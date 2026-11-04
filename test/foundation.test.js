@@ -97,6 +97,28 @@ test('original AG vocabulary and explicit guardrail lookup remain available', t 
   assert(c.nodes.some(n=>n.id==='workflow:pipeline'));
   assert(c.relationships.some(e=>e.kind==='guarded_by'));
 });
+test('original guardrail: IDs are accepted for rule kinds only, and index as guardrails', t => {
+  const g=graph([node('pipeline','workflow'),node('format','constraint'),node('edge','boundary'),node('rule','policy')],
+    [edge('guard','workflow:pipeline','guardrail:format','guarded_by')]);
+  for(const [i,name] of [[1,'format'],[2,'edge'],[3,'rule']]) g.nodes[i].id=`guardrail:${name}`;
+  const p=project(t,g);
+  assert.deepEqual(validateGraph(g,p.root),[]);
+  const c=getContext(p.load(),{guardrail:'guardrail:format'});
+  assert(c.nodes.some(n=>n.id==='workflow:pipeline'));
+  g.nodes[0].id='guardrail:pipeline';g.relationships[0].from='guardrail:pipeline';
+  assert(validateGraph(g,p.root).some(e=>e.code==='identifier-kind'&&e.at==='guardrail:pipeline'));
+});
+test('test references are indexed for file lookup but do not satisfy implemented status', t => {
+  const g=graph([node('a'),node('b')],[edge('ab','component:a','component:b')]);
+  const p=project(t,g);
+  writeFileSync(join(p.root,'a.test.js'),'');
+  g.nodes[0].references.push({kind:'test',path:'a.test.js'});
+  assert.deepEqual(validateGraph(g,p.root),[]);
+  p.save();
+  assert.deepEqual(getContext(p.load(),{file:'a.test.js',depth:0}).nodes.map(n=>n.id),['component:a']);
+  Object.assign(g.nodes[1],{status:'implemented',references:[{kind:'test',path:'a.test.js'}]});
+  assert(validateGraph(g,p.root).some(e=>e.code==='implemented-source'&&e.at==='component:b'));
+});
 test('5,000-node graph uses focused indexes and produces a bounded briefing', t => {
   const nodes=Array.from({length:5000},(_,i)=>node(String(i).padStart(5,'0')));
   const edges=nodes.slice(1).map((n,i)=>edge(`chain-${i}`,nodes[i].id,n.id));

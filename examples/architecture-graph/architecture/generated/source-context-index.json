@@ -31,9 +31,11 @@
         "contract:authored-format",
         "decision:authored-format-source",
         "decision:canonical-fallback",
+        "decision:original-graph-compatibility",
         "decision:windows-support"
       ],
       "relationshipIds": [
+        "relationship:original-compatibility-format",
         "relationship:windows-delivery"
       ]
     },
@@ -517,9 +519,11 @@
         "contract:authored-format",
         "contract:logical-modules",
         "decision:contract-sidecars",
+        "decision:original-graph-compatibility",
         "decision:typescript-source"
       ],
       "relationshipIds": [
+        "relationship:original-compatibility-format",
         "relationship:schema-authority",
         "relationship:sidecars-format",
         "relationship:single-file-modules",
@@ -564,11 +568,13 @@
         "capability:validate-declarations",
         "component:structural-validator",
         "contract:logical-modules",
-        "decision:browser-safe-core"
+        "decision:browser-safe-core",
+        "decision:original-graph-compatibility"
       ],
       "relationshipIds": [
         "relationship:browser-core-validator",
         "relationship:module-authority",
+        "relationship:original-compatibility-validator",
         "relationship:validator-format",
         "relationship:validator-modules",
         "relationship:validator-owns",
@@ -594,7 +600,8 @@
     },
     "test/foundation.test.js": {
       "nodeIds": [
-        "contract:stable-locators"
+        "contract:stable-locators",
+        "decision:original-graph-compatibility"
       ],
       "relationshipIds": []
     },

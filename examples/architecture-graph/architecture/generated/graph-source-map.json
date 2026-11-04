@@ -160,6 +160,11 @@
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "nodes"
     },
+    "decision:original-graph-compatibility": {
+      "objectId": "decision:original-graph-compatibility",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
     "decision:sidecar-maintenance-workflow": {
       "objectId": "decision:sidecar-maintenance-workflow",
       "path": "examples/architecture-graph/architecture/graph.yaml",
@@ -432,6 +437,16 @@
     },
     "relationship:module-authority": {
       "objectId": "relationship:module-authority",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:original-compatibility-format": {
+      "objectId": "relationship:original-compatibility-format",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:original-compatibility-validator": {
+      "objectId": "relationship:original-compatibility-validator",
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "relationships"
     },

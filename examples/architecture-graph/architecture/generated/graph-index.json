@@ -126,7 +126,7 @@
           "path": "src/validation.ts"
         },
         {
-          "kind": "implementation",
+          "kind": "test",
           "path": "test/consumer.mjs"
         },
         {
@@ -262,7 +262,7 @@
           "path": "package.json"
         },
         {
-          "kind": "implementation",
+          "kind": "test",
           "path": "test/consumer.mjs"
         },
         {
@@ -492,7 +492,7 @@
           "path": "src/skills.ts"
         },
         {
-          "kind": "implementation",
+          "kind": "test",
           "path": "test/toolkit.test.js"
         },
         {
@@ -664,7 +664,7 @@
           "path": "src/model.ts"
         },
         {
-          "kind": "implementation",
+          "kind": "test",
           "path": "test/foundation.test.js"
         },
         {
@@ -754,7 +754,7 @@
           "path": "src/sidecars.ts"
         },
         {
-          "kind": "implementation",
+          "kind": "test",
           "path": "test/core.test.js"
         }
       ],
@@ -847,6 +847,32 @@
         }
       ],
       "status": "unresolved"
+    },
+    "decision:original-graph-compatibility": {
+      "description": "Chosen and implemented: a test reference kind records tests that exercise a record without satisfying implemented status, and policy, constraint and boundary nodes may use the original guardrail: ID prefix. Both stay within format 1, so a graph from the original AG can move to the standalone toolkit without renaming IDs or relabeling tests as implementation. Relationship-kind rules are not relaxed; such graphs fix invalid edges instead.",
+      "id": "decision:original-graph-compatibility",
+      "kind": "decision",
+      "module": "module:declarations",
+      "name": "Original AG graphs keep their IDs and test links",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/compatibility.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/schema.ts"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/validation.ts"
+        },
+        {
+          "kind": "test",
+          "path": "test/foundation.test.js"
+        }
+      ],
+      "status": "implemented"
     },
     "decision:sidecar-maintenance-workflow": {
       "description": "Chosen and implemented: the bundled skill creates sidecars for data-shaped contracts during bootstrap, updates them in the same change as the code, and backfills from the summary's withoutSchema list. Behavioral contracts get no invented schema.",
@@ -1074,7 +1100,7 @@
           "path": "package.json"
         },
         {
-          "kind": "implementation",
+          "kind": "test",
           "path": "test/consumer.mjs"
         }
       ],
@@ -1364,7 +1390,7 @@
           "path": "src/artifacts.ts"
         },
         {
-          "kind": "implementation",
+          "kind": "test",
           "path": "test/toolkit.test.js"
         }
       ],
@@ -1424,7 +1450,7 @@
           "path": "src/artifacts.ts"
         },
         {
-          "kind": "implementation",
+          "kind": "test",
           "path": "test/consumer.mjs"
         }
       ],
@@ -1700,6 +1726,38 @@
       ],
       "status": "implemented",
       "to": "contract:logical-modules"
+    },
+    "relationship:original-compatibility-format": {
+      "description": "Adds the test reference kind and the guardrail ID prefix within format 1.",
+      "from": "decision:original-graph-compatibility",
+      "id": "relationship:original-compatibility-format",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/compatibility.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "src/schema.ts"
+        }
+      ],
+      "status": "implemented",
+      "to": "contract:authored-format"
+    },
+    "relationship:original-compatibility-validator": {
+      "description": "Identifier checks accept the guardrail prefix for rule kinds only; implemented status still requires an implementation reference.",
+      "from": "decision:original-graph-compatibility",
+      "id": "relationship:original-compatibility-validator",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "implementation",
+          "path": "src/validation.ts"
+        }
+      ],
+      "status": "implemented",
+      "to": "component:structural-validator"
     },
     "relationship:schema-authority": {
       "description": "Zod definitions decide the authored field shapes and runtime types; generated JSON schemas must preserve them.",

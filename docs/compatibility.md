@@ -24,6 +24,12 @@ The next release adds `schema` and `example` reference kinds so that contract, d
 
 `summary.json` gains a `sidecars` section and `guidance.md` gains one sentence about sidecar coverage, so existing generated output is stale after upgrading. Run `ag generate` once and commit the result. Ajv and ajv-formats become runtime dependencies for checking sidecars; Zod still defines and validates the graph format itself.
 
+### Test references and original guardrail IDs
+
+References gain a `test` kind for tests that exercise a record. Tests are indexed for `ag context --file` like any reference, but only an `implementation` reference satisfies `implemented` status.
+
+`policy`, `constraint` and `boundary` nodes may use the original AG `guardrail:` ID prefix instead of their kind. Other kinds still need a prefix that matches the kind. Both changes let an original AG graph keep its IDs and its test links when it moves to the standalone toolkit; the format stays **1**, and older toolkit versions reject graphs that use them.
+
 ### Browser-safe validation core
 
 The next release adds `@billbliss/architecture-graph/core`, an entry point that runs the same validation as `ag validate`, including sidecar checks, without Node: rules read files through a file source, so a browser can supply files from a folder, `fetch` or memory. See [the library reference](reference.md#validating-without-node-the-browser-safe-core). The core offers an asynchronous `validateGraph(graph, source)` and `sidecarValidator(source, path)` alongside synchronous `validateGraphSync` and `sidecarValidatorSync`. The main entry point keeps its synchronous `validateGraph(graph, root)` and `sidecarValidator(root, path)` and adds `nodeFileSource`.
@@ -43,7 +49,7 @@ Zod supplies runtime validation and TypeScript types from the same schemas. Expo
 
 ## Compatibility with the original AG
 
-The original AG kinds (`workflow`, `adapter`, `data_object`, `constraint`, `evidence_surface`) and relationships (`adapts`, `validates`, `supersedes`, `emits_evidence`, `guarded_by`) are accepted alongside the standalone vocabulary. The original classification labels can be recorded, but do not certify behavior. Both underscore and hyphen ID prefixes for original underscore kinds are accepted without renaming IDs.
+The original AG kinds (`workflow`, `adapter`, `data_object`, `constraint`, `evidence_surface`) and relationships (`adapts`, `validates`, `supersedes`, `emits_evidence`, `guarded_by`) are accepted alongside the standalone vocabulary. The original classification labels can be recorded, but do not certify behavior. Both underscore and hyphen ID prefixes for original underscore kinds are accepted without renaming IDs, as is the original `guardrail:` prefix for `policy`, `constraint` and `boundary` nodes.
 
 This is vocabulary continuity, not a promise to load the predecessor application’s YAML unchanged. The standalone graph still uses its own lifecycle, reference and top-level fields. There is no automatic migration from that private application. The exact preservation/exclusion decisions are in [the foundation inventory](foundation.md).
 

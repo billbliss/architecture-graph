@@ -1,5 +1,5 @@
 // Browser-safe: file access goes through a FileSource; no Node built-ins.
-import { GraphSchema, shapeErrors, type Graph, type Diagnostic, type NodeKind, type RelationshipKind } from './schema.js';
+import { GraphSchema, GUARDRAIL_KINDS, shapeErrors, type Graph, type Diagnostic, type NodeKind, type RelationshipKind } from './schema.js';
 import { assertProjectPath, messageOf, runAsync, runSync, kindOf, type AsyncFileSource, type FileSource, type FileTask } from './files.js';
 import { sidecarRules } from './sidecars.js';
 
@@ -47,7 +47,9 @@ function* graphRules(value: unknown): FileTask<Diagnostic[]> {
     }
   }
   for (const node of graph.nodes) {
-    if (![`${node.kind}:`, `${node.kind.replaceAll('_', '-')}:`].some(prefix => node.id.startsWith(prefix))) {
+    // Original AG named rule nodes `guardrail:`; accepted for the kinds that index as guardrails.
+    const prefixes = [`${node.kind}:`, `${node.kind.replaceAll('_', '-')}:`, ...(GUARDRAIL_KINDS.includes(node.kind) ? ['guardrail:'] : [])];
+    if (!prefixes.some(prefix => node.id.startsWith(prefix))) {
       add('identifier-kind', node.id, 'Node identifier prefix must match kind');
     }
     if (node.module && !modules.has(node.module)) add('module', node.id, `Unknown module ${node.module}`);
