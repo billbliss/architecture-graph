@@ -1,8 +1,8 @@
 {
   "artifactVersion": "2",
-  "toolVersion": "0.3.1",
+  "toolVersion": "0.4.0",
   "graphId": "graph:architecture-graph",
-  "declarationDigest": "99fc754bd16f84d5e0be03ad01f841ff4216650f50fbbfdaffcc4f0aca6d261c",
+  "declarationDigest": "e3cec047123c17e9fd05eacb52efac0be29771a92b6e16b4b8d3f16b7fc8e254",
   "checksums": {
     "graph-index.json": "8f0c04ef58a02dff13d31393b8c44675d711dca6b9e12373b0835a2af5138fdb",
     "source-context-index.json": "075871c29597da1ddf7ab06c839961cd15ed3bee71cc8a872cdab64dc259c325",

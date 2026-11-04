@@ -21,7 +21,7 @@ Links between `docs/` pages become site links; links to any other repository fil
 
 ## Release-dependent wording
 
-Contract sidecars and the browser-safe core are on `main` but in no published release yet, so a few pages say they arrive in the next release. `src/lib/release.ts` drops those notes once the toolkit's `package.json` version is newer than 0.3.1, which happens in the release commit (see [publishing](../docs/publishing.md)), so no page needs editing at release time.
+Contract sidecars and the browser-safe core were released in 0.4.0. `src/lib/release.ts` still compares the toolkit's `package.json` version with 0.3.1, the last release without them, so pages built from an older checkout keep their "next release" notes.
 
 ## Develop
 
