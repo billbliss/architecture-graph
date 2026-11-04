@@ -15,6 +15,9 @@
     // www has its own DNS record and certificate; a zone Redirect Rule sends it to the apex (see README).
     { "pattern": "www.architecturegraph.dev", "custom_domain": true }
   ],
+  // Required by `wrangler preview` (open beta), which builds each non-production branch as a named
+  // preview. Empty: assets and compatibility settings stay at the top level.
+  "previews": {},
   "workers_dev": true,
   "preview_urls": true
 }
