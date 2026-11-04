@@ -11,7 +11,9 @@
     "html_handling": "auto-trailing-slash"
   },
   "routes": [
-    { "pattern": "architecturegraph.dev", "custom_domain": true }
+    { "pattern": "architecturegraph.dev", "custom_domain": true },
+    // www has its own DNS record and certificate; a zone Redirect Rule sends it to the apex (see README).
+    { "pattern": "www.architecturegraph.dev", "custom_domain": true }
   ],
   "workers_dev": true,
   "preview_urls": true
