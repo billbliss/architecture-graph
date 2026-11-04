@@ -6,9 +6,13 @@ import { CONTRACTS_INTRO } from '../panels/ContractsView';
 import { Glyph } from './common';
 import { useViewer } from './context';
 
+// Where the logo leads. The viewer assumes no host: by default it is its own start page. A host that
+// serves it inside a site sets VITE_HOME_URL when building (architecturegraph.dev uses its root).
+const HOME_URL: string = import.meta.env.VITE_HOME_URL || './';
+
 export function Brand() {
   return (
-    <a className="brand" href="./">
+    <a className="brand" href={HOME_URL}>
       <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24"><circle cx="5" cy="6" r="3" fill="var(--kind-behavior)" /><circle cx="19" cy="6" r="3" fill="var(--kind-responsibility)" /><rect x="9" y="15" width="6" height="6" rx="1.5" fill="var(--kind-crossing)" /><path d="M7 8l4 7M17 8l-4 7" stroke="currentColor" strokeWidth="1.5" fill="none" /></svg>
       Architecture Graph
     </a>

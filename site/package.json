@@ -8,7 +8,7 @@
   },
   "scripts": {
     "toolkit": "npm --prefix .. ci && npm --prefix .. run build",
-    "viewer": "npm --prefix ../viewer ci && npm --prefix ../viewer run build",
+    "viewer": "npm --prefix ../viewer ci && VITE_HOME_URL=/ npm --prefix ../viewer run build",
     "dev": "astro dev",
     "build": "astro build && node scripts/check-links.mjs",
     "preview": "astro preview",
