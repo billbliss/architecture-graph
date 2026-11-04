@@ -43,6 +43,6 @@ The site deploys to Cloudflare Workers as static assets: `wrangler.jsonc` points
 | Production branch | `main` |
 | Environment variable (build) | `NODE_VERSION` = `24` |
 
-`cf:build` installs and builds the toolkit in the repository root, installs the site's dependencies and builds the site. Builds on other branches upload a preview version with its own URL instead of deploying. Add `architecturegraph.dev` under the Worker's Settings, Domains & Routes once the first production deploy succeeds. To check the configuration locally, run `npx wrangler deploy --dry-run` after a build.
+`cf:build` installs and builds the toolkit in the repository root, installs the site's dependencies and builds the site. Builds on other branches upload a preview version with its own URL instead of deploying. The custom domain `architecturegraph.dev` is declared in `wrangler.jsonc`; `wrangler deploy` creates its DNS record and certificate. A manual deploy from a checkout is `npm run build && npm run deploy` in `site/` after `npx wrangler login`. To check the configuration locally, run `npx wrangler deploy --dry-run` after a build.
 
 The viewer at `/view` is a placeholder until delivery stage 3.

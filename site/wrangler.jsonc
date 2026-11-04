@@ -10,6 +10,9 @@
     "not_found_handling": "404-page",
     "html_handling": "auto-trailing-slash"
   },
+  "routes": [
+    { "pattern": "architecturegraph.dev", "custom_domain": true }
+  ],
   "workers_dev": true,
   "preview_urls": true
 }
