@@ -115,7 +115,18 @@ Each package needs its own trusted-publisher entry on npmjs.com. If npm requires
 
 ## Core format change: the `check` reference kind
 
-`references[].kind` gains `check`. A check reference names a check file. It is allowed only on guardrail nodes: `policy`, `constraint` and `boundary` nodes, and nodes classified `guardrail`. It is not allowed on relationships.
+### One definition of a guardrail
+
+Core uses one definition everywhere: a **guardrail node** is a `policy`, `constraint` or `boundary` node, or any node classified `guardrail`. Before this specification, core was inconsistent:
+
+- The guardrail index, and therefore `ag context --guardrail`, used that definition.
+- The validator allowed `guarded_by` to target only the three rule kinds.
+
+A node classified `guardrail`, such as a validation workflow, was listed as a guardrail, but nothing could be declared `guarded_by` it, so `ag context --guardrail` could not show what it guards. The fix widens the `guarded_by` target rule to every guardrail node. It only accepts graphs that were previously rejected, and it can ship before the rest of this specification. `governed_by` and `constrained_by` keep their existing target rules.
+
+### The `check` reference kind
+
+`references[].kind` gains `check`. A check reference names a check file. It is allowed only on guardrail nodes as defined above. It is not allowed on relationships.
 
 ```yaml
 - id: constraint:platform-is-feature-neutral
@@ -126,6 +137,8 @@ Each package needs its own trusted-publisher entry on npmjs.com. If npm requires
   references:
     - kind: design
       path: docs/platform.md
+    - kind: implementation
+      path: src/platform/feature-registry.ts
     - kind: check
       path: architecture/checks/platform-is-feature-neutral.yaml
 ```
@@ -203,7 +216,7 @@ A **selector** names code. It is either a graph module ID, which expands to that
 ```
 
 - `typescript` names the exact TypeScript configuration whose `baseUrl` and `paths` aliases apply to each part of the code. Each analyzed file must match exactly one entry. The audit never searches for a nearby configuration.
-- `modules` maps graph module IDs to source globs. Every key must be a module declared in the graph, and a file may belong to at most one module.
+- `modules` maps graph module IDs to source globs. Every key must be a module declared in the graph, and a file may belong to at most one module. A graph can declare modules without assigning nodes to them, so adopting the audit does not require reorganizing an existing graph into modules. Globs work as selectors without any modules at all.
 - Mapping modules to source paths is an audit concern, so it lives here rather than in the graph.
 
 ## Validation
@@ -361,7 +374,7 @@ Core AG's statement about itself is unchanged: core validation checks declaratio
 Core:
 
 1. `src/schema.ts`: add the `check` reference kind. Regenerate the published JSON schema.
-2. `src/validation.ts`: check references only on guardrail nodes, never on relationships.
+2. `src/validation.ts`: use the shared guardrail-node definition for `guarded_by` targets (shippable on its own, ahead of the rest) and for check references, which are never allowed on relationships.
 3. `src/cli.ts`: the `ag audit` hand-off as specified, including resolution from the project root, unparsed argument pass-through and the protocol number.
 4. Generated guidance: count guardrails with check files.
 5. Viewer: show check files on guardrail panels, as file contents.
