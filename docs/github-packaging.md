@@ -28,7 +28,7 @@ shasum -a 256 -c SHA256SUMS
 sha256sum -c SHA256SUMS
 ```
 
-Choose the command for your system. Then copy the `.tgz` into your project's `vendor/` folder and run `npm install --save-dev ./vendor/billbliss-architecture-graph-0.4.0.tgz` from that project’s root (run `npm init -y` first if it has no manifest). Continue with [agent setup](getting-started.md#3-bootstrap-the-graph-with-your-coding-agent). The metadata identifies a build; it is not evidence that your application's architecture is correct.
+Choose the command for your system. Then copy the `.tgz` into your project's `vendor/` folder and run `npm install --save-dev ./vendor/billbliss-architecture-graph-0.4.1.tgz` from that project’s root (run `npm init -y` first if it has no manifest). Continue with [agent setup](getting-started.md#3-bootstrap-the-graph-with-your-coding-agent). The metadata identifies a build; it is not evidence that your application's architecture is correct.
 
 ## What runs automatically?
 

@@ -1,6 +1,6 @@
 {
   "artifactVersion": "2",
-  "toolVersion": "0.4.0",
+  "toolVersion": "0.4.1",
   "declarationDigest": "8299a788a86979813a0ad9f281db2f3d96469c7950091846349e2b9d6338e8f4",
   "graphId": "graph:task-manager",
   "title": "Task manager architecture",
