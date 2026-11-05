@@ -48,7 +48,9 @@
       ],
       "id": "module:declarations",
       "imports": [
-        "component:lookup-indexes"
+        "component:artifact-generator",
+        "component:lookup-indexes",
+        "contract:public-operations"
       ],
       "name": "Declarations and validity",
       "nodeIds": [
@@ -70,7 +72,10 @@
       ],
       "relationshipIds": [
         "relationship:audit-format",
+        "relationship:audit-guidance",
+        "relationship:audit-handoff",
         "relationship:audit-proof-boundary",
+        "relationship:audit-validator",
         "relationship:browser-core-validator",
         "relationship:format-source-format",
         "relationship:format-source-model",

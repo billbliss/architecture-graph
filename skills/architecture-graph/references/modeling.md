@@ -18,7 +18,7 @@ Every idea and relationship has a status:
 
 AG does not decide these statuses for you. An agreed design decision may remain proposed until implemented; explain its disposition in the description. Do not hide uncertainty by supplying a fictitious source file.
 
-References point to existing project files, for example `{"kind":"design","path":"requirements.md"}`. Use `implementation` for actual implementation files and `test` for tests that exercise the record; a test reference alone does not satisfy `implemented`. An optional `description` can explain what to read there. Proposed and unresolved entries can have an empty reference list; describe any inference honestly. Implemented entries need at least one implementation reference.
+References point to existing project files, for example `{"kind":"design","path":"requirements.md"}`. Use `implementation` for actual implementation files and `test` for tests that exercise the record; a test or check reference alone does not satisfy `implemented`. An optional `description` can explain what to read there. Proposed and unresolved entries can have an empty reference list; describe any inference honestly. Implemented entries need at least one implementation reference.
 
 ## Connect ideas for a reason
 
@@ -60,6 +60,12 @@ Take the schema from the best available source, in this order:
 Prefer examples captured from real output or tests, then fixtures, then hand-written ones. Keep them small, and never include secrets or personal data.
 
 New sidecars conventionally go in `contracts/<name>.schema.json` and `contracts/examples/<name>.json`, where `<name>` is the node ID without its prefix. `ag validate` checks that the schema is valid JSON Schema and that every example matches it; relative `$ref` between project files work. Passing shows only that the files agree with each other, not that the code produces that data. For an important contract, suggest a project test that validates real output with `sidecarValidator`.
+
+## Say how a rule is checked
+
+A guardrail is a `policy`, `constraint` or `boundary` node, or any node classified `guardrail`. A guardrail can name the check files that enforce it with `check` references, for example `{"kind":"check","path":"architecture/checks/platform-is-feature-neutral.yaml"}`. Check files are read by the optional Architecture Audit package (`ag audit`); AG itself only confirms that the file exists and that the reference is on a guardrail node. Check references are not allowed on other nodes or on relationships.
+
+`ag context --guardrail <id>` and `ag context --file <check file>` show the check files with their guardrail, so read them before changing code the rule covers. A check file records how a rule is checked, not that the code passes it; only running the audit says that, and only for the structure it can see.
 
 ## Make shared boundaries visible
 

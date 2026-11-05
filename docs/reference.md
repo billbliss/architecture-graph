@@ -31,12 +31,13 @@ A missing result means the graph has no matching record. It does not mean the af
 | `ag check` | Reports whether those generated files are missing or out of date, without changing them |
 | `ag skill install --agent claude` | Copies the bundled skill into `.claude/skills` so Claude Code can use it |
 | `ag skill install --agent codex` | Copies the bundled skill into `.agents/skills` so Codex can use it |
+| `ag audit` | Runs the optional Architecture Audit package installed in the project; see [guardrail check files](#guardrail-check-files) |
 
 `skill install` accepts both agents at once as `--agent claude,codex`, writes under `--root DIR` when the project is elsewhere, and refuses to replace an existing copy unless you add `--force`. It installs instructions; it does not create or change a graph. [Using AG with a coding agent](skill-installation.md) covers the Claude Code plugin alternative.
 
 `init` also accepts `--root DIR` to create the starter files elsewhere. The other commands accept `--config FILE`. Paths in the graph are relative to the directory containing that configuration file. The default is `ag.config.json` in the current directory; AG does not search parent folders for it.
 
-Use `--json` when a script needs to read context or validation diagnostics. `summary`, `generate`, and `check` always print JSON. Exit codes are 0 for success, 1 for invalid input or another error, and 2 for stale generated output.
+Use `--json` when a script needs to read context or validation diagnostics. `summary`, `generate`, and `check` always print JSON. Exit codes are 0 for success, 1 for invalid input or another error, and 2 for stale generated output. `ag audit` returns the audit package's own exit codes, and 1 when the package is not installed.
 
 ## Which files are yours?
 
@@ -86,6 +87,29 @@ New sidecars conventionally live at `contracts/<name>.schema.json` and `contract
 `ag summary` reports `sidecars.eligible`, `withSchema`, `withExamples` and `withoutSchema`, the list of eligible nodes with no schema yet. A missing schema is not an error; contracts that are rules rather than data shapes need none. The [modeling guide](../skills/architecture-graph/references/modeling.md) explains when to add sidecars.
 
 Passing these checks shows that the schema and examples agree with each other, not that the code produces or accepts that data. To check the code, add a test that runs it and validates the output with `sidecarValidator` (see below).
+
+## Guardrail check files
+
+A guardrail can name the check files that enforce it. A guardrail is a `policy`, `constraint` or `boundary` node, or any node classified `guardrail`.
+
+```yaml
+- id: constraint:platform-is-feature-neutral
+  kind: constraint
+  name: The platform is feature-neutral
+  description: The generic reporting platform never depends on feature code.
+  status: implemented
+  references:
+    - kind: implementation
+      path: src/platform/feature-registry.ts
+    - kind: check
+      path: architecture/checks/platform-is-feature-neutral.yaml
+```
+
+AG does not read check files. `ag validate`, and every command that loads a project, checks only that each check file exists and that the reference sits on a guardrail node; the `check-kind` diagnostic reports check references on other nodes or on relationships. A check reference does not satisfy `implemented` status; only an `implementation` reference does.
+
+Check files are ordinary references for lookup: `ag context --file architecture/checks/platform-is-feature-neutral.yaml` finds the guardrail, and `ag context --guardrail` lists its check files with it. `ag summary` reports `checks.guardrails` and `checks.withChecks`, and the generated briefing gives the same count. Neither records whether a check passes, because a stored result goes stale as soon as the code changes.
+
+`ag audit` hands everything after `audit` to the optional `@billbliss/architecture-graph-audit` package, which reads the check files and the source code. AG looks for that package from the project root (the directory containing the configuration), not from where `ag` itself is installed, so a global `ag` or `npx` uses the project's copy. AG reads only `--config`, before or after `audit`, and whether `--json` is present, to format its own errors; every argument after `audit` reaches the audit unchanged. When the package is not installed, `ag audit` prints how to install it and exits 1. The audit's exit code becomes `ag audit`'s; if the audit reports no valid exit code, `ag audit` treats the run as failed and exits 1. The [Architecture Audit specification](specs/architecture-audit.md) describes the check formats, the commands and their limits.
 
 ## Checking generated output in a build
 

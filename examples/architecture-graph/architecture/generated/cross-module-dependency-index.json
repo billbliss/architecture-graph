@@ -1,5 +1,17 @@
 {
   "crossModule": {
+    "relationship:audit-guidance": {
+      "edgeId": "relationship:audit-guidance",
+      "fromModule": "module:declarations",
+      "targetId": "component:artifact-generator",
+      "toModule": "module:interfaces"
+    },
+    "relationship:audit-handoff": {
+      "edgeId": "relationship:audit-handoff",
+      "fromModule": "module:declarations",
+      "targetId": "contract:public-operations",
+      "toModule": "module:interfaces"
+    },
     "relationship:build-api": {
       "edgeId": "relationship:build-api",
       "fromModule": "module:delivery",

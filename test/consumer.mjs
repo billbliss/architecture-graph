@@ -88,6 +88,8 @@ try {
   writeFileSync(join(consumer,'src/formatter.js'),'export function formatGreeting() { return "WRONG"; }\n');
   ag(consumer,'validate');ag(consumer,'check');run(consumer,'node',['--test','app.test.js'],1);
   log('PASS: intentionally wrong implementation passes AG validation/check but fails application tests, demonstrating the assurance limit.');
+  assert.match(run(consumer,join(consumer,'node_modules/.bin/ag'),['audit','--tripwires'],1),/npm install --save-dev @billbliss\/architecture-graph-audit/);
+  log('PASS: installed core without the audit package explains how to install it and exits 1.');
   run(consumer,'node',['--input-type=module','-e','import { loadProject, getContext } from "@billbliss/architecture-graph"; if (!getContext(loadProject(), {id:"contract:greeting"}).nodes.length) process.exit(1);']);
   log('PASS: public ESM package export resolves in isolated consumer.');
   run(consumer,'node',['--input-type=module','-e',`import { readFileSync } from 'node:fs';

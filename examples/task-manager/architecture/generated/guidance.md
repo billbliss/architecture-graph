@@ -8,7 +8,7 @@ Structural validation only; declarations and file existence do not prove impleme
 
 Design-stage model of a task list manager with reminders, offline sync, notifications and search. Nothing is implemented; contracts point to draft JSON Schemas and example payloads.
 
-The graph records 27 ideas, 50 relationships, and 6 logical modules in one file. 4 of 4 contracts, data objects and artifacts have a schema sidecar; `ag summary` lists the rest.
+The graph records 27 ideas, 50 relationships, and 6 logical modules in one file. 4 of 4 contracts, data objects and artifacts have a schema sidecar; `ag summary` lists the rest. 0 of 3 guardrails reference check files; this briefing does not record whether those checks pass.
 
 ## Find the relevant design
 

@@ -31,5 +31,9 @@
     "withoutSchema": [
       "contract:greeting"
     ]
+  },
+  "checks": {
+    "guardrails": 1,
+    "withChecks": 0
   }
 }

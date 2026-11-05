@@ -57,5 +57,9 @@
     "withSchema": 4,
     "withExamples": 4,
     "withoutSchema": []
+  },
+  "checks": {
+    "guardrails": 3,
+    "withChecks": 0
   }
 }

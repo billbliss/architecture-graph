@@ -230,8 +230,23 @@
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "relationships"
     },
+    "relationship:audit-guidance": {
+      "objectId": "relationship:audit-guidance",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:audit-handoff": {
+      "objectId": "relationship:audit-handoff",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
     "relationship:audit-proof-boundary": {
       "objectId": "relationship:audit-proof-boundary",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:audit-validator": {
+      "objectId": "relationship:audit-validator",
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "relationships"
     },

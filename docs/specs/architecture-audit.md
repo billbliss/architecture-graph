@@ -61,10 +61,10 @@ The audit package depends on core and uses only core's public library API to loa
 Users run the audit as `ag audit`; there is no second command. The hand-off contract is deliberately narrow:
 
 1. Core lists `audit` in `ag --help` whether or not the audit is installed.
-2. Core resolves the project as for every other command, honoring `--config`.
+2. Core resolves the project as for every other command, honoring `--config`. `--config` may come before `audit` (`ag --config FILE audit ...`) or after it (`ag audit --config FILE ...`). When it comes after, core reads it and leaves it in `args`; the audit treats `configPath` as authoritative and accepts and ignores `--config` in its own arguments. No other global option before `audit` is recognized.
 3. Core looks for `@billbliss/architecture-graph-audit` from the project's root, not from wherever `ag` itself is installed. A globally installed `ag` therefore uses the project's audit package, and `npx` runs behave the same way.
 4. If the package is missing, core prints how to install it and exits with code 1.
-5. Core calls the package's one exported entry point, `runAudit(args, { configPath, protocol })`. `args` are everything after `audit`, passed through unparsed. Core's own argument checks do not apply to them.
+5. Core calls the package's one exported entry point, `runAudit(args, { configPath, protocol })`. `args` are everything after `audit`, passed through unparsed. Core's own argument checks do not apply to them. Besides `--config`, core reads only whether `--json` is present, to format its own hand-off errors as JSON; it removes nothing from `args`. `runAudit` returns, or resolves to, the process exit code, an integer from 0 to 255. Any other result is treated as a failed run: core reports that the audit returned no exit code and exits 1, so an audit never passes by accident.
 6. `protocol` is the hand-off protocol number, starting at 1 and independent of either package's version. The audit declares which protocol numbers it supports. On a mismatch, it fails with a message naming the versions needed, such as "this audit needs AG 0.6 or later," and exits with code 1.
 
 Core has no other knowledge of the audit: about thirty lines of hand-off code, the package name and the protocol number. It never loads TypeScript or reads source.
@@ -90,6 +90,7 @@ The repository uses npm workspaces (npm 7 or later). Developers never use `npm l
 - The audit package lives in `packages/audit/` with its own `package.json`, source, tests and build.
 - One `npm install` at the root installs both packages and links the audit to the local core, so changes to core are visible to the audit immediately.
 - Core's `files` list continues to decide what its tarball contains, so the audit's code and TypeScript never enter core's published package.
+- The audit's `exports` entry for `.` includes a `default` (or `require`) condition. Core finds the package with `createRequire(...).resolve` from the project root, which does not match an `import`-only export.
 - Commands run per package (`npm test --workspace packages/audit`) or for both (`npm test --workspaces`).
 - Core builds first: the audit's TypeScript build depends on core's compiled output and type declarations, so the root build script builds core and then the audit.
 

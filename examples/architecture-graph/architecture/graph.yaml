@@ -70,7 +70,8 @@ nodes:
     kind: component
     name: Structural validator
     description: Checks shape, globally unique identities, endpoint kinds, references, ownership cycles,
-      single owner/authority and module imports/exports. Checks sidecar placement, that each schema
+      single owner/authority and module imports/exports. Checks that check references sit on
+      guardrail nodes and never on relationships, without reading them. Checks sidecar placement, that each schema
       sidecar is valid JSON Schema and that every example conforms. Unresolved owner/authority
       alternatives are excluded from conflict checks; unassigned nodes are permitted. Rules read files
       only through a file source and run unchanged under a sync driver (Node) or an async driver
@@ -203,7 +204,9 @@ nodes:
       only a check reference kind on guardrail nodes and a narrow, protocol-versioned hand-off for
       ag audit; it never parses check files or reads source, so boundary:declarations-not-proof
       stays true for core. Both packages are released together at first; a peer range, the
-      hand-off protocol and public-API-only access keep independent releases possible."
+      hand-off protocol and public-API-only access keep independent releases possible. The core
+      part (check references, the hand-off with protocol 1, and the guidance count) is implemented;
+      the audit package is not built yet, so this decision stays proposed."
     status: proposed
     module: module:declarations
     references:
@@ -432,7 +435,8 @@ nodes:
     name: Generated briefing and summary
     description: guidance.md is a bounded overview with retrieval and maintenance instructions, up to 12
       modules and 10 open questions. summary.json preserves counts and all unresolved
-      nodes/relationships. Both are derived and never design authority.
+      nodes/relationships. Both count guardrails that reference check files, never whether those
+      checks pass. Both are derived and never design authority.
     status: implemented
     module: module:interfaces
     references:
@@ -475,7 +479,9 @@ nodes:
       Consumers should load through loadProject before querying and reload after edits.
       sidecarValidator compiles a schema sidecar with validation's rules and throws if it is invalid.
       The core entry point offers the same validation from a file source, async by default with sync
-      variants; the main entry point's synchronous root-path functions are unchanged.
+      variants; the main entry point's synchronous root-path functions are unchanged. ag audit hands off to
+      the optional audit package, exits 1 when that package is missing, and otherwise returns the
+      audit's own exit code.
     status: implemented
     module: module:interfaces
     references:
@@ -1317,11 +1323,50 @@ relationships:
     kind: affects
     from: decision:architecture-audit
     to: contract:authored-format
-    description: Would add a check reference kind, allowed only on guardrail nodes, within format 1.
-    status: proposed
+    description: Adds a check reference kind, allowed only on guardrail nodes, within format 1. A check reference does not satisfy implemented status.
+    status: implemented
     references:
       - kind: design
         path: docs/specs/architecture-audit.md
+      - kind: implementation
+        path: src/schema.ts
+  - id: relationship:audit-validator
+    kind: affects
+    from: decision:architecture-audit
+    to: component:structural-validator
+    description: Validation reports check references on non-guardrail nodes or on relationships; like any reference, a check file must exist. Core never parses check files.
+    status: implemented
+    references:
+      - kind: design
+        path: docs/specs/architecture-audit.md
+      - kind: implementation
+        path: src/validation.ts
+      - kind: test
+        path: test/foundation.test.js
+  - id: relationship:audit-handoff
+    kind: affects
+    from: decision:architecture-audit
+    to: contract:public-operations
+    description: ag audit resolves the project, finds the optional audit package from the project root and calls runAudit with the arguments after audit unparsed and hand-off protocol 1. A missing package exits 1 with install instructions; otherwise the audit decides the exit code, and a result that is not an integer exit code fails closed with exit 1.
+    status: implemented
+    references:
+      - kind: design
+        path: docs/specs/architecture-audit.md
+      - kind: implementation
+        path: src/cli.ts
+      - kind: test
+        path: test/audit-handoff.test.js
+  - id: relationship:audit-guidance
+    kind: affects
+    from: decision:architecture-audit
+    to: component:artifact-generator
+    description: Summary and guidance count guardrails that reference check files, never whether those checks pass.
+    status: implemented
+    references:
+      - kind: design
+        path: docs/specs/architecture-audit.md
+      - kind: implementation
+        path: src/artifacts.ts
   - id: relationship:audit-proof-boundary
     kind: affects
     from: decision:architecture-audit
@@ -1397,7 +1442,9 @@ modules:
       - component:project-loader
       - contract:authored-format
     imports:
+      - component:artifact-generator
       - component:lookup-indexes
+      - contract:public-operations
   - id: module:context
     name: Indexes and focused context
     description: Owns disposable lookup indexes and bounded retrieval. Imports validated project
