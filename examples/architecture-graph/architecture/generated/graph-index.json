@@ -704,6 +704,24 @@
       ],
       "status": "implemented"
     },
+    "decision:architecture-audit": {
+      "description": "Proposed: an ag audit command runs checks declared in the graph and attached to guardrails. Version 1 has forbidden module dependencies and forbidden reachability from entry files, for TypeScript and JavaScript, with a reviewed baseline of known findings that must shrink. Unresolved imports are findings, never silent passes. If implemented, AG reads source imports for the first time, so boundary:declarations-not-proof must be narrowed: the audit checks import structure, not behavior, and a clean audit is not proof that the code conforms.",
+      "id": "decision:architecture-audit",
+      "kind": "decision",
+      "module": "module:declarations",
+      "name": "Architecture Audit checks declared structural rules against code",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/specs/architecture-audit.md"
+        },
+        {
+          "kind": "design",
+          "path": "docs/drift-patterns.md"
+        }
+      ],
+      "status": "proposed"
+    },
     "decision:authored-format-source": {
       "description": "Open: Zod definitions in src/schema.ts generate the published JSON Schema today. A hand-written JSON Schema as the source would make the language-neutral contract authoritative for other readers such as a browser viewer, at the cost of rewriting working validation. Revisit when a viewer reads the published schema.",
       "id": "decision:authored-format-source",
@@ -1062,6 +1080,34 @@
       ],
       "status": "implemented",
       "to": "contract:public-operations"
+    },
+    "relationship:audit-format": {
+      "description": "Would add optional checks, module paths and an audit configuration section within format 1.",
+      "from": "decision:architecture-audit",
+      "id": "relationship:audit-format",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/specs/architecture-audit.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "contract:authored-format"
+    },
+    "relationship:audit-proof-boundary": {
+      "description": "Would narrow the boundary from not reading source at all to checking import structure only, still without claiming conformance.",
+      "from": "decision:architecture-audit",
+      "id": "relationship:audit-proof-boundary",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/specs/architecture-audit.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "boundary:declarations-not-proof"
     },
     "relationship:browser-core-validator": {
       "description": "File existence and sidecar reads move behind a file-source interface.",

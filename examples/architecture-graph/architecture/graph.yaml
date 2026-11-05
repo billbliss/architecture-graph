@@ -191,6 +191,22 @@ nodes:
         path: src/validation.ts
       - kind: test
         path: test/foundation.test.js
+  - id: decision:architecture-audit
+    kind: decision
+    name: Architecture Audit checks declared structural rules against code
+    description: "Proposed: an ag audit command runs checks declared in the graph and attached to
+      guardrails. Version 1 has forbidden module dependencies and forbidden reachability from entry
+      files, for TypeScript and JavaScript, with a reviewed baseline of known findings that must
+      shrink. Unresolved imports are findings, never silent passes. If implemented, AG reads source
+      imports for the first time, so boundary:declarations-not-proof must be narrowed: the audit
+      checks import structure, not behavior, and a clean audit is not proof that the code conforms."
+    status: proposed
+    module: module:declarations
+    references:
+      - kind: design
+        path: docs/specs/architecture-audit.md
+      - kind: design
+        path: docs/drift-patterns.md
   - id: decision:authored-format-source
     kind: decision
     name: Code-first or schema-first authored format?
@@ -1293,6 +1309,24 @@ relationships:
     references:
       - kind: implementation
         path: src/validation.ts
+  - id: relationship:audit-format
+    kind: affects
+    from: decision:architecture-audit
+    to: contract:authored-format
+    description: Would add optional checks, module paths and an audit configuration section within format 1.
+    status: proposed
+    references:
+      - kind: design
+        path: docs/specs/architecture-audit.md
+  - id: relationship:audit-proof-boundary
+    kind: affects
+    from: decision:architecture-audit
+    to: boundary:declarations-not-proof
+    description: Would narrow the boundary from not reading source at all to checking import structure only, still without claiming conformance.
+    status: proposed
+    references:
+      - kind: design
+        path: docs/specs/architecture-audit.md
   - id: relationship:format-source-format
     kind: affects
     from: decision:authored-format-source
