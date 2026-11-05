@@ -130,6 +130,11 @@
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "nodes"
     },
+    "decision:architecture-audit": {
+      "objectId": "decision:architecture-audit",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
     "decision:authored-format-source": {
       "objectId": "decision:authored-format-source",
       "path": "examples/architecture-graph/architecture/graph.yaml",
@@ -217,6 +222,16 @@
     },
     "relationship:api-authority": {
       "objectId": "relationship:api-authority",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:audit-format": {
+      "objectId": "relationship:audit-format",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:audit-proof-boundary": {
+      "objectId": "relationship:audit-proof-boundary",
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "relationships"
     },

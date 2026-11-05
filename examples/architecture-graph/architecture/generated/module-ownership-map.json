@@ -61,6 +61,7 @@
         "component:structural-validator",
         "contract:authored-format",
         "contract:logical-modules",
+        "decision:architecture-audit",
         "decision:authored-format-source",
         "decision:browser-safe-core",
         "decision:contract-sidecars",
@@ -68,6 +69,8 @@
         "decision:single-canonical-file"
       ],
       "relationshipIds": [
+        "relationship:audit-format",
+        "relationship:audit-proof-boundary",
         "relationship:browser-core-validator",
         "relationship:format-source-format",
         "relationship:format-source-model",
