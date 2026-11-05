@@ -20,6 +20,16 @@ TypeScript is now the editable implementation source. npm consumers run the comp
 
 There is one authored graph per configuration. Logical modules, when useful, are groups inside that file. The graph can grow while node, relationship, file, guardrail and module indexes provide focused access. Context output has explicit limits and reports truncation. Loading still parses and validates the entire authored file; free-text queries scan records. These are local file tools, not an incremental graph database.
 
+## Coming in the next release
+
+### Check references and `ag audit`
+
+References gain a `check` kind that names the check file enforcing a guardrail, for the optional Architecture Audit package. It is allowed only on guardrail nodes (`policy`, `constraint` and `boundary` nodes, and any node classified `guardrail`) and never on relationships; the `check-kind` diagnostic reports other placements. AG checks that the file exists and does not read it. A check reference does not satisfy `implemented` status. The graph format stays **1**; older toolkit versions reject graphs that use the new kind.
+
+`ag audit` hands its arguments to `@billbliss/architecture-graph-audit` when that package is installed in the project, and otherwise prints how to install it and exits 1. Core never reads source code; only the audit package does, and its findings are advisory, not proof of conformance. See [guardrail check files](reference.md#guardrail-check-files).
+
+`summary.json` gains a `checks` section and `guidance.md` one sentence counting guardrails with check files, so existing generated output is stale after upgrading. Run `ag generate` once and commit the result.
+
 ## Added in 0.4.0
 
 ### Contract sidecars

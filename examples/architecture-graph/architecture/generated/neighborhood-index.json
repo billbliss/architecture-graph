@@ -99,6 +99,7 @@
     },
     "component:artifact-generator": {
       "inbound": [
+        "relationship:audit-guidance",
         "relationship:fallback-generator"
       ],
       "outbound": [
@@ -193,6 +194,7 @@
     },
     "component:structural-validator": {
       "inbound": [
+        "relationship:audit-validator",
         "relationship:browser-core-validator",
         "relationship:original-compatibility-validator",
         "relationship:sidecars-validator"
@@ -236,6 +238,7 @@
     "contract:public-operations": {
       "inbound": [
         "relationship:api-authority",
+        "relationship:audit-handoff",
         "relationship:human-api"
       ],
       "outbound": []
@@ -257,7 +260,10 @@
       "inbound": [],
       "outbound": [
         "relationship:audit-format",
-        "relationship:audit-proof-boundary"
+        "relationship:audit-guidance",
+        "relationship:audit-handoff",
+        "relationship:audit-proof-boundary",
+        "relationship:audit-validator"
       ]
     },
     "decision:authored-format-source": {

@@ -98,6 +98,13 @@ function* graphRules(value: unknown): FileTask<Diagnostic[]> {
       }
     }
   }
+  // Check files belong to guardrails; core confirms only placement and existence, never their content.
+  for (const edge of graph.relationships) for (const ref of edge.references) {
+    if (ref.kind === 'check') add('check-kind', edge.id, `check references are not allowed on relationships: ${ref.path}`);
+  }
+  for (const node of graph.nodes) if (!isGuardrailNode(node) && node.references.some(ref => ref.kind === 'check')) {
+    add('check-kind', node.id, 'check references are only allowed on guardrail nodes: policy, constraint or boundary, or a node classified guardrail');
+  }
   errors.push(...(yield* sidecarRules(graph)));
   // Each ownership link is visited once, including large chains.
   const finished = new Set<string>();

@@ -19,7 +19,7 @@ export const RelationshipKindSchema = z.enum([
   'adapts', 'validates', 'supersedes', 'emits_evidence', 'guarded_by',
 ]);
 export const ReferenceSchema = z.strictObject({
-  kind: z.enum(['design', 'implementation', 'test', 'schema', 'example']), path: text, description: text.optional(),
+  kind: z.enum(['design', 'implementation', 'test', 'schema', 'example', 'check']), path: text, description: text.optional(),
 });
 const status = z.enum(['proposed', 'implemented', 'unresolved']);
 export const NodeSchema = z.strictObject({

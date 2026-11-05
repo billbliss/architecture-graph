@@ -8,7 +8,7 @@ Structural validation only; declarations and file existence do not prove impleme
 
 Greeting CLI, service, and formatting semantics; excludes persistence and network. Localization is not yet decided.
 
-The graph records 8 ideas, 9 relationships, and 2 logical modules in one file. 0 of 1 contracts, data objects and artifacts have a schema sidecar; `ag summary` lists the rest.
+The graph records 8 ideas, 9 relationships, and 2 logical modules in one file. 0 of 1 contracts, data objects and artifacts have a schema sidecar; `ag summary` lists the rest. 0 of 1 guardrails reference check files; this briefing does not record whether those checks pass.
 
 ## Find the relevant design
 

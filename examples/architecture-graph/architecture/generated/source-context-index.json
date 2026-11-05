@@ -136,7 +136,10 @@
       ],
       "relationshipIds": [
         "relationship:audit-format",
-        "relationship:audit-proof-boundary"
+        "relationship:audit-guidance",
+        "relationship:audit-handoff",
+        "relationship:audit-proof-boundary",
+        "relationship:audit-validator"
       ]
     },
     "docs/specs/contract-sidecars.md": {
@@ -392,6 +395,7 @@
         "decision:contract-sidecars"
       ],
       "relationshipIds": [
+        "relationship:audit-guidance",
         "relationship:fallback-generator",
         "relationship:generator-files",
         "relationship:generator-indexes",
@@ -411,6 +415,7 @@
       ],
       "relationshipIds": [
         "relationship:api-authority",
+        "relationship:audit-handoff",
         "relationship:entrypoints-context",
         "relationship:entrypoints-guidance",
         "relationship:entrypoints-install",
@@ -538,6 +543,7 @@
         "decision:typescript-source"
       ],
       "relationshipIds": [
+        "relationship:audit-format",
         "relationship:original-compatibility-format",
         "relationship:schema-authority",
         "relationship:sidecars-format",
@@ -587,6 +593,7 @@
         "decision:original-graph-compatibility"
       ],
       "relationshipIds": [
+        "relationship:audit-validator",
         "relationship:browser-core-validator",
         "relationship:module-authority",
         "relationship:original-compatibility-validator",
@@ -595,6 +602,12 @@
         "relationship:validator-owns",
         "relationship:validator-proof",
         "relationship:validator-provides"
+      ]
+    },
+    "test/audit-handoff.test.js": {
+      "nodeIds": [],
+      "relationshipIds": [
+        "relationship:audit-handoff"
       ]
     },
     "test/consumer.mjs": {
@@ -618,7 +631,9 @@
         "contract:stable-locators",
         "decision:original-graph-compatibility"
       ],
-      "relationshipIds": []
+      "relationshipIds": [
+        "relationship:audit-validator"
+      ]
     },
     "test/toolkit.test.js": {
       "nodeIds": [

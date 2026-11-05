@@ -1,10 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, writeFileSync, readFileSync, rmSync, existsSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { stringify } from 'yaml';
-import { initProject, loadProject, getContext, syncArtifacts, renderArtifacts, validateGraph, parseDeclarations } from '../lib/index.js';
+import { initProject, loadProject, getContext, formatContext, summarize, syncArtifacts, renderArtifacts, validateGraph, parseDeclarations } from '../lib/index.js';
 
 function project(t, graph) {
   const root = mkdtempSync(join(tmpdir(), 'ag-foundation-'));
@@ -128,6 +128,41 @@ test('test references are indexed for file lookup but do not satisfy implemented
   assert.deepEqual(getContext(p.load(),{file:'a.test.js',depth:0}).nodes.map(n=>n.id),['component:a']);
   Object.assign(g.nodes[1],{status:'implemented',references:[{kind:'test',path:'a.test.js'}]});
   assert(validateGraph(g,p.root).some(e=>e.code==='implemented-source'&&e.at==='component:b'));
+});
+test('check references are allowed on guardrail nodes only, never on relationships, and surface in context', t => {
+  const g=graph([node('repository'),node('feature-neutral','constraint'),node('write-validation','workflow',{classification:'guardrail'}),node('plain','workflow')],
+    [edge('guard','component:repository','constraint:feature-neutral','guarded_by')]);
+  const p=project(t,g);
+  mkdirSync(join(p.root,'architecture/checks'));
+  for (const name of ['feature-neutral','write-validation']) writeFileSync(join(p.root,`architecture/checks/${name}.yaml`),'not parsed by core: [');
+  g.nodes[1].references.push({kind:'check',path:'architecture/checks/feature-neutral.yaml'});
+  g.nodes[2].references.push({kind:'check',path:'architecture/checks/write-validation.yaml'});
+  assert.deepEqual(validateGraph(g,p.root),[]);
+  p.save();
+  const loaded=p.load();
+  assert.deepEqual(getContext(loaded,{file:'architecture/checks/feature-neutral.yaml',depth:0}).nodes.map(n=>n.id),['constraint:feature-neutral']);
+  const guard=getContext(loaded,{guardrail:'constraint:feature-neutral'});
+  assert(guard.nodes.find(n=>n.id==='constraint:feature-neutral').references.some(r=>r.kind==='check'&&r.path==='architecture/checks/feature-neutral.yaml'));
+  assert(guard.nodes.some(n=>n.id==='component:repository'));
+  assert.match(formatContext(guard),/check: architecture\/checks\/feature-neutral\.yaml/);
+  assert.deepEqual(summarize(loaded).checks,{guardrails:2,withChecks:2});
+  assert.match(renderArtifacts(loaded)['guidance.md'],/2 of 2 guardrails reference check files; this briefing does not record whether those checks pass\./);
+  // Placement: not on other nodes, not on relationships; existence is still required.
+  g.nodes[3].references.push({kind:'check',path:'architecture/checks/write-validation.yaml'});
+  g.relationships[0].references.push({kind:'check',path:'architecture/checks/feature-neutral.yaml'});
+  g.nodes[1].references.push({kind:'check',path:'architecture/checks/missing.yaml'});
+  const errors=validateGraph(g,p.root);
+  assert(errors.some(e=>e.code==='check-kind'&&e.at==='workflow:plain'));
+  assert(errors.some(e=>e.code==='check-kind'&&e.at==='relationship:guard'));
+  assert(errors.some(e=>e.code==='reference'&&e.at==='constraint:feature-neutral'&&/missing\.yaml: file not found/.test(e.message)));
+  assert(!errors.some(e=>e.code==='check-kind'&&['constraint:feature-neutral','workflow:write-validation'].includes(e.at)));
+});
+test('a check reference does not satisfy implemented status', t => {
+  const g=graph([node('rule','constraint')]);
+  const p=project(t,g);
+  writeFileSync(join(p.root,'rule.check.yaml'),'');
+  Object.assign(g.nodes[0],{status:'implemented',references:[{kind:'check',path:'rule.check.yaml'}]});
+  assert(validateGraph(g,p.root).some(e=>e.code==='implemented-source'&&e.at==='constraint:rule'));
 });
 test('5,000-node graph uses focused indexes and produces a bounded briefing', t => {
   const nodes=Array.from({length:5000},(_,i)=>node(String(i).padStart(5,'0')));
