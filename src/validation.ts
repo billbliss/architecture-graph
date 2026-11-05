@@ -1,5 +1,5 @@
 // Browser-safe: file access goes through a FileSource; no Node built-ins.
-import { GraphSchema, GUARDRAIL_KINDS, shapeErrors, type Graph, type Diagnostic, type NodeKind, type RelationshipKind } from './schema.js';
+import { GraphSchema, GUARDRAIL_KINDS, isGuardrailNode, shapeErrors, type Graph, type Diagnostic, type NodeKind, type RelationshipKind } from './schema.js';
 import { assertProjectPath, messageOf, runAsync, runSync, kindOf, type AsyncFileSource, type FileSource, type FileTask } from './files.js';
 import { sidecarRules } from './sidecars.js';
 
@@ -73,7 +73,6 @@ function* graphRules(value: unknown): FileTask<Diagnostic[]> {
     governed_by: [null, ['policy', 'constraint']],
     authority_for: [['actor', 'component', 'contract'], ['capability', 'contract', 'artifact', 'data_object']],
     constrained_by: [null, ['boundary', 'contract', 'policy', 'constraint']],
-    guarded_by: [null, ['boundary', 'policy', 'constraint']],
     preserves: [null, ['contract', 'artifact', 'data_object']],
     affects: [['decision'], null],
   };
@@ -83,6 +82,9 @@ function* graphRules(value: unknown): FileTask<Diagnostic[]> {
     const rule = rules[edge.kind];
     if (rule && ((rule[0] && !rule[0].includes(from.kind)) || (rule[1] && !rule[1].includes(to.kind)))) {
       add('relationship-kind', edge.id, `Invalid ${from.kind} → ${to.kind} for ${edge.kind}`);
+    }
+    if (edge.kind === 'guarded_by' && !isGuardrailNode(to)) {
+      add('relationship-kind', edge.id, `Invalid ${from.kind} → ${to.kind} for guarded_by; the target must be a policy, constraint or boundary, or be classified guardrail`);
     }
     if (edge.from === edge.to) add('self-relationship', edge.id, 'Self relationships are not supported');
     if (edge.status !== 'unresolved' && ['owns', 'authority_for'].includes(edge.kind)) {

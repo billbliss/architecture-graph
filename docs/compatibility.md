@@ -8,6 +8,8 @@ For example, a formatter can be recorded as the authority for greeting text whil
 
 The toolkit and skill are **0.4.0**. Graph and configuration format **1** remain readable; generated artifacts use format **2**. New projects start with one YAML file. The toolkit also reads existing standalone JSON graphs, so changing formats is optional. Older toolkit versions may reject the added fields and vocabulary; compatibility is from 0.1 data to the 0.4 reader.
 
+0.4.1 lets `guarded_by` target any node classified `guardrail`. Before, the guardrail index listed such nodes but the validator rejected `guarded_by` relationships to them, so `ag context --guardrail` could not show what they guard. Graphs valid under 0.4.0 remain valid.
+
 0.4.0 adds contract sidecars, the browser-safe validation core, a `test` reference kind and the original `guardrail:` ID prefix, described below. Generated `summary.json` and `guidance.md` change shape, so regenerate after upgrading.
 
 0.3.1 adds the toolkit’s own architecture example, clarifies the coding-agent workflow, and prepares approval-based npm releases. Graph, configuration and generated formats are unchanged.
@@ -51,7 +53,7 @@ Zod supplies runtime validation and TypeScript types from the same schemas. Expo
 
 ## Compatibility with the original AG
 
-The original AG kinds (`workflow`, `adapter`, `data_object`, `constraint`, `evidence_surface`) and relationships (`adapts`, `validates`, `supersedes`, `emits_evidence`, `guarded_by`) are accepted alongside the standalone vocabulary. The original classification labels can be recorded, but do not certify behavior. Both underscore and hyphen ID prefixes for original underscore kinds are accepted without renaming IDs, as is the original `guardrail:` prefix for `policy`, `constraint` and `boundary` nodes.
+The original AG kinds (`workflow`, `adapter`, `data_object`, `constraint`, `evidence_surface`) and relationships (`adapts`, `validates`, `supersedes`, `emits_evidence`, `guarded_by`) are accepted alongside the standalone vocabulary. The original classification labels can be recorded, but do not certify behavior. A node classified `guardrail` is a guardrail like any `policy`, `constraint` or `boundary` node: `ag context --guardrail` lists it, and `guarded_by` may target it. Both underscore and hyphen ID prefixes for original underscore kinds are accepted without renaming IDs, as is the original `guardrail:` prefix for `policy`, `constraint` and `boundary` nodes.
 
 This is vocabulary continuity, not a promise to load the predecessor application’s YAML unchanged. The standalone graph still uses its own lifecycle, reference and top-level fields. There is no automatic migration from that private application. The exact preservation/exclusion decisions are in [the foundation inventory](foundation.md).
 

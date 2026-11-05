@@ -179,7 +179,9 @@ nodes:
       without satisfying implemented status, and policy, constraint and boundary nodes may use the
       original guardrail: ID prefix. Both stay within format 1, so a graph from the original AG can
       move to the standalone toolkit without renaming IDs or relabeling tests as implementation.
-      Relationship-kind rules are not relaxed; such graphs fix invalid edges instead."
+      Relationship-kind rules are not relaxed; such graphs fix invalid edges instead. One definition
+      of a guardrail applies everywhere: a policy, constraint or boundary node, or any node
+      classified guardrail; guarded_by may target any of them (0.4.1)."
     status: implemented
     module: module:declarations
     references:
