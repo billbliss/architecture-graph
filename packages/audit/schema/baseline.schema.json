@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "baselineVersion": {
+      "type": "string",
+      "const": "1"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^check:[^|]+\\|(dep|reach|unresolved)\\|"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "added": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          }
+        },
+        "required": [
+          "key",
+          "reason",
+          "added"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "baselineVersion",
+    "findings"
+  ],
+  "additionalProperties": false
+}

@@ -60,6 +60,11 @@
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "nodes"
     },
+    "component:audit-package": {
+      "objectId": "component:audit-package",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
     "component:build-release": {
       "objectId": "component:build-release",
       "path": "examples/architecture-graph/architecture/graph.yaml",
@@ -97,6 +102,11 @@
     },
     "component:structural-validator": {
       "objectId": "component:structural-validator",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "contract:audit-formats": {
+      "objectId": "contract:audit-formats",
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "nodes"
     },
@@ -195,6 +205,11 @@
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "nodes"
     },
+    "module:audit": {
+      "objectId": "module:audit",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "modules"
+    },
     "module:context": {
       "objectId": "module:context",
       "path": "examples/architecture-graph/architecture/graph.yaml",
@@ -237,6 +252,26 @@
     },
     "relationship:audit-handoff": {
       "objectId": "relationship:audit-handoff",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:audit-package": {
+      "objectId": "relationship:audit-package",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:audit-package-formats": {
+      "objectId": "relationship:audit-package-formats",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:audit-package-loads-project": {
+      "objectId": "relationship:audit-package-loads-project",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:audit-package-proof-boundary": {
+      "objectId": "relationship:audit-package-proof-boundary",
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "relationships"
     },

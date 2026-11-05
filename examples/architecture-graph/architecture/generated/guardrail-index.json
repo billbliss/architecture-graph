@@ -4,10 +4,12 @@
       "guardedNodeIds": [
         "artifact:bundled-skill",
         "component:artifact-generator",
+        "component:audit-package",
         "component:structural-validator"
       ],
       "nodeId": "boundary:declarations-not-proof",
       "relationshipIds": [
+        "relationship:audit-package-proof-boundary",
         "relationship:generator-proof",
         "relationship:skill-proof",
         "relationship:validator-proof"

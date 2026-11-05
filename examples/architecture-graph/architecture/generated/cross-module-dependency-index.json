@@ -12,6 +12,24 @@
       "targetId": "contract:public-operations",
       "toModule": "module:interfaces"
     },
+    "relationship:audit-package": {
+      "edgeId": "relationship:audit-package",
+      "fromModule": "module:declarations",
+      "targetId": "component:audit-package",
+      "toModule": "module:audit"
+    },
+    "relationship:audit-package-loads-project": {
+      "edgeId": "relationship:audit-package-loads-project",
+      "fromModule": "module:audit",
+      "targetId": "capability:load-project",
+      "toModule": "module:declarations"
+    },
+    "relationship:audit-package-proof-boundary": {
+      "edgeId": "relationship:audit-package-proof-boundary",
+      "fromModule": "module:audit",
+      "targetId": "boundary:declarations-not-proof",
+      "toModule": "module:declarations"
+    },
     "relationship:build-api": {
       "edgeId": "relationship:build-api",
       "fromModule": "module:delivery",

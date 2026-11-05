@@ -1,0 +1,53 @@
+{
+  "name": "@billbliss/architecture-graph-audit",
+  "version": "0.4.1",
+  "description": "Optional Architecture Audit for AG: structural checks of TypeScript and JavaScript imports against guardrail check files",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./schema/check": "./schema/check.schema.json",
+    "./schema/audit-config": "./schema/audit-config.schema.json",
+    "./schema/baseline": "./schema/baseline.schema.json",
+    "./schema/report": "./schema/report.schema.json"
+  },
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib",
+    "src",
+    "schema",
+    "README.md",
+    "tsconfig.json"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node scripts/schema.mjs",
+    "test": "npm run build && node --test test/*.test.js"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/billbliss/architecture-graph.git",
+    "directory": "packages/audit"
+  },
+  "peerDependencies": {
+    "@billbliss/architecture-graph": ">=0.4.1 <0.6.0"
+  },
+  "dependencies": {
+    "typescript": "5.9.3",
+    "yaml": "2.9.0",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@billbliss/architecture-graph": "file:../..",
+    "@types/node": "22.20.2"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  }
+}
