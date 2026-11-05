@@ -82,6 +82,37 @@ AG's own graph enforces this split with tripwires once the audit exists:
 - core source must not reach the audit package or `typescript`;
 - audit source may import core only through its public entry points.
 
+### Packaging and development
+
+The repository uses npm workspaces (npm 7 or later). Developers never use `npm link`.
+
+- The root `package.json` remains the core package and adds `"workspaces": ["packages/audit"]`. Core does not move into a subfolder.
+- The audit package lives in `packages/audit/` with its own `package.json`, source, tests and build.
+- One `npm install` at the root installs both packages and links the audit to the local core, so changes to core are visible to the audit immediately.
+- Core's `files` list continues to decide what its tarball contains, so the audit's code and TypeScript never enter core's published package.
+- Commands run per package (`npm test --workspace packages/audit`) or for both (`npm test --workspaces`).
+- Core builds first: the audit's TypeScript build depends on core's compiled output and type declarations, so the root build script builds core and then the audit.
+
+Users never see the workspace. They install two ordinary published packages:
+
+```sh
+npm install --save-dev @billbliss/architecture-graph @billbliss/architecture-graph-audit
+```
+
+Development, testing and trying the audit in another project from a local tarball need none of the release changes below. Only the audit's first publication does.
+
+#### Release pipeline changes
+
+The release workflow currently packages, tests and publishes one tarball. Before the audit's first release it must:
+
+- package both workspaces, recording a checksum and source commit for each tarball, as it does today for core;
+- run the packaged-consumer tests with both tarballs installed together, covering the hand-off, and with core alone, covering the "audit not installed" message;
+- publish core first, then the audit, each through npm trusted publishing with the existing approval gate;
+- check, on a rerun, each package's registry bytes independently, as it does today for core;
+- verify a clean install of both packages by name after publication.
+
+Each package needs its own trusted-publisher entry on npmjs.com. If npm requires a package to exist before a trusted publisher can be configured, the audit's first version is published manually once, and every later release goes through the workflow. Confirm npm's current behavior when preparing that release, and update `docs/publishing.md` with the outcome.
+
 ## Core format change: the `check` reference kind
 
 `references[].kind` gains `check`. A check reference names a check file. It is allowed only on guardrail nodes: `policy`, `constraint` and `boundary` nodes, and nodes classified `guardrail`. It is not allowed on relationships.
@@ -337,7 +368,7 @@ Core:
 
 Audit package:
 
-6. A new package in this repository, released with core at first. It depends on `typescript`, declares core as a peer dependency range, and exports `runAudit`.
+6. A new workspace package in `packages/audit/`, released with core at first. It depends on `typescript`, declares core as a peer dependency range, and exports `runAudit`. Add the root `workspaces` entry and build order.
 7. The check file, audit configuration, baseline and report formats, with published JSON Schemas.
 8. TypeScript discovery, selector expansion, the two check kinds, finding keys, baseline classification, `--base-baseline`, and the commands above.
 9. Tests:
@@ -349,7 +380,8 @@ Both:
 
 10. Skill: the workflow rules above, conditioned on the audit being installed.
 11. AG's own graph: this specification as `decision:architecture-audit` (proposed), and the two self-checks once implemented.
-12. Documentation: reference, compatibility, packaging, and the CI guide (run `ag audit --tripwires` in pull requests).
+12. Documentation: reference, compatibility, packaging, development (workspaces), publishing (two packages), and the CI guide (run `ag audit --tripwires` in pull requests).
+13. Release pipeline: the changes in [Release pipeline changes](#release-pipeline-changes), completed before the audit's first publication but not needed to develop or test it.
 
 ## Decisions
 
