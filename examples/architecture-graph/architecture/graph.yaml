@@ -191,6 +191,24 @@ nodes:
         path: src/validation.ts
       - kind: test
         path: test/foundation.test.js
+  - id: decision:architecture-audit
+    kind: decision
+    name: Architecture Audit is an optional package that checks code structure
+    description: "Proposed: an optional audit package, run as ag audit, checks structural rules
+      against code. Version 1 has forbidden module dependencies and forbidden reachability from
+      entry files, for TypeScript and JavaScript, with a reviewed in-repository baseline of known
+      findings that must shrink. Unresolved imports are findings, never silent passes. Core gains
+      only a check reference kind on guardrail nodes and a narrow, protocol-versioned hand-off for
+      ag audit; it never parses check files or reads source, so boundary:declarations-not-proof
+      stays true for core. Both packages are released together at first; a peer range, the
+      hand-off protocol and public-API-only access keep independent releases possible."
+    status: proposed
+    module: module:declarations
+    references:
+      - kind: design
+        path: docs/specs/architecture-audit.md
+      - kind: design
+        path: docs/drift-patterns.md
   - id: decision:authored-format-source
     kind: decision
     name: Code-first or schema-first authored format?
@@ -1293,6 +1311,24 @@ relationships:
     references:
       - kind: implementation
         path: src/validation.ts
+  - id: relationship:audit-format
+    kind: affects
+    from: decision:architecture-audit
+    to: contract:authored-format
+    description: Would add a check reference kind, allowed only on guardrail nodes, within format 1.
+    status: proposed
+    references:
+      - kind: design
+        path: docs/specs/architecture-audit.md
+  - id: relationship:audit-proof-boundary
+    kind: affects
+    from: decision:architecture-audit
+    to: boundary:declarations-not-proof
+    description: Keeps the boundary true for core by placing all source reading in the optional audit package, whose results still do not establish conformance.
+    status: proposed
+    references:
+      - kind: design
+        path: docs/specs/architecture-audit.md
   - id: relationship:format-source-format
     kind: affects
     from: decision:authored-format-source

@@ -54,6 +54,12 @@
         "relationship:human-model"
       ]
     },
+    "docs/drift-patterns.md": {
+      "nodeIds": [
+        "decision:architecture-audit"
+      ],
+      "relationshipIds": []
+    },
     "docs/foundation.md": {
       "nodeIds": [
         "contract:stable-locators",
@@ -123,6 +129,15 @@
         "decision:marketplace-readiness"
       ],
       "relationshipIds": []
+    },
+    "docs/specs/architecture-audit.md": {
+      "nodeIds": [
+        "decision:architecture-audit"
+      ],
+      "relationshipIds": [
+        "relationship:audit-format",
+        "relationship:audit-proof-boundary"
+      ]
     },
     "docs/specs/contract-sidecars.md": {
       "nodeIds": [

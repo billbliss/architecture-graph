@@ -704,6 +704,24 @@
       ],
       "status": "implemented"
     },
+    "decision:architecture-audit": {
+      "description": "Proposed: an optional audit package, run as ag audit, checks structural rules against code. Version 1 has forbidden module dependencies and forbidden reachability from entry files, for TypeScript and JavaScript, with a reviewed in-repository baseline of known findings that must shrink. Unresolved imports are findings, never silent passes. Core gains only a check reference kind on guardrail nodes and a narrow, protocol-versioned hand-off for ag audit; it never parses check files or reads source, so boundary:declarations-not-proof stays true for core. Both packages are released together at first; a peer range, the hand-off protocol and public-API-only access keep independent releases possible.",
+      "id": "decision:architecture-audit",
+      "kind": "decision",
+      "module": "module:declarations",
+      "name": "Architecture Audit is an optional package that checks code structure",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/specs/architecture-audit.md"
+        },
+        {
+          "kind": "design",
+          "path": "docs/drift-patterns.md"
+        }
+      ],
+      "status": "proposed"
+    },
     "decision:authored-format-source": {
       "description": "Open: Zod definitions in src/schema.ts generate the published JSON Schema today. A hand-written JSON Schema as the source would make the language-neutral contract authoritative for other readers such as a browser viewer, at the cost of rewriting working validation. Revisit when a viewer reads the published schema.",
       "id": "decision:authored-format-source",
@@ -1062,6 +1080,34 @@
       ],
       "status": "implemented",
       "to": "contract:public-operations"
+    },
+    "relationship:audit-format": {
+      "description": "Would add a check reference kind, allowed only on guardrail nodes, within format 1.",
+      "from": "decision:architecture-audit",
+      "id": "relationship:audit-format",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/specs/architecture-audit.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "contract:authored-format"
+    },
+    "relationship:audit-proof-boundary": {
+      "description": "Keeps the boundary true for core by placing all source reading in the optional audit package, whose results still do not establish conformance.",
+      "from": "decision:architecture-audit",
+      "id": "relationship:audit-proof-boundary",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/specs/architecture-audit.md"
+        }
+      ],
+      "status": "proposed",
+      "to": "boundary:declarations-not-proof"
     },
     "relationship:browser-core-validator": {
       "description": "File existence and sidecar reads move behind a file-source interface.",

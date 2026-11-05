@@ -28,6 +28,7 @@
     },
     "boundary:declarations-not-proof": {
       "inbound": [
+        "relationship:audit-proof-boundary",
         "relationship:generator-proof",
         "relationship:skill-proof",
         "relationship:validator-proof"
@@ -207,6 +208,7 @@
     },
     "contract:authored-format": {
       "inbound": [
+        "relationship:audit-format",
         "relationship:format-source-format",
         "relationship:human-model",
         "relationship:original-compatibility-format",
@@ -249,6 +251,13 @@
       "inbound": [],
       "outbound": [
         "relationship:agent-workflow"
+      ]
+    },
+    "decision:architecture-audit": {
+      "inbound": [],
+      "outbound": [
+        "relationship:audit-format",
+        "relationship:audit-proof-boundary"
       ]
     },
     "decision:authored-format-source": {
