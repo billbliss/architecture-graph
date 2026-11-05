@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "auditVersion": {
+      "type": "string",
+      "const": "1"
+    },
+    "baseline": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "typescript": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "paths": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          },
+          "tsconfig": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "required": [
+          "paths",
+          "tsconfig"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "modules": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "minItems": 1,
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      }
+    }
+  },
+  "required": [
+    "auditVersion",
+    "baseline",
+    "typescript"
+  ],
+  "additionalProperties": false
+}

@@ -1,5 +1,26 @@
 {
   "modules": {
+    "module:audit": {
+      "description": "The optional audit package, the only part of AG that reads source code. Imports project loading and the proof boundary from core's public surface.",
+      "exports": [
+        "component:audit-package"
+      ],
+      "id": "module:audit",
+      "imports": [
+        "boundary:declarations-not-proof",
+        "capability:load-project"
+      ],
+      "name": "Optional Architecture Audit",
+      "nodeIds": [
+        "component:audit-package",
+        "contract:audit-formats"
+      ],
+      "relationshipIds": [
+        "relationship:audit-package-formats",
+        "relationship:audit-package-loads-project",
+        "relationship:audit-package-proof-boundary"
+      ]
+    },
     "module:context": {
       "description": "Owns disposable lookup indexes and bounded retrieval. Imports validated project snapshots; exports context capability and index construction for loading/generation.",
       "exports": [
@@ -49,6 +70,7 @@
       "id": "module:declarations",
       "imports": [
         "component:artifact-generator",
+        "component:audit-package",
         "component:lookup-indexes",
         "contract:public-operations"
       ],
@@ -74,6 +96,7 @@
         "relationship:audit-format",
         "relationship:audit-guidance",
         "relationship:audit-handoff",
+        "relationship:audit-package",
         "relationship:audit-proof-boundary",
         "relationship:audit-validator",
         "relationship:browser-core-validator",

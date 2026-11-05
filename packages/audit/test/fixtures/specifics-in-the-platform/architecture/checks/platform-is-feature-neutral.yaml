@@ -1,0 +1,8 @@
+checkVersion: "1"
+checks:
+  - id: check:platform-independent-of-features
+    kind: forbidden_dependency
+    mode: tripwire
+    description: The generic platform must not import feature code.
+    from: [module:platform]
+    to: [module:features]

@@ -312,6 +312,52 @@
       ],
       "status": "implemented"
     },
+    "component:audit-package": {
+      "description": "The optional @billbliss/architecture-graph-audit workspace package, run through core's ag audit hand-off. It loads the project through core's public API only, validates check files, ag.audit.json and the baseline, discovers runtime imports with the TypeScript compiler API using the configured tsconfig aliases, and reports forbidden_dependency findings with stable keys, classified against the baseline (new, baselined, resolved), with exit codes 0, 1 and 3. Unresolved imports and unparseable checked files are findings, never silent passes. forbidden_reachability and the baseline accept and prune commands are not built yet. Findings are advisory, not proof of conformance.",
+      "id": "component:audit-package",
+      "kind": "component",
+      "module": "module:audit",
+      "name": "Architecture Audit package",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/specs/architecture-audit.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "packages/audit/src/run.ts"
+        },
+        {
+          "kind": "implementation",
+          "path": "packages/audit/src/load.ts"
+        },
+        {
+          "kind": "implementation",
+          "path": "packages/audit/src/discovery.ts"
+        },
+        {
+          "kind": "implementation",
+          "path": "packages/audit/src/checks.ts"
+        },
+        {
+          "kind": "implementation",
+          "path": "packages/audit/package.json"
+        },
+        {
+          "kind": "test",
+          "path": "packages/audit/test/discovery.test.js"
+        },
+        {
+          "kind": "test",
+          "path": "packages/audit/test/run.test.js"
+        },
+        {
+          "kind": "test",
+          "path": "packages/audit/test/drift-patterns.test.js"
+        }
+      ],
+      "status": "implemented"
+    },
     "component:build-release": {
       "description": "Compiles strict TypeScript to runnable JavaScript, declarations and source maps; refreshes schemas; packs a local archive with checksum/build metadata. CI verifies Linux Node 22/24 and macOS Node 22, then uploads archives. Configured stable tag releases require environment approval before OIDC publication of the tested archive and registry installation checks.",
       "id": "component:build-release",
@@ -532,6 +578,28 @@
       ],
       "status": "implemented"
     },
+    "contract:audit-formats": {
+      "description": "Check files (checkVersion 1), ag.audit.json (auditVersion 1), the baseline (baselineVersion 1) and the JSON report (reportVersion 1), defined with Zod and published as JSON Schemas in the audit package. Finding keys are readable and stable across runs; reports are not committed or used as input to later runs.",
+      "id": "contract:audit-formats",
+      "kind": "contract",
+      "module": "module:audit",
+      "name": "Audit file formats",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/specs/architecture-audit.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "packages/audit/src/formats.ts"
+        },
+        {
+          "kind": "schema",
+          "path": "packages/audit/schema/report.schema.json"
+        }
+      ],
+      "status": "implemented"
+    },
     "contract:authored-format": {
       "description": "One configured graph has stable IDs, typed nodes and relationships, lifecycle statuses and local references. Unknown fields/versions and duplicate keys are rejected. YAML is the default; legacy standalone JSON remains readable.",
       "id": "contract:authored-format",
@@ -705,7 +773,7 @@
       "status": "implemented"
     },
     "decision:architecture-audit": {
-      "description": "Proposed: an optional audit package, run as ag audit, checks structural rules against code. Version 1 has forbidden module dependencies and forbidden reachability from entry files, for TypeScript and JavaScript, with a reviewed in-repository baseline of known findings that must shrink. Unresolved imports are findings, never silent passes. Core gains only a check reference kind on guardrail nodes and a narrow, protocol-versioned hand-off for ag audit; it never parses check files or reads source, so boundary:declarations-not-proof stays true for core. Both packages are released together at first; a peer range, the hand-off protocol and public-API-only access keep independent releases possible. The core part (check references, the hand-off with protocol 1, and the guidance count) is implemented; the audit package is not built yet, so this decision stays proposed.",
+      "description": "Proposed: an optional audit package, run as ag audit, checks structural rules against code. Version 1 has forbidden module dependencies and forbidden reachability from entry files, for TypeScript and JavaScript, with a reviewed in-repository baseline of known findings that must shrink. Unresolved imports are findings, never silent passes. Core gains only a check reference kind on guardrail nodes and a narrow, protocol-versioned hand-off for ag audit; it never parses check files or reads source, so boundary:declarations-not-proof stays true for core. Both packages are released together at first; a peer range, the hand-off protocol and public-API-only access keep independent releases possible. The core part (check references, the hand-off with protocol 1, and the guidance count) is implemented, and the audit package exists with forbidden_dependency; forbidden_reachability, the baseline accept and prune commands and AG's own self-checks are not built yet, so this decision stays proposed.",
       "id": "decision:architecture-audit",
       "kind": "decision",
       "module": "module:declarations",
@@ -1138,6 +1206,66 @@
       ],
       "status": "implemented",
       "to": "contract:public-operations"
+    },
+    "relationship:audit-package": {
+      "description": "Adds the optional audit package as an npm workspace; core's tarball excludes it and core never imports it statically.",
+      "from": "decision:architecture-audit",
+      "id": "relationship:audit-package",
+      "kind": "affects",
+      "references": [
+        {
+          "kind": "design",
+          "path": "docs/specs/architecture-audit.md"
+        },
+        {
+          "kind": "implementation",
+          "path": "packages/audit/package.json"
+        }
+      ],
+      "status": "implemented",
+      "to": "component:audit-package"
+    },
+    "relationship:audit-package-formats": {
+      "description": "The audit package defines and validates its own file formats; core knows only that guardrails reference check files.",
+      "from": "component:audit-package",
+      "id": "relationship:audit-package-formats",
+      "kind": "authority_for",
+      "references": [
+        {
+          "kind": "implementation",
+          "path": "packages/audit/src/formats.ts"
+        }
+      ],
+      "status": "implemented",
+      "to": "contract:audit-formats"
+    },
+    "relationship:audit-package-loads-project": {
+      "description": "The audit loads and validates the project through core's public loadProject, never through core's internal files.",
+      "from": "component:audit-package",
+      "id": "relationship:audit-package-loads-project",
+      "kind": "depends_on",
+      "references": [
+        {
+          "kind": "implementation",
+          "path": "packages/audit/src/load.ts"
+        }
+      ],
+      "status": "implemented",
+      "to": "capability:load-project"
+    },
+    "relationship:audit-package-proof-boundary": {
+      "description": "Audit findings are advisory structural evidence within declared scopes, not proof that code conforms to the graph.",
+      "from": "component:audit-package",
+      "id": "relationship:audit-package-proof-boundary",
+      "kind": "constrained_by",
+      "references": [
+        {
+          "kind": "implementation",
+          "path": "packages/audit/src/run.ts"
+        }
+      ],
+      "status": "implemented",
+      "to": "boundary:declarations-not-proof"
     },
     "relationship:audit-proof-boundary": {
       "description": "Keeps the boundary true for core by placing all source reading in the optional audit package, whose results still do not establish conformance.",

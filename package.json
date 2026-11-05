@@ -37,13 +37,16 @@
     "lib",
     "tsconfig.json"
   ],
+  "workspaces": [
+    "packages/audit"
+  ],
   "scripts": {
-    "test": "npm run build && node --test test/*.test.js",
+    "test": "npm run build && node --test test/*.test.js && node --test packages/audit/test/*.test.js",
     "test:consumer": "node test/consumer.mjs",
     "verify": "npm test && npm run test:consumer",
     "package": "node scripts/package.mjs",
     "test:package": "node scripts/test-package.mjs",
-    "build": "tsc -p tsconfig.json && node scripts/schema.mjs",
+    "build": "tsc -p tsconfig.json && node scripts/schema.mjs && npm run build --workspace packages/audit",
     "prepack": "npm run build"
   },
   "license": "MIT",
@@ -58,7 +61,6 @@
     "zod": "4.6.7"
   },
   "devDependencies": {
-    "@billbliss/architecture-graph": "^0.3.0",
     "@types/node": "22.20.2",
     "esbuild": "0.28.2",
     "typescript": "5.9.3"
