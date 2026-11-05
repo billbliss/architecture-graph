@@ -4,9 +4,11 @@ AG helps you keep a design record understandable and internally consistent. It c
 
 For example, a formatter can be recorded as the authority for greeting text while another component secretly builds its own greeting. AG checks the declaration, not the runtime behavior. Application tests and review still matter. The hello-world tests deliberately demonstrate that difference.
 
-## The 0.4.0 toolkit
+## The 0.4.1 toolkit
 
-The toolkit and skill are **0.4.0**. Graph and configuration format **1** remain readable; generated artifacts use format **2**. New projects start with one YAML file. The toolkit also reads existing standalone JSON graphs, so changing formats is optional. Older toolkit versions may reject the added fields and vocabulary; compatibility is from 0.1 data to the 0.4 reader.
+The toolkit and skill are **0.4.1**. Graph and configuration format **1** remain readable; generated artifacts use format **2**. New projects start with one YAML file. The toolkit also reads existing standalone JSON graphs, so changing formats is optional. Older toolkit versions may reject the added fields and vocabulary; compatibility is from 0.1 data to the 0.4 reader.
+
+0.4.1 lets `guarded_by` target any node classified `guardrail`. Before, the guardrail index listed such nodes but the validator rejected `guarded_by` relationships to them, so `ag context --guardrail` could not show what they guard. Graphs valid under 0.4.0 remain valid.
 
 0.4.0 adds contract sidecars, the browser-safe validation core, a `test` reference kind and the original `guardrail:` ID prefix, described below. Generated `summary.json` and `guidance.md` change shape, so regenerate after upgrading.
 
@@ -40,7 +42,7 @@ Two diagnostic messages change so that they are the same in every environment an
 
 ## Upgrade an existing standalone project
 
-1. Install the 0.4.0 package and refresh the installed skill after reviewing local changes: `ag skill install --agent claude --force`, or `--agent codex`.
+1. Install the 0.4.1 package and refresh the installed skill after reviewing local changes: `ag skill install --agent claude --force`, or `--agent codex`.
 2. Keep the existing JSON graph and configuration if desired; they remain supported. `ag init` is for new projects and will not overwrite your files.
 3. Run `ag validate`, then `ag generate` to rebuild the new indexes and briefing. Review the changes and run `ag check`.
 4. If you prefer YAML, convert the same graph data to one `.yaml` file and update `config.graph`. Compare the loaded data before removing the JSON file. Do not maintain two independent authored copies.
@@ -51,7 +53,7 @@ Zod supplies runtime validation and TypeScript types from the same schemas. Expo
 
 ## Compatibility with the original AG
 
-The original AG kinds (`workflow`, `adapter`, `data_object`, `constraint`, `evidence_surface`) and relationships (`adapts`, `validates`, `supersedes`, `emits_evidence`, `guarded_by`) are accepted alongside the standalone vocabulary. The original classification labels can be recorded, but do not certify behavior. Both underscore and hyphen ID prefixes for original underscore kinds are accepted without renaming IDs, as is the original `guardrail:` prefix for `policy`, `constraint` and `boundary` nodes.
+The original AG kinds (`workflow`, `adapter`, `data_object`, `constraint`, `evidence_surface`) and relationships (`adapts`, `validates`, `supersedes`, `emits_evidence`, `guarded_by`) are accepted alongside the standalone vocabulary. The original classification labels can be recorded, but do not certify behavior. A node classified `guardrail` is a guardrail like any `policy`, `constraint` or `boundary` node: `ag context --guardrail` lists it, and `guarded_by` may target it. Both underscore and hyphen ID prefixes for original underscore kinds are accepted without renaming IDs, as is the original `guardrail:` prefix for `policy`, `constraint` and `boundary` nodes.
 
 This is vocabulary continuity, not a promise to load the predecessor application’s YAML unchanged. The standalone graph still uses its own lifecycle, reference and top-level fields. There is no automatic migration from that private application. The exact preservation/exclusion decisions are in [the foundation inventory](foundation.md).
 

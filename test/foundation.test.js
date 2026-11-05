@@ -108,6 +108,16 @@ test('original guardrail: IDs are accepted for rule kinds only, and index as gua
   g.nodes[0].id='guardrail:pipeline';g.relationships[0].from='guardrail:pipeline';
   assert(validateGraph(g,p.root).some(e=>e.code==='identifier-kind'&&e.at==='guardrail:pipeline'));
 });
+test('guarded_by accepts any guardrail node, matching what the guardrail index lists', t => {
+  const g=graph([node('repository'),node('write-validation','workflow',{classification:'guardrail'}),node('plain','workflow')],
+    [edge('guard','component:repository','workflow:write-validation','guarded_by')]);
+  const p=project(t,g);
+  assert.deepEqual(validateGraph(g,p.root),[]);
+  const c=getContext(p.load(),{guardrail:'workflow:write-validation'});
+  assert(c.nodes.some(n=>n.id==='component:repository'));
+  g.relationships[0].to='workflow:plain';
+  assert(validateGraph(g,p.root).some(e=>e.code==='relationship-kind'&&e.at==='relationship:guard'));
+});
 test('test references are indexed for file lookup but do not satisfy implemented status', t => {
   const g=graph([node('a'),node('b')],[edge('ab','component:a','component:b')]);
   const p=project(t,g);

@@ -1,4 +1,4 @@
-import { GUARDRAIL_KINDS, type Graph } from './schema.js';
+import { isGuardrailNode, type Graph } from './schema.js';
 import type { GraphIndex } from './model.js';
 
 const dictionary = <T>(): Record<string, T> => Object.create(null) as Record<string, T>;
@@ -21,7 +21,7 @@ export function buildIndex(graph: Graph, path: string): GraphIndex {
       const entry = index.sources[ref.path] ??= { nodeIds: [], relationshipIds: [] };
       entry.nodeIds.push(node.id);
     }
-    if (GUARDRAIL_KINDS.includes(node.kind) || node.classification === 'guardrail') {
+    if (isGuardrailNode(node)) {
       index.guardrails[node.id] = { nodeId: node.id, guardedNodeIds: [], relationshipIds: [] };
     }
   }

@@ -10,6 +10,9 @@ export const NodeKindSchema = z.enum([
 ]);
 /** Rule-like kinds: indexed as guardrails, and may use the original `guardrail:` ID prefix. */
 export const GUARDRAIL_KINDS: readonly NodeKind[] = ['policy', 'constraint', 'boundary'];
+/** The one guardrail definition: a rule kind, or any node classified guardrail. */
+export const isGuardrailNode = (node: { kind: NodeKind; classification?: string }): boolean =>
+  GUARDRAIL_KINDS.includes(node.kind) || node.classification === 'guardrail';
 export const RelationshipKindSchema = z.enum([
   'owns', 'provides', 'depends_on', 'consumes', 'produces', 'preserves',
   'governed_by', 'authority_for', 'constrained_by', 'affects',
