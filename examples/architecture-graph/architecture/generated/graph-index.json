@@ -1118,7 +1118,7 @@
       "to": "component:artifact-generator"
     },
     "relationship:audit-handoff": {
-      "description": "ag audit resolves the project, finds the optional audit package from the project root and calls runAudit with the arguments after audit unparsed and hand-off protocol 1. A missing package exits 1 with install instructions; otherwise the audit decides the exit code.",
+      "description": "ag audit resolves the project, finds the optional audit package from the project root and calls runAudit with the arguments after audit unparsed and hand-off protocol 1. A missing package exits 1 with install instructions; otherwise the audit decides the exit code, and a result that is not an integer exit code fails closed with exit 1.",
       "from": "decision:architecture-audit",
       "id": "relationship:audit-handoff",
       "kind": "affects",

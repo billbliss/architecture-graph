@@ -26,7 +26,7 @@ function installStub(root, { protocols = [1], exitCode = 0 } = {}) {
 export async function runAudit(args, { configPath, protocol }) {
   console.log(JSON.stringify({ args, configPath, protocol }));
   if (!protocols.includes(protocol)) { console.error('This audit needs AG 0.6 or later.'); return 1; }
-  return ${exitCode};
+  return ${String(exitCode)};
 }
 `);
 }
@@ -46,7 +46,9 @@ test('a missing audit package prints how to install it and exits 1', t => {
   assert.match(result.stderr, /npm install --save-dev @billbliss\/architecture-graph-audit/);
   const json = ag(root, 'audit', '--json');
   assert.equal(json.status, 1);
-  assert.match(JSON.parse(json.stderr).errors[0].message, /not installed/);
+  const reported = JSON.parse(json.stderr);
+  assert.match(reported.errors[0].message, /not installed/);
+  assert(!('valid' in reported), 'audit hand-off errors are not validation results');
 });
 
 test('core passes protocol 1, and the audit reports a protocol mismatch with exit 1', t => {
@@ -81,4 +83,14 @@ test('arguments after audit pass through unparsed, and the audit decides the exi
   const result = ag(root, 'audit', ...args);
   assert.equal(result.status, 3, result.stderr);
   assert.deepEqual(handed(result), { args, configPath: join(root, 'ag.config.json'), protocol: 1 });
+});
+
+test('an audit that returns no integer exit code fails closed with exit 1', t => {
+  for (const exitCode of ['undefined', '"0"', '1.5', '-1', '256']) {
+    const root = project(t);
+    installStub(root, { exitCode });
+    const result = ag(root, 'audit');
+    assert.equal(result.status, 1, exitCode);
+    assert.match(result.stderr, /audit returned no exit code/, exitCode);
+  }
 });

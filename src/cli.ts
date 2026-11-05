@@ -47,7 +47,10 @@ async function handOffAudit(argv: string[], at: number): Promise<number> {
   }
   const { runAudit } = await import(pathToFileURL(entry).href) as { runAudit?: RunAudit };
   if (typeof runAudit !== 'function') throw new Error(`${AUDIT_PACKAGE} at ${entry} does not export runAudit`);
-  return runAudit(args, { configPath: join(project.root, basename(configPath)), protocol: AUDIT_PROTOCOL });
+  const code: unknown = await runAudit(args, { configPath: join(project.root, basename(configPath)), protocol: AUDIT_PROTOCOL });
+  // Fail closed: an audit that reports no exit code must never pass by accident.
+  if (!Number.isInteger(code) || (code as number) < 0 || (code as number) > 255) throw new Error(`The audit returned no exit code (got ${String(code)}); treating the run as failed`);
+  return code as number;
 }
 const argv = process.argv.slice(2);
 const auditAt = argv[0] === 'audit' ? 0 : argv[0] === '--config' && argv[2] === 'audit' ? 2 : argv[0]?.startsWith('--config=') && argv[1] === 'audit' ? 1 : -1;
@@ -94,6 +97,8 @@ try {
   }
 } catch (caught) {
   const error = caught instanceof Error ? caught : new Error(String(caught));
-  console.error(asJSON ? JSON.stringify({ valid: false, errors: (error instanceof AGError ? error.errors : undefined) ?? [{ code: 'input', message: error.message }] }) : error.message);
+  const errors = (error instanceof AGError ? error.errors : undefined) ?? [{ code: 'input', message: error.message }];
+  // Audit hand-off errors are not validation results, so they carry no `valid` field.
+  console.error(asJSON ? JSON.stringify(auditAt >= 0 ? { errors } : { valid: false, errors }) : error.message);
   process.exitCode = 1;
 }
