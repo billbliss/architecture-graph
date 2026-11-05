@@ -705,11 +705,11 @@
       "status": "implemented"
     },
     "decision:architecture-audit": {
-      "description": "Proposed: an ag audit command runs checks declared in the graph and attached to guardrails. Version 1 has forbidden module dependencies and forbidden reachability from entry files, for TypeScript and JavaScript, with a reviewed baseline of known findings that must shrink. Unresolved imports are findings, never silent passes. If implemented, AG reads source imports for the first time, so boundary:declarations-not-proof must be narrowed: the audit checks import structure, not behavior, and a clean audit is not proof that the code conforms.",
+      "description": "Proposed: an optional audit package, run as ag audit, checks structural rules against code. Version 1 has forbidden module dependencies and forbidden reachability from entry files, for TypeScript and JavaScript, with a reviewed in-repository baseline of known findings that must shrink. Unresolved imports are findings, never silent passes. Core gains only a check reference kind on guardrail nodes and a hand-off for ag audit; it never parses check files or reads source, so boundary:declarations-not-proof stays true for core.",
       "id": "decision:architecture-audit",
       "kind": "decision",
       "module": "module:declarations",
-      "name": "Architecture Audit checks declared structural rules against code",
+      "name": "Architecture Audit is an optional package that checks code structure",
       "references": [
         {
           "kind": "design",
@@ -1082,7 +1082,7 @@
       "to": "contract:public-operations"
     },
     "relationship:audit-format": {
-      "description": "Would add optional checks, module paths and an audit configuration section within format 1.",
+      "description": "Would add a check reference kind, allowed only on guardrail nodes, within format 1.",
       "from": "decision:architecture-audit",
       "id": "relationship:audit-format",
       "kind": "affects",
@@ -1096,7 +1096,7 @@
       "to": "contract:authored-format"
     },
     "relationship:audit-proof-boundary": {
-      "description": "Would narrow the boundary from not reading source at all to checking import structure only, still without claiming conformance.",
+      "description": "Keeps the boundary true for core by placing all source reading in the optional audit package, whose results still do not establish conformance.",
       "from": "decision:architecture-audit",
       "id": "relationship:audit-proof-boundary",
       "kind": "affects",
