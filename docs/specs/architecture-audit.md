@@ -54,11 +54,33 @@ A **check** is a structural rule, declared in a check file referenced by a guard
 | `@billbliss/architecture-graph` (core) | Graph format, validation, context, generation, viewer core. Knows that a guardrail has check files, not what they contain | No |
 | `@billbliss/architecture-graph-audit` (optional) | Check file format, source discovery, checks, findings, baseline, report | Yes |
 
-The audit package depends on core and uses its public library API to load the project and find check references. Core never imports the audit package. When a user runs `ag audit`, core looks for the audit package in the project. If it is installed, core hands the command to it. If not, core prints how to install it and exits with an error. Core has no other knowledge of the audit.
+The audit package depends on core and uses only core's public library API to load the project and find check references. It never imports core's internal files. Core never imports the audit package statically. TypeScript is an ordinary dependency of the audit package, so projects that do not install the audit never install it.
 
-Both packages live in this repository and are released together, with matching versions. TypeScript is an ordinary dependency of the audit package, so projects that do not install the audit never install it.
+### The `ag audit` hand-off
 
-AG's own graph enforces this split with a tripwire once the audit exists: core source must not reach the audit package or `typescript`.
+Users run the audit as `ag audit`; there is no second command. The hand-off contract is deliberately narrow:
+
+1. Core lists `audit` in `ag --help` whether or not the audit is installed.
+2. Core resolves the project as for every other command, honoring `--config`.
+3. Core looks for `@billbliss/architecture-graph-audit` from the project's root, not from wherever `ag` itself is installed. A globally installed `ag` therefore uses the project's audit package, and `npx` runs behave the same way.
+4. If the package is missing, core prints how to install it and exits with code 1.
+5. Core calls the package's one exported entry point, `runAudit(args, { configPath, protocol })`. `args` are everything after `audit`, passed through unparsed. Core's own argument checks do not apply to them.
+6. `protocol` is the hand-off protocol number, starting at 1 and independent of either package's version. The audit declares which protocol numbers it supports. On a mismatch, it fails with a message naming the versions needed, such as "this audit needs AG 0.6 or later," and exits with code 1.
+
+Core has no other knowledge of the audit: about thirty lines of hand-off code, the package name and the protocol number. It never loads TypeScript or reads source.
+
+### Releases
+
+Both packages live in this repository and are, at first, released together with matching versions. That is a working practice, not a requirement. Compatibility is explicit, so independent releases need no redesign later:
+
+- The audit declares the core versions it supports as a peer dependency range, for example `^0.5.0`, and npm warns when the installed core is outside it.
+- The hand-off protocol number, not matching versions, decides whether core and the audit can work together.
+- The audit uses only core's public library API, so core's internals can change without breaking it.
+
+AG's own graph enforces this split with tripwires once the audit exists:
+
+- core source must not reach the audit package or `typescript`;
+- audit source may import core only through its public entry points.
 
 ## Core format change: the `check` reference kind
 
@@ -272,7 +294,7 @@ Accepting a finding is the easiest way to make a failing tripwire pass. An agent
 | Copy-forward | Version 2: clone detection within declared scopes |
 | Decorative identity | Not structural; tests and review |
 
-AG's own graph will use the audit on itself: one tripwire checks that the browser-safe core (`src/core.ts`) cannot reach `src/node.ts` or any `node:*` package, a property tested today only by bundling, and another checks that core source cannot reach the audit package or `typescript`.
+AG's own graph will use the audit on itself. One tripwire checks that the browser-safe core (`src/core.ts`) cannot reach `src/node.ts` or any `node:*` package, a property tested today only by bundling. Others check the package split described in [Two packages](#two-packages).
 
 ## Later versions
 
@@ -309,16 +331,19 @@ Core:
 
 1. `src/schema.ts`: add the `check` reference kind. Regenerate the published JSON schema.
 2. `src/validation.ts`: check references only on guardrail nodes, never on relationships.
-3. `src/cli.ts`: `ag audit` hands off to the audit package if it is installed, and otherwise explains how to install it.
+3. `src/cli.ts`: the `ag audit` hand-off as specified, including resolution from the project root, unparsed argument pass-through and the protocol number.
 4. Generated guidance: count guardrails with check files.
 5. Viewer: show check files on guardrail panels, as file contents.
 
 Audit package:
 
-6. A new package in this repository, released with core, depending on core and `typescript`.
+6. A new package in this repository, released with core at first. It depends on `typescript`, declares core as a peer dependency range, and exports `runAudit`.
 7. The check file, audit configuration, baseline and report formats, with published JSON Schemas.
 8. TypeScript discovery, selector expansion, the two check kinds, finding keys, baseline classification, `--base-baseline`, and the commands above.
-9. Tests. Each drift pattern in the version 1 table gets a fixture that passes `ag validate` and fails `ag audit` for the right reason. Each discovery rule gets a negative control: type-only imports ignored, aliases resolved, an unresolved dynamic import reported, and unreachable unsupported syntax ignored.
+9. Tests:
+   - hand-off: package missing, protocol mismatch, global `ag` with a project-local audit, and argument pass-through;
+   - each drift pattern in the version 1 table gets a fixture that passes `ag validate` and fails `ag audit` for the right reason;
+   - each discovery rule gets a negative control: type-only imports ignored, aliases resolved, an unresolved dynamic import reported, and unreachable unsupported syntax ignored.
 
 Both:
 
@@ -326,8 +351,11 @@ Both:
 11. AG's own graph: this specification as `decision:architecture-audit` (proposed), and the two self-checks once implemented.
 12. Documentation: reference, compatibility, packaging, and the CI guide (run `ag audit --tripwires` in pull requests).
 
+## Decisions
+
+- **One command.** The audit runs as `ag audit` through core's hand-off, not as a separate `ag-audit` command. One command keeps conventions such as `--config` shared and keeps agent instructions simple. The cost is the narrow hand-off contract above.
+- **Released together at first, independent later if needed.** Matching versions are a starting practice. The peer dependency range, the hand-off protocol number and public-API-only access make compatibility explicit, so the packages can be released independently later without redesign.
+
 ## Open questions
 
-- **Package name and command.** The proposal uses `@billbliss/architecture-graph-audit`, run as `ag audit`. A separate `ag-audit` command would avoid core's hand-off, at the cost of a second command for users to learn.
-- **Release coupling.** The proposal releases both packages together with matching versions. Independent versions would let the audit change faster, at the cost of a compatibility range between them.
 - **Report hook.** Version 3's `--on-new-finding` hook runs a project-chosen command. Decide whether a hook belongs in the audit at all, or whether consuming the report in CI is enough.

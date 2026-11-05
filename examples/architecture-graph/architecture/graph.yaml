@@ -198,8 +198,10 @@ nodes:
       against code. Version 1 has forbidden module dependencies and forbidden reachability from
       entry files, for TypeScript and JavaScript, with a reviewed in-repository baseline of known
       findings that must shrink. Unresolved imports are findings, never silent passes. Core gains
-      only a check reference kind on guardrail nodes and a hand-off for ag audit; it never parses
-      check files or reads source, so boundary:declarations-not-proof stays true for core."
+      only a check reference kind on guardrail nodes and a narrow, protocol-versioned hand-off for
+      ag audit; it never parses check files or reads source, so boundary:declarations-not-proof
+      stays true for core. Both packages are released together at first; a peer range, the
+      hand-off protocol and public-API-only access keep independent releases possible."
     status: proposed
     module: module:declarations
     references:
