@@ -3,6 +3,7 @@
     "module:audit": {
       "description": "The optional audit package, the only part of AG that reads source code. Imports project loading and the proof boundary from core's public surface.",
       "exports": [
+        "boundary:audit-package-split",
         "component:audit-package"
       ],
       "id": "module:audit",
@@ -12,13 +13,15 @@
       ],
       "name": "Optional Architecture Audit",
       "nodeIds": [
+        "boundary:audit-package-split",
         "component:audit-package",
         "contract:audit-formats"
       ],
       "relationshipIds": [
         "relationship:audit-package-formats",
         "relationship:audit-package-loads-project",
-        "relationship:audit-package-proof-boundary"
+        "relationship:audit-package-proof-boundary",
+        "relationship:audit-package-split"
       ]
     },
     "module:context": {
@@ -63,6 +66,7 @@
         "boundary:declarations-not-proof",
         "boundary:project-local-files",
         "capability:load-project",
+        "constraint:core-is-browser-safe",
         "component:declaration-model",
         "component:project-loader",
         "contract:authored-format"
@@ -83,6 +87,7 @@
         "component:declaration-model",
         "component:project-loader",
         "component:structural-validator",
+        "constraint:core-is-browser-safe",
         "contract:authored-format",
         "contract:logical-modules",
         "decision:architecture-audit",
@@ -192,7 +197,8 @@
         "capability:install-agent-skill",
         "capability:load-project",
         "capability:retrieve-context",
-        "component:lookup-indexes"
+        "component:lookup-indexes",
+        "constraint:core-is-browser-safe"
       ],
       "name": "Public interfaces and guidance",
       "nodeIds": [
@@ -204,6 +210,7 @@
       ],
       "relationshipIds": [
         "relationship:api-authority",
+        "relationship:core-browser-safe",
         "relationship:entrypoints-context",
         "relationship:entrypoints-guidance",
         "relationship:entrypoints-install",

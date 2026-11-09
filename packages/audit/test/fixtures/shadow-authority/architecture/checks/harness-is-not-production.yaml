@@ -1,0 +1,8 @@
+checkVersion: "1"
+checks:
+  - id: check:production-avoids-harness
+    kind: forbidden_reachability
+    mode: tripwire
+    description: Production entry points must not reach the experimentation harness.
+    entries: [src/server/main.ts]
+    forbidden: [module:harness]

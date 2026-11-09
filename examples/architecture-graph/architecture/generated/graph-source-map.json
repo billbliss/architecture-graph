@@ -15,6 +15,11 @@
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "nodes"
     },
+    "boundary:audit-package-split": {
+      "objectId": "boundary:audit-package-split",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
     "boundary:declarations-not-proof": {
       "objectId": "boundary:declarations-not-proof",
       "path": "examples/architecture-graph/architecture/graph.yaml",
@@ -102,6 +107,11 @@
     },
     "component:structural-validator": {
       "objectId": "component:structural-validator",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "nodes"
+    },
+    "constraint:core-is-browser-safe": {
+      "objectId": "constraint:core-is-browser-safe",
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "nodes"
     },
@@ -275,6 +285,11 @@
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "relationships"
     },
+    "relationship:audit-package-split": {
+      "objectId": "relationship:audit-package-split",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
     "relationship:audit-proof-boundary": {
       "objectId": "relationship:audit-proof-boundary",
       "path": "examples/architecture-graph/architecture/graph.yaml",
@@ -332,6 +347,11 @@
     },
     "relationship:context-provides": {
       "objectId": "relationship:context-provides",
+      "path": "examples/architecture-graph/architecture/graph.yaml",
+      "section": "relationships"
+    },
+    "relationship:core-browser-safe": {
+      "objectId": "relationship:core-browser-safe",
       "path": "examples/architecture-graph/architecture/graph.yaml",
       "section": "relationships"
     },

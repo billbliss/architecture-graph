@@ -206,8 +206,9 @@ nodes:
       stays true for core. Both packages are released together at first; a peer range, the
       hand-off protocol and public-API-only access keep independent releases possible. The core
       part (check references, the hand-off with protocol 1, and the guidance count) is implemented,
-      and the audit package exists with forbidden_dependency; forbidden_reachability, the baseline
-      accept and prune commands and AG's own self-checks are not built yet, so this decision stays proposed."
+      and the audit package implements both check kinds and the baseline commands. AG checks itself with
+      tripwires on constraint:core-is-browser-safe and boundary:audit-package-split. The skill workflow,
+      documentation and the two-package release are not done yet, so this decision stays proposed."
     status: proposed
     module: module:declarations
     references:
@@ -229,6 +230,34 @@ nodes:
         path: docs/development.md
       - kind: design
         path: docs/compatibility.md
+  - id: constraint:core-is-browser-safe
+    kind: constraint
+    name: The core entry point is browser-safe
+    description: "@billbliss/architecture-graph/core (src/core.ts) reaches neither the Node driver (src/node.ts) nor any Node built-in through runtime imports, so the viewer can bundle the same validation as ag validate. A tripwire checks the import graph; a test bundles the entry point for the browser platform."
+    status: implemented
+    module: module:declarations
+    references:
+      - kind: implementation
+        path: src/core.ts
+      - kind: test
+        path: test/core.test.js
+      - kind: check
+        path: examples/architecture-graph/architecture/checks/core-is-browser-safe.yaml
+  - id: boundary:audit-package-split
+    kind: boundary
+    name: Core and the audit stay separate packages
+    description: "Core never reaches the audit package's code or TypeScript; ag audit loads the audit only at run time through the hand-off. The audit uses core only through its public entry points. Tripwires check both directions of the import graph; core's package exports reject deep imports by name."
+    status: implemented
+    module: module:audit
+    references:
+      - kind: implementation
+        path: src/cli.ts
+      - kind: implementation
+        path: packages/audit/src/load.ts
+      - kind: design
+        path: docs/specs/architecture-audit.md
+      - kind: check
+        path: examples/architecture-graph/architecture/checks/audit-package-split.yaml
   - id: decision:browser-safe-core
     kind: decision
     name: Validation runs in browsers as well as Node
@@ -726,9 +755,10 @@ nodes:
     description: "The optional @billbliss/architecture-graph-audit workspace package, run through core's ag audit hand-off.
       It loads the project through core's public API only, validates check files, ag.audit.json and the baseline, discovers
       runtime imports with the TypeScript compiler API using the configured tsconfig aliases, and reports forbidden_dependency
-      findings with stable keys, classified against the baseline (new, baselined, resolved), with exit codes 0, 1 and 3.
-      Unresolved imports and unparseable checked files are findings, never silent passes. forbidden_reachability and the
-      baseline accept and prune commands are not built yet. Findings are advisory, not proof of conformance."
+      and forbidden_reachability findings (shortest import path as evidence) with stable keys, classified against the
+      baseline (new, baselined, resolved), with exit codes 0, 1 and 3. baseline accept adds one current finding with a
+      reason; baseline prune removes resolved entries; nothing accepts every finding. Unresolved imports and unparseable
+      reached files are findings, never silent passes. Findings are advisory, not proof of conformance."
     status: implemented
     module: module:audit
     references:
@@ -750,6 +780,12 @@ nodes:
         path: packages/audit/test/run.test.js
       - kind: test
         path: packages/audit/test/drift-patterns.test.js
+      - kind: test
+        path: packages/audit/test/reachability.test.js
+      - kind: test
+        path: packages/audit/test/baseline.test.js
+      - kind: test
+        path: packages/audit/test/self.test.js
   - id: contract:audit-formats
     kind: contract
     name: Audit file formats
@@ -1513,6 +1549,24 @@ relationships:
         path: docs/specs/architecture-audit.md
       - kind: implementation
         path: packages/audit/package.json
+  - id: relationship:core-browser-safe
+    kind: guarded_by
+    from: component:public-entrypoints
+    to: constraint:core-is-browser-safe
+    description: The core entry point must stay importable in browsers.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/core.ts
+  - id: relationship:audit-package-split
+    kind: guarded_by
+    from: component:audit-package
+    to: boundary:audit-package-split
+    description: The audit reaches core only through its public entry points, and core never reaches the audit.
+    status: implemented
+    references:
+      - kind: implementation
+        path: packages/audit/src/load.ts
 modules:
   - id: module:declarations
     name: Declarations and validity
@@ -1522,6 +1576,7 @@ modules:
       - boundary:declarations-not-proof
       - boundary:project-local-files
       - capability:load-project
+      - constraint:core-is-browser-safe
       - component:declaration-model
       - component:project-loader
       - contract:authored-format
@@ -1557,6 +1612,7 @@ modules:
       - capability:load-project
       - capability:retrieve-context
       - component:lookup-indexes
+      - constraint:core-is-browser-safe
   - id: module:delivery
     name: Agent adoption and distribution
     description: Owns shared skill installation, build/package delivery and adoption decisions. Imports
@@ -1577,6 +1633,7 @@ modules:
     description: The optional audit package, the only part of AG that reads source code. Imports project loading and the
       proof boundary from core's public surface.
     exports:
+      - boundary:audit-package-split
       - component:audit-package
     imports:
       - boundary:declarations-not-proof

@@ -132,6 +132,7 @@
     },
     "docs/specs/architecture-audit.md": {
       "nodeIds": [
+        "boundary:audit-package-split",
         "component:audit-package",
         "contract:audit-formats",
         "decision:architecture-audit"
@@ -171,6 +172,18 @@
         "relationship:browser-core-validator",
         "relationship:website-delivery"
       ]
+    },
+    "examples/architecture-graph/architecture/checks/audit-package-split.yaml": {
+      "nodeIds": [
+        "boundary:audit-package-split"
+      ],
+      "relationshipIds": []
+    },
+    "examples/architecture-graph/architecture/checks/core-is-browser-safe.yaml": {
+      "nodeIds": [
+        "constraint:core-is-browser-safe"
+      ],
+      "relationshipIds": []
     },
     "examples/architecture-graph/contracts/bounded-context.schema.json": {
       "nodeIds": [
@@ -326,10 +339,12 @@
     },
     "packages/audit/src/load.ts": {
       "nodeIds": [
+        "boundary:audit-package-split",
         "component:audit-package"
       ],
       "relationshipIds": [
-        "relationship:audit-package-loads-project"
+        "relationship:audit-package-loads-project",
+        "relationship:audit-package-split"
       ]
     },
     "packages/audit/src/run.ts": {
@@ -339,6 +354,12 @@
       "relationshipIds": [
         "relationship:audit-package-proof-boundary"
       ]
+    },
+    "packages/audit/test/baseline.test.js": {
+      "nodeIds": [
+        "component:audit-package"
+      ],
+      "relationshipIds": []
     },
     "packages/audit/test/discovery.test.js": {
       "nodeIds": [
@@ -352,7 +373,19 @@
       ],
       "relationshipIds": []
     },
+    "packages/audit/test/reachability.test.js": {
+      "nodeIds": [
+        "component:audit-package"
+      ],
+      "relationshipIds": []
+    },
     "packages/audit/test/run.test.js": {
+      "nodeIds": [
+        "component:audit-package"
+      ],
+      "relationshipIds": []
+    },
+    "packages/audit/test/self.test.js": {
       "nodeIds": [
         "component:audit-package"
       ],
@@ -480,6 +513,7 @@
     },
     "src/cli.ts": {
       "nodeIds": [
+        "boundary:audit-package-split",
         "capability:install-agent-skill",
         "component:public-entrypoints",
         "contract:public-operations"
@@ -522,10 +556,13 @@
     "src/core.ts": {
       "nodeIds": [
         "component:public-entrypoints",
+        "constraint:core-is-browser-safe",
         "contract:public-operations",
         "decision:browser-safe-core"
       ],
-      "relationshipIds": []
+      "relationshipIds": [
+        "relationship:core-browser-safe"
+      ]
     },
     "src/files.ts": {
       "nodeIds": [
@@ -693,6 +730,7 @@
     },
     "test/core.test.js": {
       "nodeIds": [
+        "constraint:core-is-browser-safe",
         "decision:browser-safe-core"
       ],
       "relationshipIds": []

@@ -1,5 +1,14 @@
 {
   "guardrails": {
+    "boundary:audit-package-split": {
+      "guardedNodeIds": [
+        "component:audit-package"
+      ],
+      "nodeId": "boundary:audit-package-split",
+      "relationshipIds": [
+        "relationship:audit-package-split"
+      ]
+    },
     "boundary:declarations-not-proof": {
       "guardedNodeIds": [
         "artifact:bundled-skill",
@@ -26,6 +35,15 @@
         "relationship:generator-files",
         "relationship:installer-files",
         "relationship:loader-files"
+      ]
+    },
+    "constraint:core-is-browser-safe": {
+      "guardedNodeIds": [
+        "component:public-entrypoints"
+      ],
+      "nodeId": "constraint:core-is-browser-safe",
+      "relationshipIds": [
+        "relationship:core-browser-safe"
       ]
     }
   }

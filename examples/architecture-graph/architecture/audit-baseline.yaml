@@ -1,0 +1,5 @@
+baselineVersion: "1"
+findings:
+  - key: check:core-without-audit|unresolved|src/cli.ts|pathToFileURL(entry).href
+    reason: "By design: the ag audit hand-off imports the audit package installed in the project at run time, so there is no static import to follow. test/audit-handoff.test.js covers the hand-off."
+    added: 2026-11-09

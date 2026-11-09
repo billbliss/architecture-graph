@@ -4,7 +4,7 @@ import { loadProject, nodeFileSource, parseDeclarations, type Diagnostic, type P
 import { assertProjectPath } from '@billbliss/architecture-graph/core';
 import type { z } from 'zod';
 import { AuditConfigSchema, BaselineSchema, CheckFileSchema, type AuditConfig, type Baseline, type Check } from './formats.js';
-import { globProblem, Repository } from './files.js';
+import { globProblem, isSource, Repository } from './files.js';
 
 export interface LoadedCheck { check: Check; file: string; guardrails: string[] }
 export interface Audit {
@@ -122,7 +122,9 @@ export function loadAudit(configPath: string, auditConfigPath?: string): Audit {
       } else glob(selector, at);
     }
     if (check.kind === 'forbidden_reachability') {
-      for (const entry of check.entries) fileExists(entry, 'entry', at, 'Entry file');
+      for (const entry of check.entries) {
+        if (fileExists(entry, 'entry', at, 'Entry file') && !isSource(entry)) add('entry', at, `Entry ${entry} is not a TypeScript or JavaScript source file`);
+      }
       for (const pattern of check.forbiddenPackages) {
         if (!/^(@[a-z0-9._*-]+\/)?[a-z0-9._*:-]+$/i.test(pattern)) add('package-pattern', at, `${pattern} is not a package name or pattern such as node:* or typescript`);
       }

@@ -1,0 +1,23 @@
+{
+  "auditVersion": "1",
+  "baseline": "architecture/audit-baseline.yaml",
+  "typescript": [
+    {
+      "paths": [
+        "src/**"
+      ],
+      "tsconfig": "tsconfig.json"
+    }
+  ],
+  "modules": {
+    "module:server": [
+      "src/server/**"
+    ],
+    "module:scoring": [
+      "src/scoring/**"
+    ],
+    "module:harness": [
+      "src/harness/**"
+    ]
+  }
+}

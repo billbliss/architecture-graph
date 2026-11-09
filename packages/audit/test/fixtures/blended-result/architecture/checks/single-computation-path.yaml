@@ -1,0 +1,8 @@
+checkVersion: "1"
+checks:
+  - id: check:report-route-single-path
+    kind: forbidden_reachability
+    mode: tripwire
+    description: Creating a report must not reach the alternate computations.
+    entries: [src/routes/create-report.ts]
+    forbidden: [module:alternate-computations]

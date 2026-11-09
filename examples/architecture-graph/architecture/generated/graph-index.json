@@ -110,6 +110,32 @@
       ],
       "status": "implemented"
     },
+    "boundary:audit-package-split": {
+      "description": "Core never reaches the audit package's code or TypeScript; ag audit loads the audit only at run time through the hand-off. The audit uses core only through its public entry points. Tripwires check both directions of the import graph; core's package exports reject deep imports by name.",
+      "id": "boundary:audit-package-split",
+      "kind": "boundary",
+      "module": "module:audit",
+      "name": "Core and the audit stay separate packages",
+      "references": [
+        {
+          "kind": "implementation",
+          "path": "src/cli.ts"
+        },
+        {
+          "kind": "implementation",
+          "path": "packages/audit/src/load.ts"
+        },
+        {
+          "kind": "design",
+          "path": "docs/specs/architecture-audit.md"
+        },
+        {
+          "kind": "check",
+          "path": "examples/architecture-graph/architecture/checks/audit-package-split.yaml"
+        }
+      ],
+      "status": "implemented"
+    },
     "boundary:declarations-not-proof": {
       "description": "AG checks records and file existence, not runtime behavior, architecture coverage, source symbols or truth of implementation claims. Tests and review remain separate; checksums and build metadata are not assurance evidence.",
       "id": "boundary:declarations-not-proof",
@@ -313,7 +339,7 @@
       "status": "implemented"
     },
     "component:audit-package": {
-      "description": "The optional @billbliss/architecture-graph-audit workspace package, run through core's ag audit hand-off. It loads the project through core's public API only, validates check files, ag.audit.json and the baseline, discovers runtime imports with the TypeScript compiler API using the configured tsconfig aliases, and reports forbidden_dependency findings with stable keys, classified against the baseline (new, baselined, resolved), with exit codes 0, 1 and 3. Unresolved imports and unparseable checked files are findings, never silent passes. forbidden_reachability and the baseline accept and prune commands are not built yet. Findings are advisory, not proof of conformance.",
+      "description": "The optional @billbliss/architecture-graph-audit workspace package, run through core's ag audit hand-off. It loads the project through core's public API only, validates check files, ag.audit.json and the baseline, discovers runtime imports with the TypeScript compiler API using the configured tsconfig aliases, and reports forbidden_dependency and forbidden_reachability findings (shortest import path as evidence) with stable keys, classified against the baseline (new, baselined, resolved), with exit codes 0, 1 and 3. baseline accept adds one current finding with a reason; baseline prune removes resolved entries; nothing accepts every finding. Unresolved imports and unparseable reached files are findings, never silent passes. Findings are advisory, not proof of conformance.",
       "id": "component:audit-package",
       "kind": "component",
       "module": "module:audit",
@@ -354,6 +380,18 @@
         {
           "kind": "test",
           "path": "packages/audit/test/drift-patterns.test.js"
+        },
+        {
+          "kind": "test",
+          "path": "packages/audit/test/reachability.test.js"
+        },
+        {
+          "kind": "test",
+          "path": "packages/audit/test/baseline.test.js"
+        },
+        {
+          "kind": "test",
+          "path": "packages/audit/test/self.test.js"
         }
       ],
       "status": "implemented"
@@ -578,6 +616,28 @@
       ],
       "status": "implemented"
     },
+    "constraint:core-is-browser-safe": {
+      "description": "@billbliss/architecture-graph/core (src/core.ts) reaches neither the Node driver (src/node.ts) nor any Node built-in through runtime imports, so the viewer can bundle the same validation as ag validate. A tripwire checks the import graph; a test bundles the entry point for the browser platform.",
+      "id": "constraint:core-is-browser-safe",
+      "kind": "constraint",
+      "module": "module:declarations",
+      "name": "The core entry point is browser-safe",
+      "references": [
+        {
+          "kind": "implementation",
+          "path": "src/core.ts"
+        },
+        {
+          "kind": "test",
+          "path": "test/core.test.js"
+        },
+        {
+          "kind": "check",
+          "path": "examples/architecture-graph/architecture/checks/core-is-browser-safe.yaml"
+        }
+      ],
+      "status": "implemented"
+    },
     "contract:audit-formats": {
       "description": "Check files (checkVersion 1), ag.audit.json (auditVersion 1), the baseline (baselineVersion 1) and the JSON report (reportVersion 1), defined with Zod and published as JSON Schemas in the audit package. Finding keys are readable and stable across runs; reports are not committed or used as input to later runs.",
       "id": "contract:audit-formats",
@@ -773,7 +833,7 @@
       "status": "implemented"
     },
     "decision:architecture-audit": {
-      "description": "Proposed: an optional audit package, run as ag audit, checks structural rules against code. Version 1 has forbidden module dependencies and forbidden reachability from entry files, for TypeScript and JavaScript, with a reviewed in-repository baseline of known findings that must shrink. Unresolved imports are findings, never silent passes. Core gains only a check reference kind on guardrail nodes and a narrow, protocol-versioned hand-off for ag audit; it never parses check files or reads source, so boundary:declarations-not-proof stays true for core. Both packages are released together at first; a peer range, the hand-off protocol and public-API-only access keep independent releases possible. The core part (check references, the hand-off with protocol 1, and the guidance count) is implemented, and the audit package exists with forbidden_dependency; forbidden_reachability, the baseline accept and prune commands and AG's own self-checks are not built yet, so this decision stays proposed.",
+      "description": "Proposed: an optional audit package, run as ag audit, checks structural rules against code. Version 1 has forbidden module dependencies and forbidden reachability from entry files, for TypeScript and JavaScript, with a reviewed in-repository baseline of known findings that must shrink. Unresolved imports are findings, never silent passes. Core gains only a check reference kind on guardrail nodes and a narrow, protocol-versioned hand-off for ag audit; it never parses check files or reads source, so boundary:declarations-not-proof stays true for core. Both packages are released together at first; a peer range, the hand-off protocol and public-API-only access keep independent releases possible. The core part (check references, the hand-off with protocol 1, and the guidance count) is implemented, and the audit package implements both check kinds and the baseline commands. AG checks itself with tripwires on constraint:core-is-browser-safe and boundary:audit-package-split. The skill workflow, documentation and the two-package release are not done yet, so this decision stays proposed.",
       "id": "decision:architecture-audit",
       "kind": "decision",
       "module": "module:declarations",
@@ -1267,6 +1327,20 @@
       "status": "implemented",
       "to": "boundary:declarations-not-proof"
     },
+    "relationship:audit-package-split": {
+      "description": "The audit reaches core only through its public entry points, and core never reaches the audit.",
+      "from": "component:audit-package",
+      "id": "relationship:audit-package-split",
+      "kind": "guarded_by",
+      "references": [
+        {
+          "kind": "implementation",
+          "path": "packages/audit/src/load.ts"
+        }
+      ],
+      "status": "implemented",
+      "to": "boundary:audit-package-split"
+    },
     "relationship:audit-proof-boundary": {
       "description": "Keeps the boundary true for core by placing all source reading in the optional audit package, whose results still do not establish conformance.",
       "from": "decision:architecture-audit",
@@ -1466,6 +1540,20 @@
       ],
       "status": "implemented",
       "to": "capability:retrieve-context"
+    },
+    "relationship:core-browser-safe": {
+      "description": "The core entry point must stay importable in browsers.",
+      "from": "component:public-entrypoints",
+      "id": "relationship:core-browser-safe",
+      "kind": "guarded_by",
+      "references": [
+        {
+          "kind": "implementation",
+          "path": "src/core.ts"
+        }
+      ],
+      "status": "implemented",
+      "to": "constraint:core-is-browser-safe"
     },
     "relationship:delivery-owns": {
       "description": "This component owns the implementation and maintenance of this responsibility.",

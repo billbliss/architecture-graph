@@ -1,0 +1,9 @@
+checkVersion: "1"
+checks:
+  - id: check:core-browser-safe
+    kind: forbidden_reachability
+    mode: tripwire
+    description: The browser-safe core entry point reaches neither the Node driver nor any Node built-in, so it bundles for browsers.
+    entries: [src/core.ts]
+    forbidden: [src/node.ts]
+    forbiddenPackages: ["node:*"]
