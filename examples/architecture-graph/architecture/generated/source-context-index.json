@@ -132,12 +132,15 @@
     },
     "docs/specs/architecture-audit.md": {
       "nodeIds": [
+        "component:audit-package",
+        "contract:audit-formats",
         "decision:architecture-audit"
       ],
       "relationshipIds": [
         "relationship:audit-format",
         "relationship:audit-guidance",
         "relationship:audit-handoff",
+        "relationship:audit-package",
         "relationship:audit-proof-boundary",
         "relationship:audit-validator"
       ]
@@ -286,6 +289,74 @@
         "relationship:delivery-provides",
         "relationship:typescript-build"
       ]
+    },
+    "packages/audit/package.json": {
+      "nodeIds": [
+        "component:audit-package"
+      ],
+      "relationshipIds": [
+        "relationship:audit-package"
+      ]
+    },
+    "packages/audit/schema/report.schema.json": {
+      "nodeIds": [
+        "contract:audit-formats"
+      ],
+      "relationshipIds": []
+    },
+    "packages/audit/src/checks.ts": {
+      "nodeIds": [
+        "component:audit-package"
+      ],
+      "relationshipIds": []
+    },
+    "packages/audit/src/discovery.ts": {
+      "nodeIds": [
+        "component:audit-package"
+      ],
+      "relationshipIds": []
+    },
+    "packages/audit/src/formats.ts": {
+      "nodeIds": [
+        "contract:audit-formats"
+      ],
+      "relationshipIds": [
+        "relationship:audit-package-formats"
+      ]
+    },
+    "packages/audit/src/load.ts": {
+      "nodeIds": [
+        "component:audit-package"
+      ],
+      "relationshipIds": [
+        "relationship:audit-package-loads-project"
+      ]
+    },
+    "packages/audit/src/run.ts": {
+      "nodeIds": [
+        "component:audit-package"
+      ],
+      "relationshipIds": [
+        "relationship:audit-package-proof-boundary"
+      ]
+    },
+    "packages/audit/test/discovery.test.js": {
+      "nodeIds": [
+        "component:audit-package"
+      ],
+      "relationshipIds": []
+    },
+    "packages/audit/test/drift-patterns.test.js": {
+      "nodeIds": [
+        "component:audit-package"
+      ],
+      "relationshipIds": []
+    },
+    "packages/audit/test/run.test.js": {
+      "nodeIds": [
+        "component:audit-package"
+      ],
+      "relationshipIds": []
     },
     "schema/graph.schema.json": {
       "nodeIds": [

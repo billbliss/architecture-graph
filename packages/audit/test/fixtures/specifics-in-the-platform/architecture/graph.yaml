@@ -1,0 +1,55 @@
+schemaVersion: "1"
+id: graph:specifics-in-the-platform
+title: Reporting platform with pluggable features
+description: A generic reporting platform and one feature that plugs into it through a registered contract.
+nodes:
+  - id: component:reporting-platform
+    kind: component
+    name: Reporting platform
+    description: Assembles reports from whatever features are registered; knows no feature by name.
+    status: implemented
+    module: module:platform
+    references:
+      - kind: implementation
+        path: src/platform/assemble-report.ts
+  - id: component:fine-grained-feature
+    kind: component
+    name: Fine-grained feature
+    description: Computes the fine-grained variant and registers it with the platform.
+    status: implemented
+    module: module:features
+    references:
+      - kind: implementation
+        path: src/features/fine-grained/compile.ts
+  - id: constraint:platform-is-feature-neutral
+    kind: constraint
+    name: The platform is feature-neutral
+    description: The generic reporting platform never depends on feature code; features plug in through registered contracts.
+    status: implemented
+    module: module:platform
+    references:
+      - kind: implementation
+        path: src/platform/feature-registry.ts
+      - kind: check
+        path: architecture/checks/platform-is-feature-neutral.yaml
+relationships:
+  - id: relationship:platform-feature-neutral
+    kind: guarded_by
+    from: component:reporting-platform
+    to: constraint:platform-is-feature-neutral
+    description: The platform's assembly must stay generic.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/platform/assemble-report.ts
+modules:
+  - id: module:platform
+    name: Reporting platform
+    description: The generic layer.
+    exports: []
+    imports: []
+  - id: module:features
+    name: Features
+    description: Feature code that plugs into the platform.
+    exports: []
+    imports: []

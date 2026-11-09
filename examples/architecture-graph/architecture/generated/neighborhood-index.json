@@ -28,6 +28,7 @@
     },
     "boundary:declarations-not-proof": {
       "inbound": [
+        "relationship:audit-package-proof-boundary",
         "relationship:audit-proof-boundary",
         "relationship:generator-proof",
         "relationship:skill-proof",
@@ -54,6 +55,7 @@
     },
     "capability:load-project": {
       "inbound": [
+        "relationship:audit-package-loads-project",
         "relationship:context-project",
         "relationship:entrypoints-project",
         "relationship:generator-project",
@@ -111,6 +113,16 @@
         "relationship:guidance-authority",
         "relationship:guidance-owns",
         "relationship:guidance-provides"
+      ]
+    },
+    "component:audit-package": {
+      "inbound": [
+        "relationship:audit-package"
+      ],
+      "outbound": [
+        "relationship:audit-package-formats",
+        "relationship:audit-package-loads-project",
+        "relationship:audit-package-proof-boundary"
       ]
     },
     "component:build-release": {
@@ -208,6 +220,12 @@
         "relationship:validator-provides"
       ]
     },
+    "contract:audit-formats": {
+      "inbound": [
+        "relationship:audit-package-formats"
+      ],
+      "outbound": []
+    },
     "contract:authored-format": {
       "inbound": [
         "relationship:audit-format",
@@ -262,6 +280,7 @@
         "relationship:audit-format",
         "relationship:audit-guidance",
         "relationship:audit-handoff",
+        "relationship:audit-package",
         "relationship:audit-proof-boundary",
         "relationship:audit-validator"
       ]

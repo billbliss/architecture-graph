@@ -45,7 +45,7 @@ jobs:
           node bin/ag.js validate
           node bin/ag.js check
       - name: Check committed schemas and example artifacts
-        run: git diff --exit-code -- schema examples/hello-world/architecture/generated
+        run: git diff --exit-code -- schema packages/audit/schema examples/hello-world/architecture/generated
 
       - name: Upload example architecture context
         if: matrix.os == 'ubuntu-latest' && matrix.node == '22'

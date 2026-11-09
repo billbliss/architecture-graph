@@ -1,17 +1,17 @@
 {
   "artifactVersion": "2",
   "toolVersion": "0.4.1",
-  "declarationDigest": "64b10b63edcb97e902e6891e3be2ff3b29bf6dfafc53d1f12a2280845d9d34e1",
+  "declarationDigest": "ab109391f042a2ad7343663b6d743307c6b5cc1c4e6de776d939bc08baa8c9c2",
   "graphId": "graph:architecture-graph",
   "title": "Architecture Graph architecture",
   "scope": "AG 0.4.1: declarations, context, interfaces and delivery. Software ownership is modeled; human assignments remain open. Excludes predecessor internals, explorer UI and implementation assurance.",
   "limitation": "Structural validation only; declarations and file existence do not prove implementation conformance.",
-  "nodes": 39,
-  "relationships": 71,
-  "modules": 4,
+  "nodes": 41,
+  "relationships": 75,
+  "modules": 5,
   "statuses": {
     "proposed": 2,
-    "implemented": 33,
+    "implemented": 35,
     "unresolved": 4
   },
   "unresolved": [
@@ -57,8 +57,8 @@
     }
   ],
   "sidecars": {
-    "eligible": 8,
-    "withSchema": 5,
+    "eligible": 9,
+    "withSchema": 6,
     "withExamples": 5,
     "withoutSchema": [
       "artifact:bundled-skill",

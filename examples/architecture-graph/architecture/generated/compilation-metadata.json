@@ -2,14 +2,14 @@
   "artifactVersion": "2",
   "toolVersion": "0.4.1",
   "graphId": "graph:architecture-graph",
-  "declarationDigest": "64b10b63edcb97e902e6891e3be2ff3b29bf6dfafc53d1f12a2280845d9d34e1",
+  "declarationDigest": "ab109391f042a2ad7343663b6d743307c6b5cc1c4e6de776d939bc08baa8c9c2",
   "checksums": {
-    "graph-index.json": "852f795aa5f540700948194096978c982e300cb4430dddda87d2515aed350487",
-    "source-context-index.json": "94992744211c093abc71709c1c506b54f5c138c45e3981c330998d1d40c292bd",
-    "neighborhood-index.json": "f194e416bf594f5427aea3b14bfdfe72b09050c7d2c16eb8995d3f6212fc7bb0",
-    "module-ownership-map.json": "f52c3974486f7bdd102c9bb9f8d8170ff44fe56996428247b46ada40d210d529",
-    "cross-module-dependency-index.json": "4fe22732b0c294de4acc9d4862a21ed3b0768075dc54b73c281d4c418de7b4a7",
-    "guardrail-index.json": "e06d363181d82a1fc3ca82b6dbb4f9e4ede0b7db280049469ad9db94612afaa1",
-    "graph-source-map.json": "7080b4b4dfe7e2db93e820d6c77ae128863b266bb84665227f5eefca17d7a20b"
+    "graph-index.json": "d9194fae8495cface048d44bb4ec64c3698e8002a316b47826afa86544cb183c",
+    "source-context-index.json": "ef580b5b2a4c32a22d663cc4a63ef344b5f71263c909dade2668b881c38e132a",
+    "neighborhood-index.json": "bc91886d87c8146d9d46d4f8f57a83bdedf268f5c33a8b4143405fc3fb5a0991",
+    "module-ownership-map.json": "ab2fa46104f18448f86a4264a6b7c31f4b8c7c26f9db56ad1da567fe50cec5b3",
+    "cross-module-dependency-index.json": "b720714ea936ce58bb0b8fec0ae4a8b96bbc059b995f908e5d4335614d710288",
+    "guardrail-index.json": "5be21cf6ae31c570339e39eecad0072bb8ba008f164fa2be7f4319f474edf3be",
+    "graph-source-map.json": "ef788a7e07c000f598b2aedf75ab9d136d4a1fe2bddbdc7b4341ce04a1c84d14"
   }
 }
