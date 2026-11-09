@@ -65,9 +65,9 @@ export function loadAudit(configPath: string, auditConfigPath?: string): Audit {
   const local = (path: string, code: string, at: string): boolean => {
     try { assertProjectPath(path); return true; } catch (error) { add(code, at, (error as Error).message); return false; }
   };
-  const fileExists = (path: string, code: string, at: string, what: string): boolean => {
+  const fileExists = (path: string, code: string, at: string, what: string, hint = ''): boolean => {
     if (!local(path, code, at)) return false;
-    try { if (files.kind(path) === 'file') return true; add(code, at, `${what} not found: ${path}`); }
+    try { if (files.kind(path) === 'file') return true; add(code, at, `${what} not found: ${path}${hint}`); }
     catch (error) { add(code, at, (error as Error).message); }
     return false;
   };
@@ -87,7 +87,8 @@ export function loadAudit(configPath: string, auditConfigPath?: string): Audit {
   });
 
   let baseline: Baseline = { baselineVersion: '1', findings: [] };
-  if (fileExists(config.baseline, 'baseline', 'ag.audit.json$.baseline', 'Baseline')) {
+  const empty = `; create it with no entries:\nbaselineVersion: "1"\nfindings: []`;
+  if (fileExists(config.baseline, 'baseline', 'ag.audit.json$.baseline', 'Baseline', empty)) {
     try { baseline = parseBaseline(files.read(config.baseline), config.baseline); }
     catch (error) { if (error instanceof AuditInputError) problems.push(...error.diagnostics); else throw error; }
   }

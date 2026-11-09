@@ -194,7 +194,7 @@ A **selector** names code. It is either a graph module ID, which expands to that
 
 `forbidden_dependency` takes `from` and `to` selectors. Any runtime import from a file matched by `from` to a file matched by `to` is a finding.
 
-`forbidden_reachability` takes `entries`, a list of repository-relative files, and `forbidden` selectors. It may also take `forbiddenPackages`, a list of package-specifier patterns such as `node:*` or `typescript`. Any forbidden file or package reachable from an entry through runtime imports is a finding.
+`forbidden_reachability` takes `entries`, a list of repository-relative files, and `forbidden` selectors. It may also take `forbiddenPackages`, a list of package-specifier patterns such as `node:*` or `typescript`. Any forbidden file or package reachable from an entry through runtime imports is a finding. Each entry must be a TypeScript or JavaScript source file.
 
 ### Audit configuration
 
@@ -275,6 +275,8 @@ Analysis is entry-first for reachability and file-first for dependencies:
 - `forbidden_dependency` parses every file matched by `from`.
 
 Unreachable files are never parsed, so unrelated unsupported syntax elsewhere cannot block a check. A file that is parsed but cannot be analyzed because of unsupported or invalid syntax is a finding of kind `unresolved_import` with the specifier `<syntax>`, so its key is `<check>|unresolved|<file>|<syntax>`.
+
+Reachability continues through a forbidden file, so every forbidden file and package reachable from an entry is reported, not only the first one found on each path. A reached file that is not a supported source file is a terminal: it can be forbidden, but it is not parsed and has no edges.
 
 Edges:
 
@@ -407,3 +409,4 @@ Both:
 ## Open questions
 
 - **Report hook.** Version 3's `--on-new-finding` hook runs a project-chosen command. Decide whether a hook belongs in the audit at all, or whether consuming the report in CI is enough.
+- **By-design exceptions.** Permanent, by-design exceptions (for example, the hand-off's non-literal import) currently live in the baseline. Decide whether v2 needs a per-check exception list, with reasons, separate from the baseline of debt.
