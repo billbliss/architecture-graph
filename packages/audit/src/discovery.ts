@@ -1,7 +1,7 @@
 import ts from 'typescript';
 import { isBuiltin } from 'node:module';
 import { dirname, join, posix, relative, sep } from 'node:path';
-import { globPattern, type Repository } from './files.js';
+import { globPattern, type Repository, AuditConfigurationError } from './files.js';
 import type { AuditConfig } from './formats.js';
 
 /** An import written in a file: a literal specifier, or a dynamic one the audit cannot follow. */
@@ -64,8 +64,7 @@ export type Resolution =
   | { kind: 'external'; name: string }
   | { kind: 'unresolved'; reason: string };
 
-/** A problem with the audit configuration found while analyzing; it makes the run invalid (exit 1), not a finding. */
-export class AuditConfigurationError extends Error {}
+export { AuditConfigurationError };
 
 interface Aliases { tsconfig: string; base: string | null; paths: Array<[string, string[]]>; baseUrl: boolean }
 const EMITTED: Record<string, string[]> = { '.js': ['.ts', '.tsx'], '.jsx': ['.tsx'], '.mjs': ['.mts'], '.cjs': ['.cts'] };
