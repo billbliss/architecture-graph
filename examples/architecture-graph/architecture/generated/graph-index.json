@@ -339,7 +339,7 @@
       "status": "implemented"
     },
     "component:audit-package": {
-      "description": "The optional @billbliss/architecture-graph-audit workspace package, run through core's ag audit hand-off. It loads the project through core's public API only, validates check files, ag.audit.json and the baseline, discovers runtime imports with the TypeScript compiler API using the configured tsconfig aliases, and reports forbidden_dependency and forbidden_reachability findings (shortest import path as evidence) with stable keys, classified against the baseline (new, baselined, resolved), with exit codes 0, 1 and 3. baseline accept adds one current finding with a reason; baseline prune removes resolved entries; nothing accepts every finding. Unresolved imports and unparseable reached files are findings, never silent passes. Findings are advisory, not proof of conformance.",
+      "description": "The optional @billbliss/architecture-graph-audit workspace package, run through core's ag audit hand-off. It loads the project through core's public API only, validates check files, ag.audit.json and the baseline, sees the files git would consider (tracked plus untracked-not-ignored) inside a git work tree, discovers runtime imports with the TypeScript compiler API using the configured tsconfig aliases, and reports forbidden_dependency and forbidden_reachability findings (shortest import path as evidence) with stable keys, classified against the baseline (new, baselined, resolved), with exit codes 0, 1 and 3. baseline accept adds one current finding with a reason; baseline prune removes resolved entries; nothing accepts every finding. Unresolved imports and unparseable reached files are findings, never silent passes. Findings are advisory, not proof of conformance.",
       "id": "component:audit-package",
       "kind": "component",
       "module": "module:audit",
@@ -392,6 +392,10 @@
         {
           "kind": "test",
           "path": "packages/audit/test/self.test.js"
+        },
+        {
+          "kind": "test",
+          "path": "packages/audit/test/git.test.js"
         }
       ],
       "status": "implemented"

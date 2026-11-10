@@ -373,6 +373,12 @@
       ],
       "relationshipIds": []
     },
+    "packages/audit/test/git.test.js": {
+      "nodeIds": [
+        "component:audit-package"
+      ],
+      "relationshipIds": []
+    },
     "packages/audit/test/reachability.test.js": {
       "nodeIds": [
         "component:audit-package"

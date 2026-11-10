@@ -269,6 +269,8 @@ Failing on resolved entries is what makes the baseline shrink: when a change fix
 
 Version 1 analyzes `.ts`, `.tsx`, `.mts`, `.cts`, `.js`, `.jsx`, `.mjs` and `.cjs` files using the TypeScript compiler API.
 
+The audit's view of the file system is the files git would consider: inside a git work tree, tracked files plus untracked files that are not ignored, listed with `git ls-files`; outside one, every regular file. In both cases symlinks are not followed and `node_modules` and `.git` are excluded. Inside a work tree, if git is missing or cannot list the files, the run fails with a configuration error rather than reading every file instead, so what the audit sees never changes silently.
+
 Analysis is entry-first for reachability and file-first for dependencies:
 
 - `forbidden_reachability` parses only files reached from its entries.
