@@ -1,0 +1,5 @@
+baselineVersion: "1"
+findings:
+  - key: check:export-avoids-legacy|reach|src/routes/export.ts->src/legacy/exporter.ts
+    reason: Wide exports still use the legacy exporter through src/export/bridge.ts. Removed at the exporter cutover.
+    added: 2026-11-08

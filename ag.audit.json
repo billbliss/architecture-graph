@@ -1,0 +1,9 @@
+{
+  "auditVersion": "1",
+  "baseline": "examples/architecture-graph/architecture/audit-baseline.yaml",
+  "typescript": [
+    { "paths": ["src/**"], "tsconfig": "tsconfig.json" },
+    { "paths": ["packages/audit/src/**"], "tsconfig": "packages/audit/tsconfig.json" }
+  ],
+  "modules": {}
+}

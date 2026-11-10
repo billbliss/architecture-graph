@@ -194,7 +194,7 @@ A **selector** names code. It is either a graph module ID, which expands to that
 
 `forbidden_dependency` takes `from` and `to` selectors. Any runtime import from a file matched by `from` to a file matched by `to` is a finding.
 
-`forbidden_reachability` takes `entries`, a list of repository-relative files, and `forbidden` selectors. It may also take `forbiddenPackages`, a list of package-specifier patterns such as `node:*` or `typescript`. Any forbidden file or package reachable from an entry through runtime imports is a finding.
+`forbidden_reachability` takes `entries`, a list of repository-relative files, and `forbidden` selectors. It may also take `forbiddenPackages`, a list of package-specifier patterns such as `node:*` or `typescript`. Any forbidden file or package reachable from an entry through runtime imports is a finding. Each entry must be a TypeScript or JavaScript source file.
 
 ### Audit configuration
 
@@ -234,6 +234,8 @@ A **selector** names code. It is either a graph module ID, which expands to that
 - module paths do not overlap;
 - the baseline and `tsconfig` files exist.
 
+The baseline file is required even when it has no entries, so adopting the audit starts with an empty baseline (`baselineVersion: "1"` and `findings: []`). A missing baseline is invalid input, not an implicitly empty one.
+
 Every `ag audit` run performs the same validation first.
 
 ## Running the audit
@@ -272,14 +274,16 @@ Analysis is entry-first for reachability and file-first for dependencies:
 - `forbidden_reachability` parses only files reached from its entries.
 - `forbidden_dependency` parses every file matched by `from`.
 
-Unreachable files are never parsed, so unrelated unsupported syntax elsewhere cannot block a check.
+Unreachable files are never parsed, so unrelated unsupported syntax elsewhere cannot block a check. A file that is parsed but cannot be analyzed because of unsupported or invalid syntax is a finding of kind `unresolved_import` with the specifier `<syntax>`, so its key is `<check>|unresolved|<file>|<syntax>`.
+
+Reachability continues through a forbidden file, so every forbidden file and package reachable from an entry is reported, not only the first one found on each path. A reached file that is not a supported source file is a terminal: it can be forbidden, but it is not parsed and has no edges.
 
 Edges:
 
 - Static imports, side-effect imports, `export ... from`, `export * from`, `import x = require("...")`, `require("...")` with a string literal and `import("...")` with a string literal are runtime edges.
 - `import type` and `export type` are not runtime edges and are ignored. Inline `type` modifiers on every imported name also make the import type-only.
-- Relative specifiers resolve to source files by the usual rules: exact file, emitted-extension counterpart (a `.js` specifier to `.ts` source), then directory index. More than one candidate is an ambiguity finding.
-- Non-relative specifiers are first matched against the configured aliases. An alias match must resolve inside the repository. A specifier that matches no alias is an external package terminal; it is recorded but not followed.
+- Relative specifiers resolve to source files by the usual rules: exact file, emitted-extension counterpart (a `.js` specifier to `.ts` source), then directory index. These are ordered steps: the first step that finds a file wins, and more than one candidate within that step is an ambiguity finding.
+- Non-relative specifiers are first matched against the configured aliases. An alias match must resolve inside the repository. A configured `baseUrl` acts as an alias root, with or without `paths`: a specifier that resolves to a file under it is followed. A specifier that matches no alias is an external package terminal; it is recorded but not followed.
 - A dynamic `import()` or `require()` with a non-literal argument, a resolution that escapes the repository, and an unresolvable relative import are findings of kind `unresolved_import`.
 - Cycles are followed once and do not cause errors.
 
@@ -405,3 +409,4 @@ Both:
 ## Open questions
 
 - **Report hook.** Version 3's `--on-new-finding` hook runs a project-chosen command. Decide whether a hook belongs in the audit at all, or whether consuming the report in CI is enough.
+- **By-design exceptions.** Permanent, by-design exceptions (for example, the hand-off's non-literal import) currently live in the baseline. Decide whether v2 needs a per-check exception list, with reasons, separate from the baseline of debt.

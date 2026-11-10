@@ -1,0 +1,23 @@
+{
+  "auditVersion": "1",
+  "baseline": "architecture/audit-baseline.yaml",
+  "typescript": [
+    {
+      "paths": [
+        "src/**"
+      ],
+      "tsconfig": "tsconfig.json"
+    }
+  ],
+  "modules": {
+    "module:routes": [
+      "src/routes/**"
+    ],
+    "module:reporting": [
+      "src/reporting/**"
+    ],
+    "module:alternate-computations": [
+      "src/alternates/**"
+    ]
+  }
+}

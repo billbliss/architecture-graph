@@ -68,9 +68,64 @@ function forbiddenDependency(audit: Audit, analyzer: Analyzer, { check }: Loaded
   return findings;
 }
 
+/** A package-specifier pattern such as `node:*`, `typescript` or `@scope/*`; `*` matches any run of characters. */
+export const packagePattern = (pattern: string): RegExp =>
+  new RegExp(`^${pattern.split('*').map(part => part.replace(/[.+?^$()|[\]{}\\/]/g, '\\$&')).join('.*')}$`);
+
+interface Hop { file: string; line: number; specifier: string }
+
+/**
+ * Any forbidden file or package reachable from an entry through runtime imports. Only files reached from the
+ * entries are parsed. Breadth-first search, so the evidence is a shortest import path.
+ */
+function forbiddenReachability(audit: Audit, analyzer: Analyzer, { check }: LoadedCheck): RawFinding[] {
+  if (check.kind !== 'forbidden_reachability') return [];
+  const targets = new Set(expand(audit, check.forbidden));
+  const packages = check.forbiddenPackages.map(packagePattern);
+  const findings: RawFinding[] = [];
+  const unresolved = new Map<string, RawFinding>();
+  for (const entry of check.entries) {
+    const via = new Map<string, Hop | null>([[entry, null]]);
+    const pathTo = (file: string): string[] => {
+      const path: string[] = [];
+      for (let at: string | undefined = file; at !== undefined; at = via.get(at)?.file) path.unshift(at);
+      return path;
+    };
+    const report = (target: string, hop: Hop): void => {
+      const path = [...pathTo(hop.file), target];
+      findings.push({
+        key: `${check.id}|reach|${entry}->${target}`, kind: 'forbidden_reachability', check: check.id,
+        message: `${entry} reaches ${target}, which ${check.id} forbids: ${path.join(' -> ')}`,
+        evidence: { file: hop.file, line: hop.line, specifier: hop.specifier, path },
+      });
+    };
+    const queue = [entry];
+    for (let next = 0; next < queue.length; next++) {
+      const file = queue[next]!;
+      if (!isSource(file)) continue; // A reached non-source file is a terminal: it can be forbidden, but it has no imports.
+      const analyzed = analyzer.analyze(file);
+      for (const finding of unresolvedFindings(check.id, file, analyzed)) unresolved.set(finding.key, finding);
+      for (const edge of analyzed.edges) {
+        const hop = { file, line: edge.line, specifier: edge.specifier };
+        if (edge.resolution.kind === 'external') {
+          const name = edge.resolution.name;
+          if (packages.some(pattern => pattern.test(name)) && !findings.some(f => f.key === `${check.id}|reach|${entry}->${name}`)) report(name, hop);
+          continue;
+        }
+        if (edge.resolution.kind !== 'file' || via.has(edge.resolution.path)) continue;
+        const target = edge.resolution.path;
+        via.set(target, hop);
+        queue.push(target);
+        if (targets.has(target)) report(target, hop);
+      }
+    }
+  }
+  return [...findings, ...unresolved.values()];
+}
+
 export function runCheck(audit: Audit, analyzer: Analyzer, loaded: LoadedCheck): RawFinding[] {
   switch (loaded.check.kind) {
     case 'forbidden_dependency': return forbiddenDependency(audit, analyzer, loaded);
-    case 'forbidden_reachability': throw new Error(`${loaded.check.id}: forbidden_reachability is not available in this build yet`);
+    case 'forbidden_reachability': return forbiddenReachability(audit, analyzer, loaded);
   }
 }

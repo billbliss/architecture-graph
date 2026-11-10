@@ -1,0 +1,69 @@
+schemaVersion: "1"
+id: graph:permanent-bridge
+title: Export route migrating off the legacy exporter
+description: An export route moving from a legacy exporter to a new one through a temporary bridge.
+nodes:
+  - id: component:export-route
+    kind: component
+    name: Export route
+    description: Exports a report on request.
+    status: implemented
+    module: module:routes
+    references:
+      - kind: implementation
+        path: src/routes/export.ts
+  - id: component:exporter
+    kind: component
+    name: Exporter
+    description: The new exporter.
+    status: implemented
+    module: module:export
+    references:
+      - kind: implementation
+        path: src/export/exporter.ts
+  - id: policy:legacy-exporter-retired
+    kind: policy
+    name: The legacy exporter is retired
+    description: The export route does not reach the legacy exporter. The bridge is temporary and is removed at cutover.
+    status: implemented
+    module: module:routes
+    references:
+      - kind: implementation
+        path: src/routes/export.ts
+      - kind: check
+        path: architecture/checks/legacy-exporter-retired.yaml
+relationships:
+  - id: relationship:route-uses-exporter
+    kind: depends_on
+    from: component:export-route
+    to: component:exporter
+    description: The route exports through the new exporter.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/routes/export.ts
+  - id: relationship:route-retires-legacy
+    kind: governed_by
+    from: component:export-route
+    to: policy:legacy-exporter-retired
+    description: The route must not reach the legacy exporter.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/routes/export.ts
+modules:
+  - id: module:routes
+    name: Routes
+    description: Request entry points.
+    exports: [component:export-route, policy:legacy-exporter-retired]
+    imports: [component:exporter]
+  - id: module:export
+    name: Export
+    description: The new exporter and the temporary bridge.
+    exports: [component:exporter]
+    imports: []
+  - id: module:legacy
+    name: Legacy exporter
+    description: The exporter being retired.
+    exports: []
+    imports: []

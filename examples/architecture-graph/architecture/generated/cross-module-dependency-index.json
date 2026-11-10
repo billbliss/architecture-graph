@@ -48,6 +48,12 @@
       "targetId": "capability:load-project",
       "toModule": "module:declarations"
     },
+    "relationship:core-browser-safe": {
+      "edgeId": "relationship:core-browser-safe",
+      "fromModule": "module:interfaces",
+      "targetId": "constraint:core-is-browser-safe",
+      "toModule": "module:declarations"
+    },
     "relationship:entrypoints-context": {
       "edgeId": "relationship:entrypoints-context",
       "fromModule": "module:interfaces",

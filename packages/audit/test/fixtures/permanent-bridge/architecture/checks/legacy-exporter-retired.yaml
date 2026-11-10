@@ -1,0 +1,8 @@
+checkVersion: "1"
+checks:
+  - id: check:export-avoids-legacy
+    kind: forbidden_reachability
+    mode: tripwire
+    description: The export route must not reach the legacy exporter.
+    entries: [src/routes/export.ts]
+    forbidden: [module:legacy]

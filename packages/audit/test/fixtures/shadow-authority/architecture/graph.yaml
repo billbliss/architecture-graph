@@ -1,0 +1,78 @@
+schemaVersion: "1"
+id: graph:shadow-authority
+title: Scoring with one production authority
+description: A service whose scores come from one rules authority, with a separate experimentation harness.
+nodes:
+  - id: component:score-handler
+    kind: component
+    name: Score handler
+    description: Answers score requests in production.
+    status: implemented
+    module: module:server
+    references:
+      - kind: implementation
+        path: src/server/score-handler.ts
+  - id: component:scoring-rules
+    kind: component
+    name: Scoring rules
+    description: The one authority for production scores.
+    status: implemented
+    module: module:scoring
+    references:
+      - kind: implementation
+        path: src/scoring/rules.ts
+  - id: component:trial-harness
+    kind: component
+    name: Trial harness
+    description: Runs experiments against trial copies of the rules.
+    status: implemented
+    module: module:harness
+    references:
+      - kind: implementation
+        path: src/harness/trial-rules.ts
+  - id: boundary:harness-is-not-production
+    kind: boundary
+    name: The harness is not production
+    description: Production code never reaches the experimentation harness; production scores come only from the scoring rules.
+    status: implemented
+    module: module:server
+    references:
+      - kind: implementation
+        path: src/server/main.ts
+      - kind: check
+        path: architecture/checks/harness-is-not-production.yaml
+relationships:
+  - id: relationship:handler-uses-rules
+    kind: depends_on
+    from: component:score-handler
+    to: component:scoring-rules
+    description: Production scores come from the scoring rules.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/server/score-handler.ts
+  - id: relationship:handler-outside-harness
+    kind: guarded_by
+    from: component:score-handler
+    to: boundary:harness-is-not-production
+    description: The handler must not use the harness.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/server/score-handler.ts
+modules:
+  - id: module:server
+    name: Server
+    description: Production entry points and handlers.
+    exports: [boundary:harness-is-not-production, component:score-handler]
+    imports: [component:scoring-rules]
+  - id: module:scoring
+    name: Scoring
+    description: The production rules authority.
+    exports: [component:scoring-rules]
+    imports: []
+  - id: module:harness
+    name: Experimentation harness
+    description: Trial copies of rules for experiments.
+    exports: [component:trial-harness]
+    imports: []

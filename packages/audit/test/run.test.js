@@ -125,6 +125,13 @@ test('protocol, arguments and the ignored --config follow the hand-off contract'
   assert.match((await p.run(t, ['--help'])).stdout, /ag audit \[--tripwires\]/);
 });
 
+test('a missing baseline prints the minimal file to create', async t => {
+  const p = project(t, { checks: platformCheck(), files: { ...violating, 'architecture/audit-baseline.yaml': null } });
+  const result = await p.run(t);
+  assert.equal(result.code, 1);
+  assert.match(result.stderr, /Baseline not found: architecture\/audit-baseline\.yaml; create it with no entries:\nbaselineVersion: "1"\nfindings: \[\]/);
+});
+
 test('missing audit configuration is invalid input', async t => {
   const p = project(t, { checks: platformCheck(), files: violating });
   rmSync(join(p.root, 'ag.audit.json'));

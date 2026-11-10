@@ -1,0 +1,15 @@
+checkVersion: "1"
+checks:
+  - id: check:core-without-audit
+    kind: forbidden_reachability
+    mode: tripwire
+    description: Core's entry points never reach the audit package's code or TypeScript; the ag audit hand-off loads the audit only at run time.
+    entries: [src/index.ts, src/core.ts, src/cli.ts]
+    forbidden: [packages/**]
+    forbiddenPackages: [typescript, "@billbliss/architecture-graph-audit"]
+  - id: check:audit-uses-core-public-api
+    kind: forbidden_dependency
+    mode: tripwire
+    description: Audit source imports core only by package name, through its public entry points, never core's source or build output by path. Core's package exports reject deep imports by name.
+    from: [packages/audit/src/**]
+    to: [src/**, lib/**, bin/**]

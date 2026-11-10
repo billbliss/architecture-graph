@@ -26,6 +26,12 @@
       ],
       "outbound": []
     },
+    "boundary:audit-package-split": {
+      "inbound": [
+        "relationship:audit-package-split"
+      ],
+      "outbound": []
+    },
     "boundary:declarations-not-proof": {
       "inbound": [
         "relationship:audit-package-proof-boundary",
@@ -122,7 +128,8 @@
       "outbound": [
         "relationship:audit-package-formats",
         "relationship:audit-package-loads-project",
-        "relationship:audit-package-proof-boundary"
+        "relationship:audit-package-proof-boundary",
+        "relationship:audit-package-split"
       ]
     },
     "component:build-release": {
@@ -189,6 +196,7 @@
       ],
       "outbound": [
         "relationship:api-authority",
+        "relationship:core-browser-safe",
         "relationship:entrypoints-context",
         "relationship:entrypoints-guidance",
         "relationship:entrypoints-install",
@@ -219,6 +227,12 @@
         "relationship:validator-proof",
         "relationship:validator-provides"
       ]
+    },
+    "constraint:core-is-browser-safe": {
+      "inbound": [
+        "relationship:core-browser-safe"
+      ],
+      "outbound": []
     },
     "contract:audit-formats": {
       "inbound": [

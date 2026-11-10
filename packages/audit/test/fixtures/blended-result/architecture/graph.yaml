@@ -1,0 +1,69 @@
+schemaVersion: "1"
+id: graph:blended-result
+title: Report creation with a single computation path
+description: A report route that computes totals through one shared computation.
+nodes:
+  - id: component:report-route
+    kind: component
+    name: Report route
+    description: Creates a report from a request.
+    status: implemented
+    module: module:routes
+    references:
+      - kind: implementation
+        path: src/routes/create-report.ts
+  - id: component:totals
+    kind: component
+    name: Totals computation
+    description: The one computation for report totals.
+    status: implemented
+    module: module:reporting
+    references:
+      - kind: implementation
+        path: src/reporting/totals.ts
+  - id: constraint:single-computation-path
+    kind: constraint
+    name: One computation path per report
+    description: A report is computed by exactly one computation; alternate computations are never reachable from report creation.
+    status: implemented
+    module: module:reporting
+    references:
+      - kind: implementation
+        path: src/reporting/totals.ts
+      - kind: check
+        path: architecture/checks/single-computation-path.yaml
+relationships:
+  - id: relationship:route-uses-totals
+    kind: depends_on
+    from: component:report-route
+    to: component:totals
+    description: The route computes totals through the shared computation.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/routes/create-report.ts
+  - id: relationship:route-single-path
+    kind: guarded_by
+    from: component:report-route
+    to: constraint:single-computation-path
+    description: Report creation must not blend computations.
+    status: implemented
+    references:
+      - kind: implementation
+        path: src/routes/create-report.ts
+modules:
+  - id: module:routes
+    name: Routes
+    description: Request entry points.
+    exports: [component:report-route]
+    imports: [component:totals, constraint:single-computation-path]
+  - id: module:reporting
+    name: Reporting
+    description: The shared computation.
+    exports: [component:totals, constraint:single-computation-path]
+    imports: []
+  - id: module:alternate-computations
+    name: Alternate computations
+    description: Computations kept for comparison, never used to build reports.
+    exports: []
+    imports: []
